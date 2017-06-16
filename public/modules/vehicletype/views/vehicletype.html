@@ -1,0 +1,92 @@
+ <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+                        Vehicle Types
+                       
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li>Vehicle Types</li>                       
+                    </ol>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                    <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>   
+                            
+                            <div class="box">
+                                
+                                <!-- <div class="box-header">
+                                    <h3 class="box-title">Data Table With Full Features</h3>
+                                </div> -->
+                                <div class="box-body table-responsive">
+                                <div class="clearfix" style="padding-bottom:15px;">
+                                 <div style="float:right;"><a href='/#/vehicletype/add' align='right' >Add New Vehicle Type</a></div>
+                               
+                                <form name="searchForm" novalidate ng-submit="applyGlobalSearch()">
+                                    <div class="input-group">
+                                      <span class="input-group-addon">Except for...
+                                        <input type="checkbox" name="inverted" ng-model="isInvertedSearch" />
+                                      </span>
+                                      <input type="text" class="form-control" placeholder="Search term" name="searchTerm" ng-model="globalSearchTerm" required />
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>
+                                      </span>
+                                    </div>
+                              </form>
+                              </div>                         
+
+                           <form role="form">
+                                  
+                                    <table id="example1" class="table table-bordered table-striped" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                                     <colgroup>
+                                              <col width="5%"/>
+                                              <col width="5%"/>
+                                              <col width="80%"/>
+                                              <!-- <col width="10%"/> -->
+                                            </colgroup>
+
+                                            <tr ng-repeat = "vehicletype in $data">
+                                                <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[vehicletype._id]" value="{{vehicletype._id}}" /></td>
+                                                <td data-title="'Status'" sortable="'enable'" align='left'><div ng-if="vehicletype.enable==true"><img src='images/enable.png' border='0'></div><div ng-if="vehicletype.enable==false"><img src='images/disable.png' border='0'></div></td>
+
+                                                <td data-title="'VehicleType'" sortable="'vehicleType'" filter="{vehicleType:'text'}" align="left"><a href="/#/vehicletype/edit/{{vehicletype._id}}" alt="Click to edit" title="Click to edit">{{vehicletype.vehicleType}}</a></td>
+
+                                                <!-- <td data-title="'Action'" align="left"><a href="/#/vehicletype/delete/{{vehicletype._id}}"><i class="fa fa-trash-o"></i></a></td> -->
+                                            </tr>
+                                            <tr>
+                                                <td colspan='2'>
+                                                    
+                                                    <div class="form-group">
+                                                                <select class="form-control" name='selectAction' id='selectAction'>
+                                                                <option value="">Select</option>
+                                                                <option value="enable">Enable</option>
+                                                                <option value="disable">Disable</option>
+                                                                <option value="delete">Delete</option>
+                                                            </select> 
+                                                    </div>
+                                                </td>
+                                                <td colspan='2'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()"></td>
+                                                </form>
+                                            </tr>  
+                                    </table>   
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+
+
+            <!-- page script -->
+         <script type="text/ng-template" id="headerCheckbox.html">
+                <input type="checkbox" ng-model="checkboxes.checked" class="select-all" value="" />
+            </script>
+               

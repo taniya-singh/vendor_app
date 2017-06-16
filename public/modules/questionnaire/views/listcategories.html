@@ -1,0 +1,60 @@
+ <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+                       Questionnaire                       
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a href="/#/questionnaire">Questionnaire</a></li> 
+                         <li>Select Categories</li>                                            
+                    </ol>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                    <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>   
+                            
+                            
+                           <form role="form">
+                                  <input type='hidden' name='id' value="{{questionnaireID}}" ng-model="questionnaireID">
+                                    <table id="example1" class="table table-bordered table-striped" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                                     <colgroup>
+                                              <col width="5%"/>
+                                              <!-- <col width="5%"/> -->
+                                              <col width="95%"/>
+                                             <!--  <col width="10%"/>
+                                              <col width="20%"/>
+                                              <col width="20%"/> -->
+                                             
+                                            </colgroup>
+
+                                            <tr ng-repeat = "category in $data">
+                                                <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[category._id]" value="{{category._id}}" ng-change="toggleSelection(category._id)"/></td>
+                                                
+                                             <td data-title="'Category Name'" sortable="'category_name'" filter="{category_name:'text'}" align="left">{{category.category_name}}</td>
+                                            </tr>
+                                            
+                                    </table>   
+                                      </form>
+
+                                      <div class="box-footer">
+                                        <button type="button" class="btn btn-primary" ng-click="addCategoryToQuestionnaire()">Next: Select Questions</button>
+                                    </div>
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+
+
+            <!-- page script -->
+         <script type="text/ng-template" id="headerCheckbox.html">
+                <input type="checkbox" ng-model="checkboxes.checked" class="select-all" value="" data-ng-click="toggleSelection(0)"/>
+            </script>
+               

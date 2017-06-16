@@ -1,0 +1,37 @@
+<div class="form-box" id="login-box">
+            <div class="header">Register New Membership</div>
+
+            <form role="form">
+                <div class="body bg-gray">
+                
+                <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" ng-model = "firstname" placeholder="Enter first name"/>
+                    </div>
+                     <div class="form-group">
+                        <input type="text" name="name" class="form-control" ng-model = "lastname" placeholder="Enter last name"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" ng-model = "email" placeholder="Enter Email"/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control" placeholder="Enter username" ng-model="username"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Enter password" ng-model="password"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password2" class="form-control" placeholder="Re-enter password"/>
+                    </div>
+                </div>
+                <div class="footer">                    
+
+                    <button type="button" class="btn bg-olive btn-block" ng-click="addUser()">Sign me up</button>
+
+                    <a href="/#/login" class="text-center">I already have a membership</a>
+                </div>
+            </form>           
