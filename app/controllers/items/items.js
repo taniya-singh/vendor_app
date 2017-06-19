@@ -111,7 +111,6 @@ exports.additems = function(req,res){
  * a middleware controller to get all products
  */
 exports.updateItem=function(req,res){
-	console.log(req.body)
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
 		itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.name,p_price:req.body.price}},{multi:true},function(err,data){
 					if(err){
