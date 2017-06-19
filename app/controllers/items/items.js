@@ -111,14 +111,17 @@ exports.additems = function(req,res){
  * a middleware controller to get all products
  */
 exports.updateItem=function(req,res){
-      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
-		itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.name,p_price:req.body.price}},{multi:true},function(err,data){
-					if(err){
+	console.log("data",req.body);
+     var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
+		itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price}},{multi:true},function(err,data){
+						
+	if(err){
 						res.json("Error: "+err);
 					}
 					else{
-				 		outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successUpdatingItems, "data": data }, 
-
+					console.log("in uppdate",data)
+				 	var outputJSON = {'status':'success',
+					'messageId':200, 'message': constantObj.messages.successUpdatingItems, "data": data } 
 					res.json(outputJSON);
 					}
 				});
