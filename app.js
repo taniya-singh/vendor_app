@@ -100,7 +100,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*app.use('/', routes);
 app.use('/users', users);*/
 
-
+require('./routes/adminlogin')(app, express, passport);
 require('./routes/users')(app, express, passport);
 
 require('./routes/items')(app, express, passport);
