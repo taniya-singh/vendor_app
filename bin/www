@@ -9,11 +9,11 @@ var debug = require('debug')('taxiapp:server');
 var http = require('http');
 
 /**
- * Get port from environment and store in Express.
+ * Get portt from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4075');
-app.set('port', port);
+var portt = normalizeportt(process.env.portt || '4075');
+app.set('portt', portt);
 
 /**
  * Create HTTP server.
@@ -22,28 +22,28 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Listen on provided portt, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(portt);
 server.on('error', onError);
 server.on('listening', onListening);
 
 /**
- * Normalize a port into a number, string, or false.
+ * Normalize a portt into a number, string, or false.
  */
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+function normalizeportt(val) {
+  var portt = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(portt)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
-    // port number
-    return port;
+  if (portt >= 0) {
+    // portt number
+    return portt;
   }
 
   return false;
@@ -58,9 +58,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof portt === 'string'
+    ? 'Pipe ' + portt
+    : 'portt ' + portt;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -85,6 +85,6 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.port;
+    : 'portt ' + addr.portt;
   debug('Listening on ' + bind);
 }
