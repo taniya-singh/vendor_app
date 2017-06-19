@@ -1,4 +1,4 @@
-var baseUrl = "http://localhost:4075";
+var baseUrl = "http://52.39.212.226:4075";
 
 var webservices = {	
 
