@@ -15,11 +15,9 @@ var constantObj = require('./../../../constants.js');
 	console.log("ddd",req.body.password);
 	userObj.findOne({"email" : req.body.email, "password" : req.body.password},function(err,data){
 		
-		//var mySession="";
-		//mySession=req.body.email;
-		//var type=data.Type;
+		
 		if(err) {
-			console.log("err----->",err)
+		
 				 	switch(err.name) {
 				 	case 'ValidationError':
 				 	for(field in err.errors) {
@@ -35,12 +33,17 @@ var constantObj = require('./../../../constants.js');
 						
 		 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
 		 	res.jsonp(outputJSON);
-		  }//if
-	  else {
-	  	console.log("data--->",data)
-	   outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.LoginSuccess, 'data': data}; 
-	    res.jsonp(outputJSON);
-	  }
+		  }
+	  else{
+		  	if(data==null){
+		  	outputJSON = {'status': 'invalid credentials', 'messageId':400, 'message':"invalid credentials"}; 
+		    res.jsonp(outputJSON);
+		    }
+		    else {
+		    	outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully", 'data': data}; 
+		    	res.jsonp(outputJSON);
+		   	}
+	  	}
        
     });
   }
