@@ -1,4 +1,5 @@
-/node_modules
-/db.js
-/bin
+node_modules/
+db.js
+bin/www
+npm.debug.log
 
