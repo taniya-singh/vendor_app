@@ -8,6 +8,7 @@ var fs=require('fs');
 exports.additems = function(req,res){
 
 	//console.log(req.files[0].filename);
+	console.log("inside add items",req.body);
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorAddingItems};
 
 	 if (req.body.image != undefined)
@@ -20,8 +21,7 @@ exports.additems = function(req,res){
 					//console.log("herereee uploadImg",reqdata);
 					uploadSkillImg(reqdata,function(response){
 					
-						console.log("datga",req.body)
-		    itemsObj.update({_id :response._id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price}},{multi:true},function(err,data){
+				    itemsObj.update({_id :response._id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
 					if(err){
 						res.json("Error: "+err);
 					}
@@ -111,12 +111,15 @@ exports.additems = function(req,res){
  * a middleware controller to get all products
  */
 exports.updateItem=function(req,res){
+	console.log("data insise updateItem ",req.body)
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
-		itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.name,p_price:req.body.price}},{multi:true},function(err,data){
+		itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_count:req.body.p_count}},{multi:true},function(err,data){
 					if(err){
-						res.json("Error: "+err);
+						
+						//res.json("Error: "+err);
 					}
 					else{
+						console.log("bb",data)
 				 		outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successUpdatingItems, "data": data }, 
 
 					res.json(outputJSON);

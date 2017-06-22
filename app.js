@@ -104,6 +104,8 @@ require('./routes/adminlogin')(app, express, passport);
 require('./routes/users')(app, express, passport);
 
 require('./routes/items')(app, express, passport);
+require('./routes/signup')(app, express, passport);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -136,8 +138,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(4075,function(){
-  console.log("server listening at port 4075");
+app.listen(3000,function(){
+  console.log("server listening at port 3000");
 })
 
 module.exports = app;

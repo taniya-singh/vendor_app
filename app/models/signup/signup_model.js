@@ -4,12 +4,11 @@ var Schema = mongoose.Schema;
 
 
 var mySchema = new Schema({
-    p_name : String,
-    p_price: Number,
-    p_description: String,
-    p_count:Number,
+    firstname : String,
+    lastname: String,
+    email: String,
+    password:String,
     is_deleted:{type:Boolean, default:false},
-    image:String
 });
 
 mySchema.statics.load = function(id, cb) {
@@ -19,8 +18,8 @@ mySchema.statics.load = function(id, cb) {
     .exec(cb);
 };
 
-mySchema.plugin(uniqueValidator, {message: "item name already exists."});
+//mySchema.plugin(uniqueValidator, {message: "item name already exists."});
 
 
-var itemsObj=mongoose.model("items",mySchema);
-module.exports = itemsObj;
+var Users=mongoose.model("user",mySchema);
+module.exports = Users;
