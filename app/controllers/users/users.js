@@ -1,4 +1,6 @@
 var userObj = require('./../../models/users/users.js');
+var vendor = require('./../../models/vendordetails/vendordetails.js');
+
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
         
@@ -11,47 +13,110 @@ var constantObj = require('./../../../constants.js');
 		 */
 
     exports.login = function(req,res){
-	console.log("ddd",req.body.email);
-	console.log("ddd",req.body.password);
-	userObj.findOne({"email" : req.body.email, "password" : req.body.password},function(err,data){
-		
-		
-		if(err) {
-		
-				 	switch(err.name) {
-				 	case 'ValidationError':
-				 	for(field in err.errors) {
-				 		if(errorMessage == "") {
-				 			errorMessage = err.errors[field].message;
-				 			}
-				 	    else {							
-				 			errorMessage+=", " + err.errors[field].message;
-				 			}
-						}//for
-					break;
-				}//switch
-						
-		 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
-		 	res.jsonp(outputJSON);
-		  }
-	  else{
-		  	if(data==null){
-		  	outputJSON = {'status': 'invalid credentials', 'messageId':400, 'message':"invalid credentials"}; 
-		    res.jsonp(outputJSON);
-		    }
-		    else {
-		    	outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully", 'data': data}; 
-		    	res.jsonp(outputJSON);
-		   	}
-	  	}
-       
-    });
-  }
+	
+		userObj.findOne({"email" : req.body.email, "password" : req.body.password},function(err,data){
+			if(err) {
+			
+					 	switch(err.name) {
+					 	case 'ValidationError':
+					 	for(field in err.errors) {
+					 		if(errorMessage == "") {
+					 			errorMessage = err.errors[field].message;
+					 			}
+					 	    else {							
+					 			errorMessage+=", " + err.errors[field].message;
+					 			}
+							}//for
+						break;
+					}//switch
+							
+			 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
+			 	res.jsonp(outputJSON);
+			  }
+		  	else{
+				  	if(data==null){
+				  	outputJSON = {'status': 'invalid credentials', 'messageId':400, 'message':"invalid credentials"}; 
+				    res.jsonp(outputJSON);
+				    }
+				    else {
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
+					   	res.jsonp(outputJSON)
 
+				  //   	if(data.user_type=='vendor')
+				  //   	{
+				  //   		console.log("inside the vendor",data._id);
 
+						// 	var outputJSON = "";
+						// 	var vendorModelObj = {};
+						// 	vendorModelObj.vendor_id=data._id;
+						// 	vendorModelObj.vendor_email=data.email;
+						// 	vendorModelObj.vendor_password=data.password
+							
+							
+						// 	vendor.findOne({vendor_id:data._id},function(err,findData){
+						// 		console.log("findData",findData)
+						// 		if(err)
+						// 		{
 
+						// 		}	
+						// 		else
+						// 		{
+						// 			if(findData){
+										
+						// 				outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
+					 //   					res.jsonp(outputJSON)
+					 //   				}
+					 //   				else{
+						// 				vendor.(vendorModelObj).save(function(err, vendordata){
+						// 					if(err) {
+						// 						console.log("inside error")
+						// 						outputJSON = {'status': 'error', 'messageId':401, 'message':"error occured"}; 
+						//     				}
+						//     				else{
+						//     				console.log("inside else",vendordata)
+						//     				outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data};
+						//     				res.jsonp(outputJSON)
+						//     				}
+						// 				})
+						// 			}
+				  //   			}
+				  //   		})
+						// }
+					 //   	else
+					 //   	{
+					 //   		outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
+					 //   		res.jsonp(outputJSON)
 
+					 //   	}
+			  		}
+	      		}
+	  	});
+ } 	
+//update vendor information
 
+exports.update_vendor_info=function(req,res){
+	if(req.body){
+		userObj.findOne({_id:req.body._id},function(err,data){
+			if(err){
+				outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
+				res.jsonp(outputJSON)
+			}
+			else{
+				userObj.update({_id:data._id},{$set:{pickup_time:req.body.pickup_time,email:req.body.email,password:req.body.password}},function(err,updatedresponse){
+					if(err){
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
+						res.jsonp(outputJSON)
+					}
+					else{
+						console.log("inside responmse");
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
+					 	res.jsonp(outputJSON)
+					 }
+				})
+			}
+		})
+	}
+}
 
 exports.faceBookLogin = function(req, res) {
 	//console.log("in faceBookLogin");

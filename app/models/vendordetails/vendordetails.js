@@ -4,11 +4,11 @@ var Schema = mongoose.Schema;
 
 
 var mySchema = new Schema({
-    firstname : String,
-    lastname: String,
-    email: String,
-    password:String,
-    is_deleted:{type:Boolean, default:false},
+    vendor_id:{type:Schema.Types.ObjectId},
+    pickup_time:{type:Date,default: Date.now},
+    vendor_email: {type:String},
+    vendor_password:{type:String},
+    
 });
 
 mySchema.statics.load = function(id, cb) {
@@ -21,5 +21,5 @@ mySchema.statics.load = function(id, cb) {
 //mySchema.plugin(uniqueValidator, {message: "item name already exists."});
 
 
-var Users=mongoose.model("user",mySchema);
-module.exports = Users;
+var vendor=mongoose.model("vendordetails",mySchema);
+module.exports = vendor;

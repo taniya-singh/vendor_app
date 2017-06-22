@@ -105,7 +105,6 @@ require('./routes/adminlogin')(app, express, passport);
 require('./routes/users')(app, express, passport);
 
 require('./routes/items')(app, express, passport);
-require('./routes/signup')(app, express, passport);
 
 
 // catch 404 and forward to error handler

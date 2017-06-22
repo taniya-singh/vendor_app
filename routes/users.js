@@ -10,6 +10,7 @@ module.exports = function(app, express, passport) {
 	 // router.get('/userOne/:id', passport.authenticate('basic', {session:false}), userObj.findOne);
 	 // router.post('/bulkUpdate', passport.authenticate('basic', {session:false}), userObj.bulkUpdate);
 	  router.post('/login', userObj.login);
+	  router.post('/update_vendor_info',userObj.update_vendor_info);
 	  router.post('/register', userObj.register);
       router.post('/faceBookLogin',userObj.faceBookLogin);
 	

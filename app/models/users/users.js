@@ -13,8 +13,9 @@ var userSchema = new mongoose.Schema({
   is_deleted:{type:Boolean, default:false},
   facebook_id:Number,
   faceBookFlag:{type: Boolean, default:false},
-  type:String,
-  created_date:{type:Date, default: Date.now}  
+  user_type:{type:String,default:"vendor"},
+  created_date:{type:Date, default: Date.now}  ,
+  pickup_time:{type:String,default:"10:00-10:30am"}
 });
 
 userSchema.statics.load = function(id, cb) {
