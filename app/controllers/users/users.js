@@ -2,8 +2,11 @@ var userObj = require('./../../models/users/users.js');
 var vendor = require('./../../models/vendordetails/vendordetails.js');
 
 var mongoose = require('mongoose');
+var twilio=require('twilio');
 var constantObj = require('./../../../constants.js');
-        
+var accountSid = 'ACf8246b33d4d1342704dee12500c7aba2'; // Your Account SID from www.twilio.com/console
+var authToken = '53800350222c1f6974ce1617563aaaa5';   // Your Auth Token from www.twilio.com/console
+var client = new twilio(accountSid, authToken);   
         /**
 		 * Find role by id
 		 * Input: roleId
@@ -13,6 +16,7 @@ var constantObj = require('./../../../constants.js');
 		 */
 
     exports.login = function(req,res){
+    	console.log("login ", req.body)
 	
 		userObj.findOne({"email" : req.body.email, "password" : req.body.password},function(err,data){
 			if(err) {
@@ -465,3 +469,91 @@ exports.register = function(req, res) {
 		 	});
 		 	res.jsonp(outputJSON);
 		 }
+
+exports.reset_password=function(req,res){
+	
+	if(req.body._id!=null){
+				userObj.update({_id:req.body._id},{$set:{password:req.body.password}},function(err,updatedresponse){
+					if(err){
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"pasword not Updated"}; 
+						res.jsonp(outputJSON)
+					}
+					else{
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"password updated successfully","data":updatedresponse}; 
+					 	res.jsonp(outputJSON)
+					 }
+				})
+			}
+			else{
+				outputJSON = {'status': 'failure', 'messageId':400, 'message':"session expired"}; 
+				res.jsonp(outputJSON)
+				
+			}
+		}
+
+
+
+		 exports.forgetpassword=function(req,res){
+		 	
+		 console.log("inside forget password");
+		 userObj.findOne({phone_no : req.body.phone_no},function(err,data){
+		 		if(err){
+		 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error Occured"};
+					res.jsonp(outputJSON);
+				}
+		 		else{
+			 			
+			 			if(data==null){
+							outputJSON = {'status': 'failure', 'messageId':401, 'message':"Not a valid phone number"};
+							res.jsonp(outputJSON)	
+									
+			 			}
+			 			else{
+			 				console.log("not a validph",req.body.phone_no)
+			 				var url="http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
+							console.log("url",url)
+							client.messages.create({
+		    					body: 'Click on link to reset password '+ url,
+		    					to:  req.body.phone_no,  // Text this number
+		    					from: '(480) 526-9615' // From a valid Twilio number
+							},function(err,response)
+							{
+								if(err){
+									outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
+									res.jsonp(outputJSON)	
+									
+								}
+								else{
+								outputJSON={'status': 'success', 'messageId':200, 'message':"success"};
+								res.jsonp(outputJSON)
+								
+									
+								}
+							
+							})
+						}		
+		 			}
+		 })
+
+
+
+		 }
+
+
+/*exports.twilioTest = function(){
+
+console.log("m here i ")
+						client.messages.create({
+	    					body: 'Hello from Node',
+	    					to: '+918054218147',  // Text this number
+	    					from: '(480) 526-9615' // From a valid Twilio number
+						},function(err,response){
+							if(err){
+								console.log(err)
+							}else{
+								console.log("response",response)
+							}
+						})
+						
+
+}*/

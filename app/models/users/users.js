@@ -10,6 +10,7 @@ var userSchema = new mongoose.Schema({
   password: { type: String, required: 'Please enter the password.' },
   facebook: String,
   enable: {type: Boolean, default:false},
+  phone_no:{type:String, required: 'Please enter the phone number.'},
   is_deleted:{type:Boolean, default:false},
   facebook_id:Number,
   faceBookFlag:{type: Boolean, default:false},

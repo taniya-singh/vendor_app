@@ -21,6 +21,12 @@ angular.module('Authentication')
 			callback(response.data);
 		});
 	} 
+service.resetpassword = function(inputJsonString, callback) {
+	console.log("json data",inputJsonString)
+		communicationService.resultViaPost(webservices.resetpassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			callback(response.data);
+		});
+	} 
 
      return service;
 }])

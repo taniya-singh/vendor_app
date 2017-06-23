@@ -13,7 +13,10 @@ module.exports = function(app, express, passport) {
 	  router.post('/update_vendor_info',userObj.update_vendor_info);
 	  router.post('/register', userObj.register);
       router.post('/faceBookLogin',userObj.faceBookLogin);
-	
+      router.post('/forgetpassword',userObj.forgetpassword);
+      router.post('/reset_password',userObj.reset_password);
+
+
 
 	 app.use('/users', router);
 

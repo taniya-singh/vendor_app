@@ -1,5 +1,5 @@
 var baseUrl = "http://52.39.212.226:4075";
-//var baseUrl = "http://localhost:3000";
+//var baseUrl = "http://localhost:4075";
 
 var webservices = {	
 
@@ -71,8 +71,10 @@ var webservices = {
 	"updatePermission" : baseUrl + "/permissions/update",
 	"findOnePermission" : baseUrl + "/permissions/permission",
 	"bulkUpdatePermission" : baseUrl + "/permissions/bulkUpdate",
+	/******************taniya work*****************/
 
 
+	"resetpassword":baseUrl+"/users/reset_password"
 
 }
 
