@@ -132,6 +132,32 @@ exports.updateItem=function(req,res){
      
 
  }
+exports.removeItem=function(req,res){
+     var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
+		itemsObj.findOneAndRemove({_id :req.body._id},function(err,data){
+						
+					if(err){
+						res.json("Error: "+err);
+					}
+					else{
+						if(data==null)
+						{
+							var outputJSON = {'status':'failure',
+							'messageId':400, 'message': "Invalid _id ,try again", "data": data } 
+							res.json(outputJSON);		
+						}
+						else{
+							var outputJSON = {'status':'success',
+							'messageId':200, 'message': "Removed successfully", "data": data } 
+							res.json(outputJSON);	
+						}
+				 	
+					}
+				});
+		
+     
+
+ }
 
 
 /**
@@ -153,7 +179,23 @@ exports.updateItem=function(req,res){
      
 
  }
+ /*List items to be viewed on customer screen */
+exports.customerListItem = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+      console.log("inside customerListItem");
+		itemsObj.find({},function(err,data){
+					if(err){
+						res.json("Error: "+err);
+					}
+					else{
+				 		outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+					res.json(outputJSON);
+					}
+				});
+		
+     
 
+ }
 
 
  
