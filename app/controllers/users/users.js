@@ -42,7 +42,7 @@ var client = new twilio(accountSid, authToken);
 				  	outputJSON = {'status': 'invalid credentials', 'messageId':400, 'message':"invalid credentials"}; 
 				    res.jsonp(outputJSON);
 				    }
-				    else {
+				    else {console.log("inside correrect login");
 						outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
 					   	res.jsonp(outputJSON)
 
