@@ -4,14 +4,10 @@ var Schema = mongoose.Schema;
 
 
 var mySchema = new Schema({
-    p_name : String,
-    p_price: Number,
-    p_description: String,
-    p_count:Number,
-    vendor_id:{type:Schema.Types.ObjectId},
-    is_deleted:{type:Boolean, default:false},
-    image:String
-});
+    device_id : {type:String},
+    device_type: {type:String},
+    user_id:{type:Schema.Types.ObjectId}
+    });
 
 mySchema.statics.load = function(id, cb) {
     this.findOne({
@@ -23,13 +19,5 @@ mySchema.statics.load = function(id, cb) {
 mySchema.plugin(uniqueValidator, {message: "item name already exists."});
 
 
-var itemsObj=mongoose.model("items",mySchema);
-module.exports = itemsObj;
-
-
-
-
-
-
-
-
+var device=mongoose.model("devices",mySchema);
+module.exports = device;

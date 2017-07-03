@@ -22,7 +22,7 @@ angular.module('Authentication')
 		});
 	} 
 service.resetpassword = function(inputJsonString, callback) {
-	console.log("json data",inputJsonString)
+	console.log("json data from service",inputJsonString)
 		communicationService.resultViaPost(webservices.resetpassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});

@@ -42,14 +42,15 @@ taxiapp.controller('loginController', ['$scope', '$rootScope', '$location', 'Aut
 	// }
 
 	$scope.resetpassword=function(){
-		console.log($routeParams.id)
-		console.log("inside reset password");
-var json={"_id":$routeParams.id,"password":$scope.newpassword}
-		AuthenticationService.resetpassword(json,function(err,res){
-			if(err){
-
-			}else{
-				alert('Password updated successfully')
+		console.log("hanjiiii",$routeParams.id)
+		var json={"_id":$routeParams.id,"password":$scope.newpassword}
+		AuthenticationService.resetpassword(json,function(res){
+			if(res){
+				console.log("res",res)
+				if(res.messageId==200)
+				alert('Password updated successfully,Redirect to your application')
+				else			
+				alert('Try again Later');
 			}
 		})
 

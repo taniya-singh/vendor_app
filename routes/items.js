@@ -8,6 +8,8 @@ module.exports = function(app, express) {
 	 router.get('/listItem', itemsObj.listItem);
 	 router.get('/customerListItem',itemsObj.customerListItem);
 	 router.post('/removeItem',itemsObj.removeItem);
+	 router.post('/item_listing_for_user',itemsObj. item_listing_for_user);
+
 	app.use('/items', router);
 
 }

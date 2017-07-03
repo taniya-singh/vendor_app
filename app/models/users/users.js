@@ -3,24 +3,21 @@ var uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var userSchema = new mongoose.Schema({
+  vendor_id: {type: mongoose.Schema.Types.ObjectId, ref: 'vendor'},
   first_name: {type:String},
   last_name: {type:String},
-  email: { type: String ,required: 'Please enter the email.'},
-  user_name: {type: String, required: 'Please enter the username.'},
-  password: { type: String, required: 'Please enter the password.' },
-  facebook: String,
+  email: { type: String},
+  password: { type: String},
+  gender:{type:String,default:"Female"},
   enable: {type: Boolean, default:false},
-  phone_no:{type:String, required: 'Please enter the phone number.'},
-  latitude:{type:String,default:"30.708394"},
-  longitude:{type:String,default:"76.702293"},
-  restraunt_name:{type:String,default:"JW MARRIOT"},
+  phone_no:{type:String},
   is_deleted:{type:Boolean, default:false},
-  facebook_id:Number,
-  faceBookFlag:{type: Boolean, default:false},
-  user_type:{type:String,default:"vendor"},
-  created_date:{type:Date, default: Date.now}  ,
-  pickup_time:{type:String,default:"10:00-10:30am"}
-});
+  facebook_id:{type:String},
+  google_id:{type:Number},
+  loginType:{type: Number, default:1},// 1 simple,2 facebook, 3 google
+  user_type:{type:String,default:"customer"},
+  created_date:{type:Date, default: Date.now}
+ });
 
 userSchema.statics.load = function(id, cb) {
     this.findOne({
@@ -50,10 +47,6 @@ userSchema.path("email").validate(function(value) {
    return validateExpression.test(value);
 }, "Please enter a valid email address.");
 
-userSchema.path("user_name").validate(function(value) {
-  validateExpression = /^[a-zA-Z0-9]*$/;
-  return validateExpression.test(value);
-}, "Please enter a valid user name"); 
 
 
 userSchema.plugin(uniqueValidator, {message: "Username already exists."});

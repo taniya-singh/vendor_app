@@ -12,8 +12,9 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 
 var adminLoginObj = require('./app/models/adminlogins/adminlogin.js');
 var constantObj = require('./constants.js');
-
-
+var vendor = require('./app/models/admin/signup_vendor.js');
+var userObj = require('./app/models/users/users.js');
+var NodeGeocoder = require('node-geocoder');
 /*var routes = require('./routes/index');
 var users = require('./routes/users');*/
 
@@ -51,34 +52,89 @@ function findByUsername(username, fn) {
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
 
-  passport.use('adminLogin',new LocalStrategy(
+  passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
       
-      adminLoginObj.findOne({username: username}, function(err, adminuser) {
-       
+      vendor.findOne({vendor_email: username}, function(err, adminuser) {
         if(err) {
-               return done(err);
+
+               return done(err,{"message":"Error"});
         }
         
         if(!adminuser) {
-           console.log("in adminuser");
-          return done(null, false);
+          return done(null, {"message":"Invalid username"});
         }
 
         if(adminuser.password != password) {
-              return done(null, false);
+              return done(null, {"message":"Invalid password"});
         }
-
-
         //returning specific data
-        return done(null, {id: adminuser._id});
-
+        return done(null, {id: adminuser._id,
+                    vendor_name: adminuser.vendor_name,
+                    vendor_email: adminuser.vendor_email,
+                    phone_no: adminuser.phone_no,
+                    vendor_address: adminuser.vendor_address,
+                    pickup_time: adminuser.pickup_time,     
+                    user_type: adminuser.user_type,            
+                    longitude: adminuser.longitude,
+                    latitude: adminuser.latitude
+        });
       });
     }
   ));
 
-passport.serializeUser(adminLoginObj.serializeUser);
-passport.deserializeUser(adminLoginObj.deserializeUser);
+passport.serializeUser(function(adminLoginObj,done){
+  done(null,adminLoginObj)
+})
+passport.deserializeUser(function(adminLoginObj,done){ 
+  done(null,adminLoginObj)
+})
+
+//userlogin
+passport.use('userLogin',new LocalStrategy(
+    function(username, password, done) {
+      console.log("inside user passport");    
+      userObj.findOne({email: username}, function(err, user) {
+        if(err) {
+          console.log("errrr")
+               return done(err,{"message":"Error"});
+        }
+        
+        if(!user) {
+console.log("ggg")
+
+          return done(null, {"message":"Invalid username"});
+        }
+
+        if(user.password != password) {
+          console.log("t6tt")
+              return done(null,{"message":"Invalid password"});
+        }
+        //returning specific data
+        return done(null, {_id: user._id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    phone_no: user.phone_no,
+                    user_type: user.user_type,            
+                    facebook_id:user.facebook_id,
+                    loginType:user.loginType
+        });
+      });
+    }
+  ));
+
+passport.serializeUser(function(userLoginObj,done){
+  done(null,userLoginObj)
+})
+passport.deserializeUser(function(userLoginObj,done){ 
+  done(null,userLoginObj)
+})
+
+
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -104,6 +160,7 @@ app.use('/users', users);*/
 require('./routes/adminlogin')(app, express, passport);
 require('./routes/users')(app, express, passport);
 require('./routes/items')(app, express, passport);
+require('./routes/admin')(app, express, passport);
 
 
 // catch 404 and forward to error handler
