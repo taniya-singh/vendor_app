@@ -114,7 +114,7 @@ exports.updateItem=function(req,res){
 
      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorUpdatingItems};
 		itemsObj.update({_id :req.body.id},
-			{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_count:req.body.p_count}},
+			{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_count:req.body.p_count,p_description:req.body.p_description}},
 			{multi:true},function(err,data){
 						
 	if(err){
