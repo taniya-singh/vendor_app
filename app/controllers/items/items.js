@@ -163,6 +163,7 @@ uploadSkillImg = function(data, callback) {
 /**
  * a middleware controller to get all products
  */
+
 exports.updateItem = function(req, res) {
 
 	var outputJSON = {
