@@ -73,6 +73,7 @@ var LocalStrategy = require('passport-local').Strategy;
                     vendor_name: adminuser.vendor_name,
                     vendor_email: adminuser.vendor_email,
                     phone_no: adminuser.phone_no,
+                    password:adminuser,password,
                     vendor_address: adminuser.vendor_address,
                     pickup_time: adminuser.pickup_time,     
                     user_type: adminuser.user_type,            

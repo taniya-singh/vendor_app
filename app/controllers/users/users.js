@@ -46,7 +46,7 @@ var client = new twilio(accountSid, authToken);
                 }
                 details.facebook_id = req.body.facebook_id;
                 details.loginType=2;
-                userObj.findOne({facebook_id:details.facebook_id},function(err, user) {
+                userObj.findOne({facebook_id:req.body.facebook_id},function(err, user) {
                     if (err) {
                         console.log("err",err)
                         res.jsonp({ "status": 'faliure',
@@ -82,13 +82,14 @@ var client = new twilio(accountSid, authToken);
                                                     'status': 'success',
                                                     'messageId': 200,
                                                     'message': 'User logged in successfully',
-                                                    "userdata": adduser
+                                                    "data": adduser
                                                 });
                                             }
                                         })
                                     }
                                 })
                             }else {
+
                                 var dev = {};
                                 dev.user_id = user._id;
                                 dev.device_id = req.body.device_id;
@@ -105,7 +106,7 @@ var client = new twilio(accountSid, authToken);
                                             'status': 'success',
                                             'messageId': 200,
                                             'message': 'Facebook credentials already exists',
-                                            "userdata": user
+                                            "data": user
                                         });
                                     }
                                 })
@@ -154,13 +155,14 @@ exports.update_vendor_info=function(req,res){
 				res.jsonp(outputJSON)
 			}
 			else{
-				userObj.update({_id:data._id},{$set:{pickup_time:req.body.pickup_time,email:req.body.email,password:req.body.password}},function(err,updatedresponse){
+                console.log("req.body",req.body)
+				userObj.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"email":req.body.email,"password":req.body.password}},function(err,updatedresponse){
 					if(err){
 						outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
 						res.jsonp(outputJSON)
 					}
 					else{
-						console.log("inside responmse");
+						console.log("inside responmse",updatedresponse);
 						outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
 					 	res.jsonp(outputJSON)
 					 }
@@ -545,11 +547,13 @@ exports.register = function(req, res) {
 		 }
 
 exports.reset_password=function(req,res){
+    console.log("reset password wich",req.body._id);
+    console.log("new pass",req.body.password.newpassword)
 	if(req.body._id!=null){
 
-				userObj.update({_id:req.body._id},{$set:{password:req.body.password}},function(err,updatedresponse){
+				userObj.update({_id:req.body._id},{$set:{"password":req.body.password.newpassword}},function(err,updatedresponse){
 					if(err){
-						outputJSON = {'status': 'error', 'messageId':400, 'message':"pasword not Updated"}; 
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"Password not updated, Try again later"}; 
 						res.jsonp(outputJSON)
 					}
 					else{
@@ -577,7 +581,7 @@ exports.reset_password=function(req,res){
                 }
                 else{  
                         if(data==null){
-                            outputJSON = {'status': 'failure', 'messageId':401, 'message':"Not a valid phone number"};
+                            outputJSON = {'status': 'failure', 'messageId':401, 'message':"Please enter a vali phone no"};
                             res.jsonp(outputJSON)                
                         }
                         else{
@@ -594,7 +598,7 @@ exports.reset_password=function(req,res){
                                     res.jsonp(outputJSON)           
                                 }
                                 else{
-                                outputJSON={'status': 'success', 'messageId':200, 'message':"message send successfully"};
+                                outputJSON={'status': 'success', 'messageId':200, 'message':"Reset password link has been send to your phone. Kindly reset."};
                                 res.jsonp(outputJSON)       
                                 }
                             })
@@ -603,41 +607,43 @@ exports.reset_password=function(req,res){
                })
          }
          if(req.body.email)
-         {
+         {console.log("inside email")
             userObj.findOne({email : req.body.email},function(err,data){
                 if(err){
                     outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error Occured"};
                     res.jsonp(outputJSON);
                 }else{
-                    console.log("inside send mail")
+                    if(data==null){
+                        outputJSON={'status': 'failure', 'messageId':401,'message':"Please enter a valid Email ID"};
+                        res.jsonp(outputJSON)    
+                    }else
+                    {
                     var mailDetail="smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
                     var resetUrl = "http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
-                    var transporter = nodemailer.createTransport(constantObj.messages.mailDetail);
-                        console.log("2");
+                    var transporter = nodemailer.createTransport(mailDetail);
+                        
                         var mailOptions = {
-                            from: "taniya.singh@smartdatainc.net",
+                            from: "abc",
                             to: req.body.email,
                             subject: 'Reset password',
-                            html: 'Welcome to MunchApp!Your request for reset password is os being proccessed .Please Follow the link to RESET YOUR PASSWORD'
+                            html: 'Welcome to MunchApp!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
                         };
                     transporter.sendMail(mailOptions, function(error, response) {
-                        console.log("transporter mail send",response)
-                    if (error) {
-                        console.log("err",error)
-                         outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
-                        res.jsonp(outputJSON)    
-    		        } 
-                    else{
-                        var response = {
-                        "status": 'success',
-                        "messageId": 200,
-                        "message": "Mail send",
-                        "Sent on":"4:32 pm",
-                        "From":"Taniya Singh"}  
-                        res.jsonp(response)
-                    }
+                        if (error) {
+                            console.log("err",error)
+                             outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
+                            res.jsonp(outputJSON)    
+                        }else{
+                            var response = {
+                            "status": 'success',
+                            "messageId": 200,
+                            "message": "Reset password link has been send to your Mail. Kindly reset.",
+                            "Sent on":Date(),
+                            "From":"Taniya Singh"}  
+                            res.jsonp(response)
+                        }
                     })  
-            
+                    }        
 		         }
             })
         }

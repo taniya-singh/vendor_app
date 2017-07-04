@@ -97,36 +97,32 @@ var data = res.req.user;
         res.jsonp(outputJSON)
             
         }
-		// vendor.findOne({"vendor_email" : req.body.vendor_email, "password" : req.body.password},function(err,data){
-		// 	if(err) {
-			
-		// 			 	switch(err.name) {
-		// 			 	case 'ValidationError':
-		// 			 	for(field in err.errors) {
-		// 			 		if(errorMessage == "") {
-		// 			 			errorMessage = err.errors[field].message;
-		// 			 			}
-		// 			 	    else {							
-		// 			 			errorMessage+=", " + err.errors[field].message;
-		// 			 			}
-		// 					}//for
-		// 				break;
-		// 			}//switch
-							
-		// 	 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
-		// 	 	res.jsonp(outputJSON);
-		// 	  }
-		//   	else{
-		// 		  	if(data==null){
-		// 		  	outputJSON = {'status': 'invalid credentials', 'messageId':400, 'message':"invalid credentials"}; 
-		// 		    res.jsonp(outputJSON);
-		// 		    }
-		// 		    else {
-		// 				outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
-		// 			   	res.jsonp(outputJSON)
-		// 	  		}
-	 //      		}
-	 //  	});
  } 	
 
+/*update vendor information*/
 
+exports.update_vendor_info2=function(req,res){
+	console.log("inside vendor ")
+	if(req.body._id){
+		vendor.findOne({_id:req.body._id},function(err,data){
+			if(err){
+				outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
+				res.jsonp(outputJSON)
+			}
+			else{
+                console.log("req.body",req.body)
+				vendor.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"vendor_email":req.body.vendor_email,"password":req.body.password,"vendor_name":req.body.vendor_name,"vendor_address":req.body.vendor_address,"phone_no":req.body.phone_no}},function(err,updatedresponse){
+					if(err){
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
+						res.jsonp(outputJSON)
+					}
+					else{
+						console.log("inside responmse",updatedresponse);
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
+					 	res.jsonp(outputJSON)
+					 }
+				})
+			}
+		})
+	}
+}

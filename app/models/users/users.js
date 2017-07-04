@@ -11,6 +11,7 @@ var userSchema = new mongoose.Schema({
   gender:{type:String,default:"Female"},
   enable: {type: Boolean, default:false},
   phone_no:{type:String},
+  pickup_time:{type:String,default:"10:00-10:30am"},
   is_deleted:{type:Boolean, default:false},
   facebook_id:{type:String},
   google_id:{type:Number},
