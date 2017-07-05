@@ -5,7 +5,10 @@ var fs=require('fs');
 var emailService = require('./../email/emailService.js');
 /* Vendor sign up form  */
 
+
+
 exports.add = function(req, res) {
+
 
 	var vendorobj = {};
 		vendorobj = req.body;
