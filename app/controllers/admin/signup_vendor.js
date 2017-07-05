@@ -33,7 +33,7 @@ exports.signupVendor = function(req, res) {
 					vendorobj.zipcode=addressdetails[0].zipcode;
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
-					vendorobj.geo=[addressdetails[0].longitude,addressdetails[0].latitude]
+					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
 				console.log("dfgfgfgh",vendorobj)
 					vendor(vendorobj).save(vendorobj, function(err, data) { 
 						if(err) {

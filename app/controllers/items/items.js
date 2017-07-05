@@ -8,155 +8,85 @@ var constantObj = require('./../../../constants.js');
 var fs = require('fs');
 
 
-
-exports.additems = function(req, res) {
-
-	console.log("inside add items", req.body);
-	var outputJSON = {
-		'status': 'failure',
-		'messageId': 203,
-		'message': constantObj.messages.errorAddingItems
-	};
-
-	if (req.body.image != undefined) {
-		reqdata = {};
-		reqdata.image = req.body.image;
-		reqdata.p_name = req.body.p_name;
-		reqdata.vendor_id = req.body.vendor_id;
-		reqdata.p_price = req.body.p_price;
-		reqdata.p_description = req.body.p_description;
-		reqdata.p_count = req.body.p_count;
-		uploadSkillImg(reqdata, function(response) {
-			vendor.find({
-				_id: req.body.vendor_id
-			}, function(err, vendetail) {
-				if (err) {
-					outputJSON = {
-							'status': 'failure',
-							'messageId': 400,
-							'message': "vendor added successfully"
-						},
-						res.json(outputJSON);
-				} else {
-					console.log("vendetail", vendetail)
-					if (vendetail == "") {
-
-						outputJSON = {
-								'status': 'failure',
-								'messageId': 400,
-								'message': "Vendor doesnot exists"
-							},
-							res.json(outputJSON);
-
-					} else {
-						itemsObj(reqdata).save(req.body, function(err, data) {
-							if (err) {
-								res.json("Error: " + err);
-							} else {
-								outputJSON = {
-										'status': 'success',
-										'messageId': 200,
-										'message': "vendor added successfully",
-										"data": data
-									},
-									res.json(outputJSON);
+ /*Add item along with the valid vendor ID*/
+exports.additems = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':400, 'message': constantObj.messages.errorAddingItems};
+	 if (req.body.image != undefined){	
+					reqdata={};
+					reqdata.image=req.body.image;
+					reqdata.p_name=req.body.p_name;
+					reqdata.vendor_id=req.body.vendor_id;
+					reqdata.p_price=req.body.p_price;
+					reqdata.p_description=req.body.p_description;
+					reqdata.p_count=req.body.p_count;
+					uploadSkillImg(reqdata,function(response){
+						vendor.find({_id:req.body.vendor_id},function(err,vendetail){
+							if(err){
+								console.log(err)
+					 			outputJSON = {'status':'failure', 'messageId':400, 'message':"error in vendor_id"}, 
+					 			res.json(outputJSON);
+							}else
+							{
+								if(vendetail==""){
+									outputJSON = {'status':'failure', 'messageId':400, 'message': "Vendor doesnot exists"}, 
+					 				res.json(outputJSON);	
+								}else{
+									itemsObj.update({_id :response._id},{$set:{p_name:req.body.p_name,vendor_id:req.body.vendor_id,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
+										if(err){
+											res.json("Error: "+err);
+										}
+										else{
+					 						outputJSON = {'status':'success', 'messageId':200, 'message':"item added successfully", "data":data }, 
+					 						res.json(outputJSON);
+										}
+									});
+								}
 							}
-						});
-					}
-				}
-			})
-		});
-	}
-}
+						})
+					});
+			}
+}		
 
 
 /* ~~~~~~~~~~~~~UPloading image ~~~~~~~~~~~~~~~~~~~~~~~*/
 
-uploadSkillImg = function(data, callback) {
-	console.log("data", data)
-
-	var photoname = Date.now() + ".png";
-	var imageName = __dirname + "/../../../public/images/upload/" + photoname;
-
-
-	if (data.image.indexOf("base64,") != -1) {
-
-		var Data = data.image.split('base64,');
-
-		var ext = Data[0].split('/');
-		var format = ext[1].replace(';', '');
-
-		var photoname = Date.now() + "." + format;
-		var imageName = __dirname + "/../../../public/images/upload/" + photoname;
-
-
-		var base64Data = Data[1];
-		var base64Data = base64Data;
-
-
-		// console.log("hgs",base64Data)
-	} else {
-		var base64Data = data.image.base64;
-	}
-
-	//console.log("asdasd",base64Data)
-	if (base64Data != undefined) {
-
-		fs.writeFile(imageName, base64Data, 'base64', function(err) {
-
-			if (err) {
-				console.log(err);
-				callback("Failure Upload");
-
-
-			} else {
-				var updateField = {};
-
-				updateField = {
-					'image': photoname
-				};
-
-
-
-				var item = new itemsObj({
-
-					image: photoname
-				});
-				item.save(function(err, data) {
-					console.log(data)
-					if (data) {
-						//console.log(err);
-						callback(data);
+uploadSkillImg= function(data,callback){
+	console.log("inside function image");
+		      var photoname = Date.now() + ".png";
+		      var imageName = __dirname+"/../../../public/images/upload/"+photoname;
+	      
+		     if(data.image.indexOf("base64,")!=-1){	
+		         var Data = data.image.split('base64,'); 
+		         var ext=Data[0].split('/');		          
+		         var format= ext[1].replace(';','');        
+		         var photoname = Date.now() + "."+format;
+		         var imageName = __dirname+"/../../../public/images/upload/"+photoname;
+		         var base64Data = Data[1];
+		         var base64Data = base64Data;     
+		     }else{
+		     	var base64Data = data.image.base64;
+		     }
+		     if(base64Data!=undefined){
+		     	 fs.writeFile(imageName, base64Data, 'base64', function(err) {
+				        if (err) {
+				         callback("Failure Upload");
+				        }else{
+				         var updateField={};
+						 updateField={'image':photoname};	  
+                       	 var item=new itemsObj({
+					      image:photoname
+				   		});
+                 item.save(function(err,data){
+					console.log("***********",data)
+					if(data) {
+					callback(data);
 					}
-
-				});
-
-
-				// itemsObj.insert(updateField,{w: 1},function(err,res){
-				// 	console.log(err);
-				// 	if(err){
-				// 		console.log(err);
-				// 		callback("Success Uploaded");
-				// 	}
-
-				// });
-
-
-			}
-		});
-		// }else{
-		// 	callback("Image  is too large.");
-		// }
-
-
-	} else {
-		callback("wrongFormat");
-	}
-	//console.log("main data ",base64Data);
-	// var base64Data =data.image.base64; 
-
-
-
+				 });  
+				        }
+				      });
+		     }else{
+		     	callback("wrongFormat");
+		     }			       
 }
 
 
@@ -165,43 +95,45 @@ uploadSkillImg = function(data, callback) {
  */
 
 exports.updateItem = function(req, res) {
+	var reqdata={};
 
 	var outputJSON = {
 		'status': 'failure',
 		'messageId': 203,
 		'message': constantObj.messages.errorUpdatingItems
 	};
-	itemsObj.update({
-		_id: req.body.id
-	}, {
-		$set: {
-			p_name: req.body.p_name,
-			p_price: req.body.p_price,
-			p_count: req.body.p_count,
-			p_description :req.body.p_description
-		}
-	}, {
-		multi: true
-	}, function(err, data) {
+		
+					reqdata={};
+					reqdata.image=req.body.image;
+					reqdata.p_name=req.body.p_name;
+					reqdata.p_price=req.body.p_price;
+					reqdata.p_description=req.body.p_description;
+					reqdata.p_count=req.body.p_count;
+						itemsObj.find({_id:req.body.id},function(err,itemdetail){
+							if(err){
+								console.log(err)
+					 			outputJSON = {'status':'failure', 'messageId':400, 'message':"error"}, 
+					 			res.json(outputJSON);
+							}else
+							{
+								if(itemdetail!="")
+								{
+									if(req.body.image != undefined){
 
-		if (err) {
-			res.json("Error: " + err);
-		} else {
-			console.log("in uppdate", data)
-			var outputJSON = {
-				'status': 'success',
-				'messageId': 200,
-				'message': constantObj.messages.successUpdatingItems,
-				"data": data
-			}
+									}
 
-			res.json(outputJSON);
-		}
-	});
+								
+								
+								}else{
+										outputJSON = {'status':'failure', 'messageId':400, 'message':"Wrong id"}, 
+					 					res.json(outputJSON);
+								}
+
+							}
+						})
+				}
 
 
-
-}
 exports.removeItem = function(req, res) {
 	var outputJSON = {
 		'status': 'failure',
@@ -297,7 +229,10 @@ exports.customerListItem = function(req, res) {
 exports.item_listing_for_user = function(req, res) {
 	console.log("body", req.body)
 	if (req.body != null) {
-		console.log("inside")
+		console.log("inside",req.body)
+		var lat=req.body.latitude;
+		var long=req.body.longitude;
+		console.log("lat and long",lat,long)
 			/*var  details =[req.body.latitute,req.body.longitude]
 	console.log("details",details)
 	 	
@@ -316,7 +251,7 @@ exports.item_listing_for_user = function(req, res) {
 			$geoNear: {
 				near: {
 						type: "Point",
-						coordinates: [req.body.latitute, req.body.longitude]
+						coordinates: [lat,long]
 					},
 				distanceField: "dist.calculated",
 				maxDistance: 250000,
@@ -331,7 +266,6 @@ exports.item_listing_for_user = function(req, res) {
 				as: "item_detail"
 			}
 		}], function(err, items) {
-			//console.log("sdrgrsdfr", err)
 			if (err) {
 				console.log("err",err)
 				outputJSON = {
@@ -342,6 +276,7 @@ exports.item_listing_for_user = function(req, res) {
 					res.json(outputJSON);
 			} else {
 				console.log("item_detail", items)
+				//console.log("count",);
 				outputJSON = {
 						'status': 'success',
 						'messageId': 200,
