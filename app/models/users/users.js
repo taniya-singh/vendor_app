@@ -3,19 +3,22 @@ var uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var userSchema = new mongoose.Schema({
+  vendor_id: {type: mongoose.Schema.Types.ObjectId, ref: 'vendor'},
   first_name: {type:String},
   last_name: {type:String},
-  email: { type: String , unique: true, required: 'Please enter the email.'},
-  user_name: {type: String, required: 'Please enter the username.'},
-  password: { type: String, required: 'Please enter the password.' },
-  facebook: String,
+  email: { type: String},
+  user_name: {type: String},
+  password: { type: String},
+  gender:{type:String,default:"Female"},
   enable: {type: Boolean, default:false},
+  phone:{type:String},
   is_deleted:{type:Boolean, default:false},
-  facebook_id:Number,
-  faceBookFlag:{type: Boolean, default:false},
-  type:String,
-  created_date:{type:Date, default: Date.now}  
-});
+  facebook_id:{type:Number},
+  google_id:{type:Number},
+  loginType:{type: Number, default:1},// 1 simple,2 facebook, 3 google
+  user_type:{type:String,default:"customer"},
+  created_date:{type:Date, default: Date.now}
+ });
 
 userSchema.statics.load = function(id, cb) {
     this.findOne({

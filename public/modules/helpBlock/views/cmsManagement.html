@@ -1,0 +1,87 @@
+
+<style type="text/css">
+    .package{margin: 10px 0px 0px 0px}
+    
+    .spaceBT10 { padding-bottom: 10px; }
+    p.requiredClass{margin:0px 0px 0px 0px ;}
+    .sp{margin:10px 0px 0px 0px }
+
+</style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header" >
+        <h1>
+                Content Management System
+
+
+
+                    </h1>
+        <ol class="breadcrumb">        
+            <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a ui-sref="cmslisting">CMS</a></li>
+            <li class="active">Add cms</li>
+           
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+            <div class="box box-primary">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                       <!--  <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a data-toggle="tab">Edit Profile</a></li> -->
+                    </ul>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                             <div class="package">
+                                <form role="form" name="myform" class="spaceTP10 clearfix">
+                                    <div class="col-sm-3">Title<span class="requiredClass">*</span></div>
+                                    <div class="col-sm-9 spaceBT10">
+                                        <input type="text" name="title" class="form-control" ng-model="information.title" ng-pattern="/^[a-z ,.'-]+$/i" required capitalize-first  ng-minlength="2" ng-maxlength="30" maxlength="31">
+
+
+                                       <div class="help-block" ng-messages="myform.title.$error" ng-if="myform.title.$touched">
+                                        <p ng-message="minlength" class="requiredClass">Title is too short.</p>
+                                        <p ng-message="maxlength" class="requiredClass">Title is too long.</p>
+                                        <p ng-message="required" class="requiredClass">Title is required.</p>
+                                        <p ng-message="pattern" class="requiredClass">Use a-z or A-Z</p>
+                                    </div>
+                                    </div>
+
+                                    <div class="col-sm-3">Identifier
+                                        <span class="requiredClass">*</span>
+                                    </div>
+                                    <div class="col-sm-9 spaceBT10">
+                                        <input type="text" name="identifier" class="form-control" ng-model="information.identifier" ng-pattern="/^[a-z ,.'-]+$/i" required   ng-minlength="2" ng-maxlength="30" maxlength="31" ng-disabled="updateButton">
+                                        <div class="help-block" ng-messages="myform.identifier.$error" ng-if="myform.identifier.$touched">
+                                            <p ng-message="minlength" class="requiredClass"> Identifier is too short.</p>
+                                            <p ng-message="maxlength" class="requiredClass">Identifier is too long.</p>
+                                            <p ng-message="required" class="requiredClass">Identifier is required.</p>
+                                            <p ng-message="pattern" class="requiredClass">Use a-z or A-Z</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">Description</div>
+                                    <div class="col-sm-9">
+                                         <textarea name="editor2"></textarea>
+                                    </div>
+                                   
+                                    <div class="col-sm-3">&nbsp;</div>
+                                    <div class="col-sm-9 sp">
+        								<div class="btn-right">
+                                        <button class="btn btn-primary" ng-if="submitButton" ng-click="submit()" ng-disabled="myform.$invalid" >Submit</button>
+                                        <button class="btn btn-primary" ng-if="updateButton" ng-click="update()" ng-disabled="myform.$invalid">Update</button>
+                                        </div>
+        						    </div>
+                                </form>
+                              </div>      
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            </div>
+        </div>
+    </section>
+

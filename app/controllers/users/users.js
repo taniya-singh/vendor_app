@@ -1,7 +1,12 @@
 var userObj = require('./../../models/users/users.js');
+var vendor = require('./../../models/vendordetails/vendordetails.js');
+var device=require('./../../models/devices/devices.js')
 var mongoose = require('mongoose');
+var twilio=require('twilio');
 var constantObj = require('./../../../constants.js');
-        
+var accountSid = 'ACf8246b33d4d1342704dee12500c7aba2'; // Your Account SID from www.twilio.com/console
+var authToken = '53800350222c1f6974ce1617563aaaa5';   // Your Auth Token from www.twilio.com/console
+var client = new twilio(accountSid, authToken);   
         /**
 		 * Find role by id
 		 * Input: roleId
@@ -10,143 +15,264 @@ var constantObj = require('./../../../constants.js');
 		 * It uses load function which has been define in role model after that passes control to next calling function.
 		 */
 
-    exports.login = function(req,res){
-	console.log("ddd",req.body.email);
-	console.log("ddd",req.body.password);
-	userObj.findOne({"email" : req.body.email, "password" : req.body.password},function(err,data){
-		
-		//var mySession="";
-		//mySession=req.body.email;
-		//var type=data.Type;
-		if(err) {
-			console.log("err----->",err)
-				 	switch(err.name) {
-				 	case 'ValidationError':
-				 	for(field in err.errors) {
-				 		if(errorMessage == "") {
-				 			errorMessage = err.errors[field].message;
-				 			}
-				 	    else {							
-				 			errorMessage+=", " + err.errors[field].message;
-				 			}
-						}//for
-					break;
-				}//switch
-						
-		 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
-		 	res.jsonp(outputJSON);
-		  }//if
-	  else {
-	  	console.log("data--->",data)
-	   outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.LoginSuccess, 'data': data}; 
-	    res.jsonp(outputJSON);
-	  }
-       
-    });
-  }
+    exports.userlogin = function(req,res){
+    	console.log("login ", res.req.user)
+		var data = res.req.user;
+    	var outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
+		res.jsonp(outputJSON)
+	  	};
+	
+//update vendor information
 
-
-
-
-
-
-exports.faceBookLogin = function(req, res) {
-	//console.log("in faceBookLogin");
-	var errorMessage = '';
-	var messages = '';
-	//console.log(req.body);
-	req.body.faceBookFlag = true;
-	req.body.password="123213213";
-	if (req.body.facebook_id) {
-		userObj.findOne({
-			facebook_id: req.body.facebook_id
-		}, function(err, data1) {
-			if (err) {
-				outputJSON = {
-					'status': 'failure',
-					'messageId': 401,
-					'message': 'Error' + errorMessage
-				};
-				res.status(200).jsonp(outputJSON);
-			} else {
-				//console.log("data1", data1);
-				if (data1 == null) {
-					console.log(req.body);
-					var saveData = req.body;
-					userObj(saveData).save(saveData, function(err, data) {
-								if (err) {
-									console.log("err.code", err);
-									if (err) {
-										outputJSON = {
-											'status': 'failure',
-											'messageId': 401,
-											'message': '401' 
-										};
-									}  else if (err.errors.email) {
-										outputJSON = {
-											'status': 'failure',
-											'messageId': 401,
-											'message': 'Please enter Email'
-										};
-									}
-									res.status(200).jsonp(outputJSON)
-								} else {
-									
-									// saveSetting(data);
-									 login(data, res);
-									
-								}
-							})
-					
-				} else {
-					
-					login(data1, res);
-				}
+exports.update_vendor_info=function(req,res){
+	if(req.body){
+		userObj.findOne({_id:req.body._id},function(err,data){
+			if(err){
+				outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
+				res.jsonp(outputJSON)
+			}
+			else{
+				userObj.update({_id:data._id},{$set:{pickup_time:req.body.pickup_time,email:req.body.email,password:req.body.password}},function(err,updatedresponse){
+					if(err){
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
+						res.jsonp(outputJSON)
+					}
+					else{
+						console.log("inside responmse");
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
+					 	res.jsonp(outputJSON)
+					 }
+				})
 			}
 		})
-	} else {
-		var response = {
-			"status": 'failure',
-			"messageId": 401,
-			'message': ''	
-		};
-		res.status(200).json(response);
 	}
-
 }
 
-function login(req,res){
-console.log("daa",req)
-userObj.findOne({"email" : req.email, "password" : req.password},function(err,data){
-		
-		//var mySession="";
-		//mySession=req.body.email;
-		//var type=data.Type;
-		if(err) {
-			console.log("err----->",err)
-				 	switch(err.name) {
-				 	case 'ValidationError':
-				 	for(field in err.errors) {
-				 		if(errorMessage == "") {
-				 			errorMessage = err.errors[field].message;
-				 			}
-				 	    else {							
-				 			errorMessage+=", " + err.errors[field].message;
-				 			}
-						}//for
-					break;
-				}//switch
-						
-		 	outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
-		 	res.jsonp(outputJSON);
-		  }//if
-	  else {
-	  	console.log("data--->",data)
-	   outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.LoginSuccess, 'data': data}; 
-	    res.jsonp(outputJSON);
-	  }
-       
-    });
+exports.faceBookLogin = function(req, res) {
+
+	if (req.body.login_type == 2) {
+        if (!req.body.facebook_id) {
+            res.jsonp({
+                'status': 'failure',
+                'messageId': 401,
+                'message': 'Facebook Authentication Failed.'
+            });
+        }
+        else {
+            var details = {};
+            
+            if (req.body.first_name) {
+                details.first_name = req.body.first_name;
+            }
+            if (req.body.last_name) {
+                details.last_name = req.body.last_name;
+            }
+            if (req.body.phone_no) {
+                details.phone_no = req.body.phone_no;
+            }
+            if (req.body.email) {
+                details.email = req.body.email;
+            }  
+            details.login_type = req.body.login_type;
+            details.facebook_id = req.body.facebook_id;
+            userObj.findOne({facebook_id:details.facebook_id},function(err, user) {
+                if (err) {
+                    var response = {
+                        "status": 'faliure',
+                        "messageId": "401",
+                        "message": "Sorry, Problem to login with facebook."
+                    };
+                    res.status(401).json(response);
+                } 
+                else {
+                    if (user == null) {
+                        console.log("create new credentials",details)
+                        var dateTime = Math.floor(Date.now() / 1000);
+                        var profilePic = dateTime + "_profile_pic.jpg";
+                            userObj(details).save(req.body,function(err, adduser) {
+                                if (err) {
+                                    res.jsonp({
+                                        'status': 'failure',
+                                        'messageId': 401,
+                                        'message': 'User is not found'
+                                    });
+                                } else {
+                                    var data = {};
+                                    data.user_id = adduser._id;
+                                    data.device_id = req.body.device_id;
+                                    data.device_type = req.body.device_type;
+                                    device(device).save(req.body,function(err, devicedata) {
+                                        if (err) {
+                                            res.jsonp({
+                                                'status': 'faliure',
+                                                'messageId': 401,
+                                                'message': 'Either device_id or device_type is not available!'
+                                            });
+                                        } else {
+                                            res.jsonp({
+                                                'status': 'success',
+                                                'messageId': 200,
+                                                'message': 'User logged in successfully',
+                                                "userdata": adduser
+                                            });
+                                        }
+                                    })
+                                }
+                            })
+                    } else {
+                        console.log("use old")
+                        var dev = {};
+                        dev.user_id = user._id;
+                        dev.device_id = req.body.device_id;
+                        dev.device_type = req.body.device_type;
+                        device(dev).save(function(err, data) {
+                            if (err) {
+                                res.jsonp({
+                                    'status': 'faliure',
+                                    'messageId': 401,
+                                    'message': 'Either device_id or device_type is not available!'
+                                });
+                            } else {
+                                res.jsonp({
+                                    'status': 'success',
+                                    'messageId': 200,
+                                    'message': 'Facebook credentials already exists',
+                                    "userdata": user
+                                });
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    } else if (req.body.login_type == "Google") {
+
+        if (!req.body.id) {
+            res.jsonp({
+                'status': 'faliure',
+                'messageId': 401,
+                'message': 'Google Id required!'
+            });
+        } else {
+            var details = {};
+            if (req.body.firstname) {
+                details.firstname = req.body.firstname;
+            }
+            if (req.body.phone) {
+                details.phone = req.body.phone;
+            }
+            if (req.body.dob) {
+                details.dob = req.body.birthday;
+            }
+            if (req.body.user_type) {
+                details.user_type = req.body.user_type;
+            }
+            details.login_type = req.body.login_type;
+            details.google_id = req.body.id;
+            details.email = req.body.email;
+            details.gender = req.body.gender;
+            if (req.body.profile_path) {
+                details.image_path = req.body.profile_path;
+            }
+
+            userObj.findOne(details.google_id, details.user_type, details.email, function(err, user) {
+
+                if (err) {
+
+                    var response = {
+                        "status": 'faliure',
+                        "messageId": "401",
+                        "message": "Google Authentication Failed!"
+                    };
+                    res.status(401).json(response);
+                } else {
+                    var pro = paths.resolve(appDir + "./../public/images/profile_pic/");
+                    if (user == null) {
+                        var dateTime = Math.floor(Date.now() / 1000);
+                        var profilePic = dateTime + "_profile_pic.jpg";
+                        download(details.image_path, pro + "/" + profilePic, function() {
+                            var host = req.get('host');
+                            var protocall = req.protocol;
+
+                            if (details.image_path) {
+                                details.image_path = protocall + '://' + host + '/images/profile_pic/' + profilePic;
+                            }
+
+                            userObj.insert(details, function(err, user) {
+                                if (err) {
+                                    return done(null, false);
+                                } else {
+                                    req.session.user = user;
+                                    var data = {};
+                                    data.userId = user._id;
+                                    data.device_id = req.body.device_id;
+                                    data.device_type = req.body.device_type;
+                                    userObj.device(data, function(err, data) {
+                                            if (err) {
+                                                res.jsonp({
+                                                    'status': 'faliure',
+                                                    'messageId': 401,
+                                                    'message': 'Something went wrong!'
+                                                });
+                                            } else {
+                                                res.jsonp({
+                                                    'status': 'success',
+                                                    'messageId': 200,
+                                                    'message': 'User logged in successfully',
+                                                    "userdata": user
+                                                });
+                                            }
+                                        })
+                                        //res.jsonp({'status':'success', 'messageId':200, 'message':'User logged in successfully',"userdata":user});
+
+                                }
+                            })
+                        });
+                    } else {
+
+                        //if (user.google_id == req.body.id && user.user_type != req.body.user_type) {
+                        //    if (user.user_type == "Host") {
+                        //        res.jsonp({ 'status': 'faliure', 'messageId': 401, 'message': 'User is already registered as Local Pro with this Id.' });
+                        //    } else {
+                        //        res.jsonp({ 'status': 'faliure', 'messageId': 401, 'message': 'User is already registered as Traveler with this Id.' });
+                        //    }
+                        //} else {
+                        req.session.user = user;
+                        var data = {};
+                        data.userId = user._id;
+                        data.device_id = req.body.device_id;
+                        data.device_type = req.body.device_type;
+                        userObj.device(data, function(err, data) {
+                                if (err) {
+                                    res.jsonp({
+                                        'status': 'faliure',
+                                        'messageId': 401,
+                                        'message': 'Either device_id or device_type is not available!'
+                                    });
+                                } else {
+                                    res.jsonp({
+                                        'status': 'success',
+                                        'messageId': 200,
+                                        'message': 'User logged in successfully',
+                                        "userdata": user
+                                    });
+                                }
+                            })
+                            //res.jsonp({ 'status': 'success', 'messageId': 200, 'message': 'User logged in successfully', "userdata": user });
+                            //}
+                    }
+
+                }
+            })
+        }
+
+    } else {
+        res.jsonp({
+            'status': 'faliure',
+            'messageId': 401,
+            'message': 'something wrong here'
+        });
+    }
 }
 
 exports.register = function(req, res) {
@@ -304,33 +430,45 @@ exports.register = function(req, res) {
 
 		console.log(req.body);
 		userModelObj = req.body;
-		userObj(userModelObj).save(req.body, function(err, data) { 
-			if(err) {
-				switch(err.name) {
-					case 'ValidationError':
-					
-						for(field in err.errors) {
-							if(errorMessage == "") {
-								errorMessage = err.errors[field].message;
-							}
-							else {							
-								errorMessage+=", " + err.errors[field].message;
-							}
-						}//for
-					break;
-				}//switch
-				
+		userObj.findOne({email:req.body.email},function(err,user){
+			console.log("user",user)
+			if(err){
 				outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
-			}//if
-			else {
-				outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userSuccess, 'data': data};
 			}
-
-			res.jsonp(outputJSON);
-
-		});
-
-	}
+			else{
+				if(user ==null){
+					console.log("inside if");
+					userObj(userModelObj).save(req.body, function(err, data) { 
+						if(err) {
+							switch(err.name) {
+								case 'ValidationError':
+								
+									for(field in err.errors) {
+										if(errorMessage == "") {
+											errorMessage = err.errors[field].message;
+										}
+										else {							
+											errorMessage+=", " + err.errors[field].message;
+										}
+									}//for
+								break;
+							}//switch
+							
+							outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
+						}//if
+						else {
+							outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userSuccess, 'data': data};
+						}
+					res.jsonp(outputJSON);
+					});					
+				}
+				else{
+					console.log("inside else")
+					outputJSON = {'status': 'failure', 'messageId':401, 'message':"user already exists"};
+					res.jsonp(outputJSON);
+				}
+			}})
+		}
 
 
 		 /**
@@ -397,3 +535,106 @@ exports.register = function(req, res) {
 		 	});
 		 	res.jsonp(outputJSON);
 		 }
+
+exports.reset_password=function(req,res){
+	
+	if(req.body._id!=null){
+				userObj.update({_id:req.body._id},{$set:{password:req.body.password}},function(err,updatedresponse){
+					if(err){
+						outputJSON = {'status': 'error', 'messageId':400, 'message':"pasword not Updated"}; 
+						res.jsonp(outputJSON)
+					}
+					else{
+						outputJSON = {'status': 'success', 'messageId':200, 'message':"password updated successfully","data":updatedresponse}; 
+					 	res.jsonp(outputJSON)
+					 }
+				})
+			}
+			else{
+				outputJSON = {'status': 'failure', 'messageId':400, 'message':"session expired"}; 
+				res.jsonp(outputJSON)
+				
+			}
+		}
+
+
+
+		 exports.forgetpassword=function(req,res){
+		 	
+		 console.log("inside forget password");
+		 userObj.findOne({phone_no : req.body.phone_no},function(err,data){
+		 		if(err){
+		 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error Occured"};
+					res.jsonp(outputJSON);
+				}
+		 		else{
+			 			
+			 			if(data==null){
+							outputJSON = {'status': 'failure', 'messageId':401, 'message':"Not a valid phone number"};
+							res.jsonp(outputJSON)	
+									
+			 			}
+			 			else{
+			 				console.log("not a validph",req.body.phone_no)
+			 				var url="http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
+							console.log("url",url)
+							client.messages.create({
+		    					body: 'Click on link to reset password '+ url,
+		    					to:  req.body.phone_no,  // Text this number
+		    					from: '(480) 526-9615' // From a valid Twilio number
+							},function(err,response)
+							{
+								if(err){
+									outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
+									res.jsonp(outputJSON)	
+									
+								}
+								else{
+								outputJSON={'status': 'success', 'messageId':200, 'message':"success"};
+								res.jsonp(outputJSON)
+								
+									
+								}
+							
+							})
+						}		
+		 			}
+		 })
+
+
+
+		 }
+
+
+/*exports.twilioTest = function(){
+
+console.log("m here i ")
+						client.messages.create({
+	    					body: 'Hello from Node',
+	    					to: '+918054218147',  // Text this number
+	    					from: '(480) 526-9615' // From a valid Twilio number
+						},function(err,response){
+							if(err){
+								console.log(err)
+							}else{
+								console.log("response",response)
+							}
+						})
+						
+
+}*/
+
+
+exports.userList = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+
+        userObj.find({},function(err,data){
+                    if(err){
+                        res.json("Error: "+err);
+                    }
+                    else{
+                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                    res.json(outputJSON);
+                    }
+                });
+    }

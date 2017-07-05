@@ -1,0 +1,333 @@
+
+
+  <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div></div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header" data-ng-init="getAllDetail()">
+        <h1>
+           Admin Profile
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+            
+            <li>Admin Profile</li>                      
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content" data-ng-init="findOne()">
+
+        <div class="row">
+          <div class="col-md-3">
+
+          <!-- Profile Image -->
+          <div class="box box-primary">
+            <div class="box-body box-profile">
+            <i class="fa fa-camera pull-right cursur" ng-click="editImage()" title="Edit"></i>
+              <img ng-show="displayImage" class="profile-user-img img-responsive img-circle" src="assets/upload/adminProfile/{{displayImage}}" alt="User profile picture" ng->
+              <img ng-hide="displayImage" class="profile-user-img img-responsive img-circle" src="images/user_default.jpg" alt="User profile picture" >
+
+              <h3 class="profile-username text-center">{{displayName}}</h3>
+
+              <!-- <p class="text-muted text-center">Software Engineer</p> -->
+
+              <ul class="list-group list-group-unbordered">
+                <!-- <li class="list-group-item">
+                  <b>New Jobs</b> <a class="pull-right" href="#" >12</a>
+                </li> -->
+                <li class="list-group-item">
+                  <b>New members</b> <a class="pull-right" href="#/users" >{{totalUser}}</a>
+                </li>
+                <!-- <li class="list-group-item">
+                  <b>Revenue</b> <a class="pull-right">$13,287</a>
+                </li> -->
+              </ul>
+
+              <!-- <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a> -->
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+          <!-- About Me Box -->
+          <!--<div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">About Me</h3>
+            </div>
+            
+            <div class="box-body">
+              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+
+              <p class="text-muted">
+                B.S. in Computer Science from the University of Tennessee at Knoxville
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+
+              <p class="text-muted">Malibu, California</p>
+
+              <hr>
+
+              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+
+              <p>
+                <span class="label label-danger">UI Design</span>
+                <span class="label label-success">Coding</span>
+                <span class="label label-info">Javascript</span>
+                <span class="label label-warning">PHP</span>
+                <span class="label label-primary">Node.js</span>
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+            </div>
+            
+          </div>-->
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+            <div class="col-md-9">
+             <div class="box box-primary">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs cursurul">
+                        <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a data-toggle="tab">Profile</a></li>
+                        <li ng-if="admin._id" ng-class="{'active': activeTab === 1} " data-ng-click="moveTabContents(1)"><a   data-toggle="tab">Change Password</a></li>
+                         <!-- <li ng-if="admin._id" ng-class="{'active': activeTab === 2} " data-ng-click="moveTabContents(2)"><a   data-toggle="tab">Payment Setting</a></li> -->
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <div class="tab-pane" ng-class="{'active': activeTab === 0}" id="tab_1">
+                          <div ng-class="alerttype" ng-show="showmessage1">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                         <div class="row">
+                            <div class="col-xs-12">
+                                <div class="">
+                                    <div class="box-body table-responsive">  
+                                                           
+                                        <form role="form" name="adminFrom">
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <label>First Name</label><span class="red">*</span>
+                                                    <input type="hidden" data-ng-model="admin.preusername"  required>
+                                                    <input type="text" class="form-control"  name='firstname' data-ng-model="admin.firstname"  required ng-maxlength="15" ng-pattern="/^[a-zA-Z']*$/" maxlength="15">
+
+                                                    <div class="errormsg"ng-show="adminFrom.firstname.$dirty && adminFrom.firstname.$invalid">
+                                                    
+                                                   <span ng-show="adminFrom.firstname.$error.required">Please enter first name.</span>
+<span ng-show="adminFrom.firstname.$error.maxlength">This field can be at most 15 characters long.</span>
+<span ng-show="adminFrom.firstname.$error.pattern">Please enter valid first name.</span>
+                                                    </div>                                          <label>Last Name</label><span class="red">*</span>
+                                                    <input type="text" class="form-control"  name='lastname' data-ng-model="admin.lastname"  required ng-maxlength="15" ng-pattern="/^[a-zA-Z']*$/" maxlength="15">
+
+                                                    <div class="errormsg"ng-show="adminFrom.lastname.$dirty && adminFrom.lastname.$invalid">
+                                                    <span ng-show="adminFrom.lastname.$error.required">Please enter last name.</span>
+<span ng-show="adminFrom.lastname.$error.maxlength">This field can be at most 15 characters long.</span>
+<span ng-show="adminFrom.lastname.$error.pattern">Please enter valid last name.</span>
+                                                    </div>
+                                                    <label>Email</label><span class="red">*</span>
+                                                    <input type="email" class="form-control"  name='email' data-ng-model="admin.email"  required>
+                                                    <div class="errormsg"
+                                                    ng-show="adminFrom.email.$submitted || adminFrom.email.$touched"
+                                                    >
+                                                   <span ng-show="adminFrom.email.$error.required">Please enter email.</span>
+                                                    <span ng-show="adminFrom.email.$error.email">Please enter valid email address.</span>
+                                                    </div>
+                                                    <label>Username</label>
+                                                    <input type="text" class="form-control"  name='username' data-ng-model="admin.username"  required disabled="true">
+                                                    
+                                                    
+                                                </div>
+                                                <div class="box-footer clearfix no-border">
+                                                  
+                                                  <button data-ng-if="admin._id" class="btn btn-primary" data-ng-click="saveProfile()" ng-disabled="adminFrom.$invalid">Save</button>
+
+                                                  <a href="/#/" class="btn m_lft5 btn-primary">Cancel</a>
+                                              </div>
+                                          </div>
+
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div><!-- /.tab-pane -->
+                  <div   class="tab-pane"  ng-class="{'active': activeTab === 1}" id="tab_2">
+                  <div ng-class="alerttype" ng-show="showmessage2">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                    <div class="box-body table-responsive">
+                                       
+                                                                    
+                                    <form method="post" name="frm" role="form" enctype="multipart/form-data">
+                                    <div class="box-body">
+                                        <div class="form-group">
+
+                                           <label>Old Password</label><span class="red">*</span>
+                                            <input type="password" name="oldpwd" class="form-control" ng-model="admin.oldpwd" required>
+                                            <div class="errormsg"ng-show="frm.oldpwd.$dirty && frm.oldpwd.$invalid">
+<span ng-show="frm.newpwd.$error.required">Please enter old password.</span>
+</div>  
+
+                                            <label>New Password</label><span class="red">*</span>
+                                            <input type="password" name="newpwd" class="form-control" ng-model="admin.newpwd"  required ng-minlength="5" ng-maxlength="15">
+                                            
+                                              <div class="errormsg"ng-show="frm.newpwd.$dirty && frm.newpwd.$invalid">
+<span ng-show="frm.newpwd.$error.required">Please enter new password.</span>
+<span ng-show="frm.newpwd.$error.minlength">Please enter at least 5 characters.</span>
+<span ng-show="frm.newpwd.$error.maxlength">Please enter at least 15 characters.</span>
+</div>  
+                                            
+                                                                                    
+                                    </div><!-- /.box-body -->
+                                    <div class="form-group">
+                                            <label>Confirm Password</label><span class="red">*</span>
+                                            <input type="password" name="cnfpwd" class="form-control" ng-model="admin.cnfpwd"  compare-to="admin.newpwd">
+                                            <div class="errormsg">
+
+<span  ng-show="frm.cnfpwd.$invalid && !frm.cnfpwd.$pristine" >Passwords don't match. </span> 
+</div>  
+
+                                            
+                                                                                    
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="button" class="btn btn-primary" ng-click="changePwd()" ng-disabled="frm.$invalid">Change Password</button>
+                                        <a href="/#/" class="btn m_lft5 btn-primary">Cancel</a>
+                                    </div>
+                                </form>              
+                                  
+                                </div>
+                                              
+                  </div><!-- /.tab-pane -->
+              </div><!-- /.tab-content -->
+
+              <div   class="tab-pane"  ng-class="{'active': activeTab === 2}" id="tab_3">
+                  <div ng-class="alerttype" ng-show="showmessage3">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                    <div class="box-body table-responsive">
+                                       
+                                                                    
+                                    <form method="post" name="frm" role="form" enctype="multipart/form-data">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                           <label>Stripe secret key</label><span class="red">*</span>
+                                            <input type="text" name="secret_key" class="form-control" ng-model="admin.stripe_credential.secret_key" required  ng-maxlength="50">
+                                            <div class="errormsg"ng-show="frm.secret_key.$dirty && frm.secret_key.$invalid" >
+<span ng-show="frm.secret_key.$error.required">Please enter stripe secret key.</span>
+<span ng-show="frm.secret_key.$error.maxlength">This field can be at most 15 characters long.</span>
+
+</div>  
+                                           <label>Commission from job poster (%)</label><span class="red">*</span>
+                                            <input type="number" name="job_poster" class="form-control" ng-model="admin.admin_commission.job_poster" required ng-pattern="/^\d{0,2}(\.\d{1,2})?$/" step="0.01" maxlength="" >
+                                            <div class="errormsg"ng-show="frm.job_poster.$dirty && frm.job_poster.$invalid">
+<span ng-show="frm.job_poster.$error.required">Please enter job poster commision.</span>
+<span ng-show="frm.job_poster.$error.number">Please enter numeric value.</span>
+<span ng-show="frm.job_poster.$error.pattern">This field can't have more than  2 decimal places.</span>
+
+</div>  
+
+                                          <label>Commission from job finder (%)</label><span class="red">*</span>
+                                            <input type="number" name="job_finder" class="form-control" ng-model="admin.admin_commission.job_finder" required ng-pattern="/^\d{0,2}(\.\d{1,2})?$/" step="0.01" >
+                                            <div class="errormsg"ng-show="frm.job_finder.$dirty && frm.job_poster.$invalid" >
+<span ng-show="frm.job_finder.$error.required">Please enter job finder commision.</span>
+<span ng-show="frm.job_finder.$error.number">Please enter numeric value.</span>
+<span ng-show="frm.job_finder.$error.pattern">This field can't have more than 2 decimal places.</span>
+</div>  
+  
+                                            
+                                                                                    
+                                    </div><!-- /.box-body -->
+                                    
+                                    <div class="box-footer">
+                                        <button type="button" class="btn btn-primary" ng-click="updateCommision()" ng-disabled="frm.$invalid" >Update</button>
+                                        
+                                    </div>
+                                </form>              
+                                  
+                                </div>
+                                              
+                  </div><!-- /.tab-pane -->
+              </div><!-- /.tab-content -->
+          </div>
+      </div>
+      </div>
+      </div>
+
+  </section><!-- /.content -->
+          <div id="myModal" class="modal fade " role="dialog">
+  <div class="modal-dialog" >
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title ng-binding">
+Profile Image
+
+</h4>
+      </div>
+      <form method="post" name="profileImg" role="form" enctype="multipart/form-data"> 
+      <div class="modal-body">
+
+      <div class="row">
+        <div class="col-xs-4">
+          <label>Select Image</label>
+                                             <div class="form-group">
+                                                <div class="btn btn-default btn-file">
+                                                  <i class="fa fa-paperclip"></i> Attachment
+                                                  
+
+                                                  
+                                                  <input type='file' name="proImg" ng-model='image' base-sixty-four-input  accept="image/*" 
+                                                  type="file" id="fileInput" required>
+                                                  
+                                                </div>
+                                                <div class="errormsg" ng-show="imageError">
+                                            <span>{{imageError}}</span>
+                                            
+                                            </div>
+                                                <div class="errormsg"ng-show="profileImg.proImg.$dirty && profileImg.proImg.$invalid">
+                                            <span ng-show="profileImg.proImg.$error.required">Please select image.</span>
+                                            
+                                            </div>
+                                                <p class="help-block">Max. 2MB</p>
+                                              </div>
+        </div>
+        <div class="col-xs-8">
+          <img class="profile-user-img img-responsive img-circle" alt="Image"  src="{{myCroppedImage}}" ng-show="myImage!=''" style="height: 160px;width: 160px;" >
+        </div>
+      </div> 
+      <div class="row">
+      <div class="col-xs-12">
+       <div class="cropArea" >
+                                    <img-crop image="myImage" area-type="circle"  result-image="myCroppedImage"  init-max-area="true" result-image-size='{w: 120,h: 120}' ></img-crop>
+                                    </div>
+        </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+      <button id="upload-btn" type="button" class="btn btn-primary"  ng-disabled="profileImg.$invalid"  ng-click="updateImage()">Upload</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      </form> 
+    </div>
+    </div>
+    </div>
+<style type="text/css">
+  .cropArea {
+  /*background: #E4E4E4;*/
+  overflow: hidden;
+  width:500px;
+  height:250px;
+}
+
+</style>

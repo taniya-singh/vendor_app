@@ -1,4 +1,12 @@
-<aside class="right-side">
+<style type="text/css">
+    .thumb {display: inline-block;width: 170px;height: 170px;margin: 5px;border: 3px solid #c99;background-position: center center;background-size: cover;border-radius: 100px;}
+</style>
+        <!-- <div ng-if="loader==true" >
+        <div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div>
+        </div> -->
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
@@ -12,94 +20,222 @@
                 </section>
                 <!-- Main content -->
 
-                <section class="content" data-ng-init="findOne()">
-            <div class="row">
+                <section class="content">
+            <div class="row ">
             <div class="col-md-12">
+            <div class="box box-primary">
+
                 <!-- Custom Tabs -->
                 <div class="nav-tabs-custom">
-                    <ul class="nav nav-tabs">
-                        <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a data-toggle="tab">User</a></li>
-                        <li  data-ng-if="user._id" ng-class="{'active': activeTab === 1}" data-ng-click="moveTabContents(1)"><a   data-toggle="tab">Role</a></li>
+                    <ul class="nav nav-tabs cursurul">
+                        <li ng-class="{'active': activeTab === 0}"><a data-toggle="tab">User</a></li>
+                        
                     </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane" ng-class="{'active': activeTab === 0}" id="tab_1">
-                         <div class="row">
-                            <div class="col-xs-12">
-                                <div class="box">
-                                    <div class="box-body table-responsive">  
-                                        <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>                    
-                                        <form role="form">
-                                        <div class="box-body">
-                                        <div class="form-group">
-                                            <label>First Name</label>
-                                            <input type="text" class="form-control" ng-model="user.first_name" placeholder="Enter Firstname">
-
-                                            <label>Last Name</label>
-                                            <input type="text" class="form-control" i ng-model="user.last_name" placeholder="Enter Lastname" >
-
-                                            <label>Email</label>
-                                            <input type="text" class="form-control"  ng-model="user.email" placeholder="Enter Email">
-
-                                            <label>Username</label>
-                                            <input type="text" class="form-control"  ng-model="user.user_name" placeholder="Enter Username">
-
-                                            <label>Password</label>
-                                            <input type="password" class="form-control"  ng-model="user.password" placeholder="Enter password" >
-
-                                            <label>Display Name</label>
-                                            <input type="text" class="form-control" ng-model="user.display_name" placeholder="Enter display name">
-
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" name='enable'  ng-model='user.enable' checked="{{enableChecked}}"/>
-                                                    Enable
-                                                </label>
-                                            </div>                                          
+                    
+                    <div class="tab-pane" ng-class="{'active': activeTab === 0}" id="tab_1">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div ng-class="alerttype" ng-show="showmessage">
+                             <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}
                                     </div>
-                                     
-
-                                   
-                                </form>              
+                                </div>
+                    <div class="col-xs-12">
+                      <div class="">
+                         <div class="box-body table-responsive">  
+                            <div class="box-body">
+                              <form name="userForm" class="clear" novalidate onsubmit="window.scroll(0, 0); return true;">
+                                <div class="col-md-7">
+                                  <div ng-show="userForm.$invalid && userForm.$submitted" class="alert alert-danger alert-margin">
+                                     <strong>Error!</strong> Please fill the required fields.
                                   </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div><!-- /.tab-pane -->
-                  <div  class="tab-pane"  ng-class="{'active': activeTab === 1}" id="tab_2">
-                    <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
-                      <table class="table">
-                  <thead>
-                <tr>
-                <td class="stdc"><b>Used</b></td>
-                <td style="width:100%;"><b>Role</b></td>
-                <td class="stdc"><b>Status</b></td>
-            </tr>
-        </thead>
-        <tbody>
+ <div class="box-body">
+              <div class="form-group">
+                 <label>Name:<span class="requiredClass">*</span></label>
+                  <input type="text" class="form-control" ng-model="user.name" placeholder="Enter vendor name" ng-minlength="3" ng-maxlength="20" maxlength="21" name="name" ng-pattern="/^[a-z ,.'-]+$/i" required capitalize-first>
+            
+            <div class="validationError" ng-messages="userForm.vendorname.$error" ng-show=" userForm.vendorname.$error.required && userForm.vendorname.$touched &&
+             userForm.vendorname.$invalid " role="alert">
+             <span style="color:red" ng-message="required">Name is required</span>
+           </div>
 
-            <tr data-ng-repeat="role in roleData" on-finish-render class="pointer {{checkStatus(role.used)}}" data-ng-click="selectRole(role._id)">
-                <td class="set{{role.used}}"><i ng-show="role.used" class="fa fa-thumbs-up fa-2x" title="Used on this Objective"></i><i ng-hide="role.used" class="fa fa-thumbs-down fa-2x" title="Not on this Objective"></i></td>
-                <td class="stdl set{{role.is_deleted==0}}" style="width:100%;">{{role.name}}</td>
-                <td class="set{{!role.is_deleted}} stdc smallertext">
-                    <i ng-show="role.is_deleted==0" class="fa fa-thumbs-up fa-2x active-data" title="Active"></i>
-                    <i ng-hide="role.is_deleted==0" class="fa fa-thumbs-down fa-2x inactive-data" title="Disabled"></i>
-                    <div ng-show="role.is_deleted==0">Active</div>
-                    <div ng-hide="role.is_deleted==0">Disabled</div>
-                </td>
-            </tr>
-    </table>
-                                             
-                  </div><!-- /.tab-pane -->
-              </div><!-- /.tab-content -->
+              <div class="validationError" ng-messages="userForm.name.$error" ng-show="
+               userForm.name.$error.pattern && (!userForm.name.$pristine || userForm.$submitted)" role="alert">
+              <span style="color:red" ng-message="pattern">Enter valid character </span>
           </div>
-          <div class="box-footer clearfix no-border">
-                                                  <button data-ng-if="!user._id" class=" btn m_lft5  btn-warning pull-right" data-ng-click="updateData(0)">Save & Continue</button>
-                                                   <button data-ng-if="user._id && activeTab != 1" class="btn m_lft5 btn-warning pull-right" data-ng-click="updateData(0)">Save & Continue</button>
-                                                  <button data-ng-if="user._id" class="btn m_lft5 btn-warning pull-right" data-ng-click="updateData(1)">Save & Exit</button>
-                                              </div>
+
+           <div class="validationError"  ng-show="userForm.name.$error.maxlength && userForm.name.$dirty"">
+             <span style="color:red">Name maximum length 20</span>
+          </div>
+             <!-- <label>Last Name:<span class="requiredClass">*</span></label>
+           <input type="text" class="form-control" ng-model="user.last_name" placeholder="Enter last name" name="lastname" ng-pattern="/^[a-z ,.'-]+$/i" ng-minlength="3" ng-maxlength="20" maxlength="20"  capitalize-first>
+           <p style="color:red" ng-show="userForm.lastname.$error.required && userForm.lastname.$touched" class="help-block">Last Name is required.</p>
+
+          <div class="validationError" ng-messages="userForm.lastname.$error" ng-show="
+          userForm.lastname.$error.pattern && (!userForm.lastname.$pristine || userForm.$submitted)" role="alert">
+          <span style="color:red" ng-message="pattern">Enter valid character </span>
+       </div> -->
+                                                     
+        <label ng-if="!updateButton">Email<span class="requiredClass">*</span></label>
+          <input ng-if="!updateButton" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="user.email" placeholder="Enter email" name="email" required>
+
+       <div class="validationError" ng-messages="userForm.email.$error" ng-show=" userForm.email.$touched &&userForm.email.$invalid && (!userForm.email.$pristine || userForm.$submitted)" role="alert">
+      <span style="color:red" ng-message="pattern" class="error-message">Email is not valid</span>
+     </div>
+        
+    <div class="validationError" ng-messages="userForm.email.$error" ng-show="userForm.email.$error.required && userForm.email.$touched && userForm.email.$invalid"
+    role="alert"> 
+    <span style="color:red" ng-message="required" class="error-message">Email is required</span>
       </div>
+        
+    <div class="validationError" ng-if="emailValid" role="alert">
+      <span style="color:red" class="error-message">Email Already exist</span>
+        </div>
+
+    <label ng-if="!updateButton">Password<span class="requiredClass">*</span></label>
+     <input ng-if="!updateButton" type="password"  class="form-control" name="password" ng-if="!updateButton" placeholder="Enter password" ng-model="user.password" ng-minlength="8" ng-maxlength="20" maxlength="21" required>
+
+   <div class="validationError" ng-messages="userForm.password.$error" ng-show="userForm.password.$error.required && userForm.password.$touched && userForm.password.$invalid" role="alert">
+
+    <span style="color:red" ng-message="required">password is required</span>
   </div>
 
-  </section><!-- /.content -->
-            </aside><!-- /.right-side -->   
+   <div class="validationError" ng-if="!updateButton" ng-messages="userForm.password.$error" ng-show="
+      userForm.password.$error.pattern && (!userForm.password.$pristine || userForm.$submitted)" role="alert">
+     <span style="color:red" ng-message="pattern">Enter valid character </span>
+  </div>
+        
+    <div class="validationError" ng-if="!updateButton" ng-show="userForm.password.$error.maxlength && userForm.password.$dirty"">
+     <span style="color:red">password maximum length exceeds</span>
+        </div>
+     
+     <div class="validationError" ng-if="!updateButton" ng-show="userForm.password.$error.minlength && userForm.password.$dirty"">
+       <span style="color:red">password is too short</span>
+     </div>
+
+
+     {{user.user_type && user.facebook_id}}
+  <label ng-if="user.user_type || ! user.facebook_id">Mobile Number:<span class="requiredClass">*</span></label>
+
+ <div ng-if="user.user_type || ! user.facebook_id" class="input-group">
+   <input ng-if="user.user_type || ! user.facebook_id" type="text" class="form-control" ng-model="user.phone" mask="(999) 999-9999" name="phone" mask-clean='true' placeholder="(xxx) xxx-xxxx" mask-restrict='reject' ng-minlength="10" ng-maxlength="14" maxlength="14" required/>  
+</div>
+     <p class="help-block">
+     <span style="color:red"  ng-show="userForm.phone.$touched && userForm.phone.$invalid && userForm.phone.$error.required">Phone is required.</span>
+     <span style="color:red"  ng-show="userForm.phone.$error.minlength">Phone have 10-digits minimum.</span>
+   </p> 
+</div>
+
+         <label>Address<span class="requiredClass">*</span></label>
+        <input type="text" class="form-control" ng-model="user.location" ng-required placeholder="Enter address" name="location" gm-places-autocomplete >
+        
+          <div>
+              <span style="color:red" ng-if="addressValid">Please enter your detaild address.</span>
+         </div>
+          
+           <div class="validationError" ng-messages="userForm.location.$error" ng-show="  userForm.location.$error.required && userForm.location.$touched && userForm.location.$invalid " role="alert">
+         <span style="color:red" ng-message="required">Address is required</span>
+       <span style="color:red" ng-if="addressValid">Address is not valid.</span>
+          </div>
+
+     <!-- <div class="validationError" ng-messages="userForm.location.$error" ng-show=" userForm.location.$error.pattern && (!userForm.location.$pristine || userForm.$submitted)" role="alert">
+     <span style="color:red" ng-message="pattern">Enter valid character </span>
+     </div>
+
+      <div class="validationError"  ng-show="userForm.location.$error.maxlength && userForm.location.$dirty"">
+      <span style="color:red">Address maximum length exceeds</span>
+     </div> -->
+           
+    <label ng-if="!updateButton">Confirm Password<span class="requiredClass">*</span></label>
+     <input type="password" ng-if="!updateButton" class="form-control" name="password2" placeholder="Enter confirm password" ng-model="user.password2" required ng-pattern="user.password">
+    
+     <div class="validationError" ng-if="!updateButton" ng-messages="userForm.password2.$error" ng-show=" userForm.password2.$error.pattern && (!userForm.password2.$pristine || userForm.$submitted)" role="alert">
+    <span style="color:red" ng-if="!updateButton" ng-message="pattern">Password do not match</span>
+     </div>
+    <div ng-if="!updateButton" class="validationError" ng-messages="userForm.password2.$error" ng-show="userForm.password2.$error.required && userForm.password2.$touched && userForm.password2.$invalid" role="alert">
+    <span ng-if="!updateButton" style="color:red" ng-message="required" class="error-message">Confirm password is required</span>
+  </div>
+    
+    <label >ZipCode<span class="requiredClass">*</span></label>
+     <input type="text" class="form-control" name="zipcode"  placeholder="Enter zip code" ng-pattern="/^[0-9]{1,7}$/" ng-model="user.zipCode" ng-minlength="4" ng-maxlength="7" maxlength="8" ng-disabled="true" required>
+  
+  <div class="validationError" ng-messages="userForm.zipcode.$error" ng-show="
+    userForm.zipcode.$error.required && userForm.zipcode.$touched && userForm.zipcode.$invalid 
+      " role="alert">
+     <span style="color:red" ng-message="required">zip code is required</span>
+   </div>
+
+      <div class="validationError" ng-messages="userForm.zipcode.$error" ng-show=" userForm.zipcode.$error.pattern && (!userForm.zipcode.$pristine || userForm.$submitted)" role="alert">
+      <span style="color:red" ng-message="pattern">Enter valid character </span>
+    </div>
+
+     <div class="validationError"  ng-show="userForm.zipcode.$error.maxlength && userForm.zipcode.$dirty"">
+      <span style="color:red">zip code maximum length exceeds</span>
+     </div>
+
+       <!-- <label>Date Of birth</label>
+     <div class="input-group">
+     <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="user.dob" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+     <span class="input-group-btn">
+     <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+    </div> -->
+
+  <label>Gender:</label>
+    <div ng-init="user.gender='Male'">
+     <input ng-model="user.gender" type="radio" name="gender" value="Male" > Male
+         <input ng-model="user.gender" type="radio" name="gender" value="Female"> Female
+     </div>
+                                                        
+  </div>
+</div>
+             <div class="col-md-4">
+              <label>ProfileImage</label>
+                <div class="form-group">
+                  <div class="btn btn-default btn-file">
+                     <i class="fa fa-paperclip"></i> Attachment
+                     <input type='file' ng-model='user.profile_image' base-sixty-four-input accept="image/*" ng-change="onSelectIconImg()" type="file" id="fileInput2" ngf-max-size="2B">
+                 </div>
+
+              <div class="errormsg" ng-show="imageIconError">
+                <span>{{imageIconError}}</span>
+             </div>
+
+             <!-- <p class="help-block">Max. 2MB</p> -->
+               <span class="image-span" ng-if=" imageIconError==''"> 
+                  <i class="fa fa-remove fa-2x  pull-right cursur removeImage" ng-click="removeIconImg()" ng-if="picIconData || user.icon" title="Remove"></i>
+                 
+                 <img class="img-responsive cursur img-border-skill-icon" alt="Image"  src="assets/upload/profileImg/{{user.profile_image}}" ng-if="user.profile_image && !myCroppedIconImage && !user.facebook_id" ng-click="viewIconImage(skill.icon)" >
+
+                 <img class="img-responsive cursur img-border-skill-icon" alt="Image"  src="{{user.profile_image}}" ng-if="user.facebook_id && !myCroppedIconImage"
+                  ng-click="viewIconImage(skill.icon)" height="210" width="210">
+                                               
+                <img class="img-responsive cursur img-border-skill-icon" alt="Image"  src="{{myCroppedIconImage}}" ng-show="myIconImage!=''" >
+               </span>
+             </div>
+       <label></label>
+   <div class="cropArea margin-top" ng-show="myIconImage  && imageIconError==''">
+   <img-crop image="myIconImage" area-type="rectangle" aspect-ratio="1" result-image="myCroppedIconImage" result-image-size='{w: 50,h: 50}' init-max-area="true"></img-crop>
+  </div>
+ </div>
+</div>
+         </form>             
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+               
+
+ <div class="box-footer clearfix no-border">
+           <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login" ng-disabled="userForm.$invalid" ng-click="submit()" value="Submit">
+    <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update"  ng-click="update()" value="Update ">
+      
+      </div>
+     </div><!-- /.tab-content -->
+   </div>
+  </div>
+ </div>
+</div>
+</section><!-- /.content -->
+           

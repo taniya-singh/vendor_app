@@ -2,205 +2,478 @@
 
 angular.module("Authentication", []);
 angular.module("Home", []);
-angular.module("Vehicletype", []);
-angular.module("Vehicle", []);
 angular.module("communicationModule", []);
-angular.module("Users", []);
-angular.module("Roles", []);
-angular.module("Permissions", []);
-angular.module("Questionnaire", ['ui.bootstrap']);
-angular.module("Question", []);
-angular.module("Categories", []);
+angular.module("helpBlock",['oitozero.ngSweetAlert']);
+angular.module("Users", ['oitozero.ngSweetAlert']);
+angular.module("Vendor", ['oitozero.ngSweetAlert']);
 
-var taxiapp = angular.module('taxiapp', ['ngRoute', 'ngStorage', 'ngTable', 'ngResource', 'ui.grid', 'Authentication', 'Home', 'Vehicletype', 'Vehicle','communicationModule', 'Users', 'Roles','Permissions', 'satellizer', 'Questionnaire', 'Question', 'Categories'])
+//angular.module("Packages",['oitozero.ngSweetAlert']);
 
-.factory('basicAuthenticationInterceptor', function() {
+
+
+
+var munchapp = angular.module('munchapp', [
+	'naif.base64',
+	'ngMap',
+	'ngMask',
+	'ngRoute',
+	'ngStorage',
+	'ngTable',
+	'ngResource',
+	'ngMessages',
+	'ui.grid',
+	'ui.router',
+	'Authentication',
+	'Home',
+	'communicationModule',
+	'Users',
+	'Vendor',
+	'gm',
+	'ui.bootstrap',
+	'satellizer',
+	'ngFileUpload',
+	'helpBlock',
+    'oitozero.ngSweetAlert',
+	'ngImgCrop',
+	'uiSwitch'
+	]);
+function checkloggedIn($rootScope, $localStorage, $http) {
+    
+    if($localStorage.userLoggedIn) {
+	    $rootScope.userLoggedIn 	= true;	   
+
+    }
+  
+
+   else if($localStorage.vendorLoggedIn) {
+	    $rootScope.vendorLoggedIn 	= true;	   
+
+    }
+
+
+     else {
+	    $rootScope.userLoggedIn = false;
+	    $rootScope.vendorLoggedIn = false;
+	    $state.go('/login');
+    }
+}
+
+munchapp.factory('basicAuthenticationInterceptor', ['$q','$localStorage','$location' , '$rootScope' , '$timeout', function($q , $localStorage , $location, $rootScope, $timeout) {
 	
 	var basicAuthenticationInterceptor = {
-		request:function(config) {
-			config.headers['Authorization'] = 'Basic ' + appConstants.authorizationKey;
- 			config.headers['Content-Type'] = headerConstants.json;
-	
+		request:function(config) {  
+			if($localStorage.authorizationToken){  //console.log("here ",$localStorage.authorizationToken);
+			config.headers['Authorization'] = 'Bearer ' + $localStorage.authorizationToken;
+			}
+			//config.headers['Authentication'] = 'Basic ' + appConstants.authorizationKey;
+ 			config.headers['Content-Type'] = headerConstants.json;			
 			return config;
 		}
 	};
 
 	return basicAuthenticationInterceptor;
 	
+}]).filter('capitalize', function() {
+    return function(input) {
+      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
 })
 
-.config(['$routeProvider', '$httpProvider', '$authProvider', '$locationProvider', function($routeProvider, $httpProvider, $authProvider, $locationProvider) {
+munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$httpProvider', '$authProvider', '$locationProvider', function($routeProvider,$stateProvider, $urlRouterProvider , $httpProvider, $authProvider, $locationProvider) {
 
-	//$httpProvider.interceptors.push('basicAuthenticationInterceptor');
+	$httpProvider.interceptors.push('basicAuthenticationInterceptor');
 
-	$authProvider.facebook({
-		clientId: facebookConstants.facebook_app_id,
-		url: '/adminlogin/auth/facebook'		
-	});
 
-	$authProvider.twitter({
-		url:'/adminlogin/auth/twitter'
-	});
+	$stateProvider
+		.state('/', {
+			resolve: {
+				mess: function($location, $localStorage) {
 
-	$authProvider.google({
-		clientId : googleConstants.google_client_id,
-		url:'/adminlogin/auth/google'
-	});
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+			url: "/",
+			controller:'homeController',
+			templateUrl:'/modules/home/views/home.html'
+		})
 
-	$routeProvider
-	.when('/', {
-		controller:'homeController',
-		templateUrl:'/modules/home/views/home.html'
-	})
+		.state('/home', {
+			resolve: {
+				mess: function($location, $localStorage) {
 
-	.when('/home', {
-		controller:'homeController',
-		templateUrl:'/modules/home/views/home.html'
-	})
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+			url: "/home",
+			controller:'homeController',
+			templateUrl:'/modules/home/views/home.html'
+		})
 
-	.when('/login', {
+		.state('/login', {			
+			url: "/login",
+			controller:'loginController',
+			templateUrl:'/modules/authentication/views/login.html'
+		})
+	.state('/profile', {
+		
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/profile",
 		controller:'loginController',
-		templateUrl:'/modules/authentication/views/login.html'
+		templateUrl:'/modules/authentication/views/profile.html'
 	})
+	.state('/setting', {
+		
+		resolve: {
+				mess: function($location, $localStorage) {
 
-	.when('/forgot-password', {
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/setting",
+		controller:'loginController',
+		templateUrl:'/modules/authentication/views/setting.html'
+	})
+	.state('/forgot-password', {
+		
+		url: "/forgot-password",
 		controller:'loginController',
 		templateUrl:'/modules/authentication/views/forgot-password.html'
 	})
-
-	.when('/vehicletype', {
-		controller:'vehicletypeController',
-		templateUrl:'/modules/vehicletype/views/vehicletype.html'
+	.state('/reset-password/:vStr', {		
+		url: "/reset-password/:vStr",
+		controller:'loginController',
+		templateUrl:'/modules/authentication/views/reset-password.html'
 	})
+	.state('/users', {
+		resolve: {
+				mess: function($location, $localStorage) {
 
-	.when('/vehicletype/add', {
-		controller:'vehicletypeController',
-		templateUrl:'/modules/vehicletype/views/addvehicletype.html'
-	})
-
-	.when('/vehicletype/edit/:id', {
-		controller:'vehicletypeController',
-		templateUrl:'/modules/vehicletype/views/addvehicletype.html'
-	})
-
-	.when('/vehicles', {
-		controller:"vehicleController",
-		templateUrl:'/modules/vehicle/views/vehicles.html'
-	})
-
-	.when('/users', {
+					console.log ($localStorage);
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/users",
 		controller : "userController",
 		templateUrl : "/modules/users/views/listuser.html"
 	})
 
-	.when('/users/add', {
+	.state('/users/add', {
+
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/users/add",
 		controller : "userController",
 		templateUrl : "/modules/users/views/adduser.html"
 	})
 
-	.when('/users/signup', {
-		controller : "userController",
-		templateUrl : "/modules/users/views/signup.html"
-	})
+	.state('/users/edit/:id' , {
 
-	.when('/users/edit/:id' , {
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/users/edit/:id",
 		controller: "userController",
 		templateUrl : "/modules/users/views/adduser.html"
 	})
+  .state('/users/profile/:id' , {
+
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+						
+						
+				}
+			},
+		url: "/users/profile/:id",
+		controller: "userController",
+		templateUrl : "/modules/users/views/userprofile.html"
+	})
+
+
+
+
+
+	.state('vendor', {
+		resolve: {
+				mess: function($location, $localStorage) {
+					// console.log ($localStorage);
+					if (! $localStorage.userLoggedIn) {
+						 $state.go('/login');
+					} 
+					
+				}
+			},
+		url: "/vendor",
+		controller : "vendorController",
+		templateUrl : "/modules/vendor/views/listvendor.html"
+	})
+
+	.state('/vendor/add', {
+
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/vendor/add",
+		controller : "vendorController",
+		templateUrl : "/modules/vendor/views/addvendor.html"
+	})
+
+	.state('/vendor/edit/:id' , {
+
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/vendor/edit/:id",
+		controller: "vendorController",
+		templateUrl : "/modules/vendor/views/addvendor.html"
+	})
+  .state('/vendor/profile/:id' , {
+
+		resolve: {
+				mess: function($location, $localStorage) {
+
+					if ($localStorage.userLoggedIn != true) {
+						$state.go('/login');
+					}
+					
+						
+				}
+			},
+		url: "/vendor/profile/:id",
+		controller: "vendorController",
+		templateUrl : "/modules/vendor/views/vendorprofile.html"
+	})
   
-  .when('/roles', {
-		controller : "roleController",
-		templateUrl : "/modules/roles/views/list_role.html"
-	})
-	.when('/roles/add', {
-		controller : "roleController",
-		templateUrl : "/modules/roles/views/add_role.html"
-	})
-	.when('/roles/edit/:roleId', {
-		controller : "roleController",
-		templateUrl : "/modules/roles/views/add_role.html"
-	})
-	.when('/permissions', {
-		controller : "permissionController",
-		templateUrl : "/modules/permissions/views/list_permission.html"
-	})
-	.when('/permissions/add', {
-		controller : "permissionController",
-		templateUrl : "/modules/permissions/views/add_permission.html"
-	})
-	.when('/permissions/edit/:permissionId', {
-		controller : "permissionController",
-		templateUrl : "/modules/permissions/views/add_permission.html"
-	})
-
-	.when('/categories' , {
-		controller: "categoryController",
-		templateUrl:"/modules/categories/views/listcategory.html"
-	})
-
-	.when('/categories/add' , {
-		controller: "categoryController",
-		templateUrl:"/modules/categories/views/addcategory.html"
-	})
-
-	.when('/categories/editcategory/:categoryId', {
-		controller:"categoryController",
-		templateUrl:"/modules/categories/views/addcategory.html"
-	})
-
-	.when('/categories/listquestions/:categoryId' , {
-		controller : "categoryController",
-		templateUrl : "/modules/categories/views/listquestions.html"
-	})
 
 
+
+
+
+    .state('cmsManagement', {
+			url: '/help/cmsManagement',
+			controller: "cmsController",
+			templateUrl: "/modules/helpBlock/views/cmsManagement.html"
+			// resolve: {
+			// 		checklogin: cmsCheck
+			// 	}
+		})
+
+		.state('cmsPageEdit', {
+			url: '/help/:_id',
+			params:{
+				_id:null
+			},
+			controller: "cmsController",
+			templateUrl: "/modules/helpBlock/views/cmsManagement.html"
+			// resolve: {
+			// 		checklogin: cmsCheck
+			// 	}
+		})
+
+		.state('cmslisting', {
+			url: '/cmslisting',
+			controller: "cmsListingController",
+			templateUrl: "/modules/helpBlock/views/cmsListing.html"
+			// resolve: {
+			// 		checklogin: cmsCheck
+			// 	}
+		})
+
+		.state('addpackage', {
+			url: '/addpackage',
+			controller: "packageController",
+			templateUrl: "/modules/packages/views/addpackage.html"		
+		})
+
+		.state('packages', {
+			url: '/packages',
+			controller: "packageController",
+			templateUrl: "/modules/packages/views/packages.html"
+			
+		})
+
+		.state('editPackage', {
+			url: '/editPackage/:_id',
+			params:{
+				_id:null
+			},
+			controller: "packageController",
+			templateUrl: "/modules/packages/views/addpackage.html"	
+		})
+
+		.state('reset_password',{
+			url:'/admin/:email/:id',
+			params:{
+				email:null,
+				id:null
+			},
+			controller:"loginController",
+			templateUrl:"/modules/authentication/views/reset-password.html"
+		})
+  
+  
+	 
 	
-	.when('/questionnaire', {
-		controller : "questionnaireController",
-		templateUrl : "/modules/questionnaire/views/listquestionnaire.html"
-	})
-
-	.when('/questionnaire/add', {
-		controller : "questionnaireController",
-		templateUrl : "/modules/questionnaire/views/addquestionnaire.html"
-	})
-
-	.when('/viewcategories/:questionnaireID', {
-		controller: "questionnaireController",
-		templateUrl: "/modules/questionnaire/views/listcategories.html"
-	})
-
-	.when('/viewcategoryquestions/:catquestionnaireID', {
-		controller : "questionnaireController",
-		templateUrl : "/modules/questionnaire/views/listquestions.html"
-	})
-
-	.when('/questionnaire/edit/:questionnarieId', {
-		controller : "questionnaireController",
-		templateUrl : "/modules/questionnaire/views/addquestionnaire.html"
-	})	
-
-	.when('/questions/add/:categoryId' , {
-		controller : "questionController",
-		templateUrl : "/modules/questions/views/addquestion.html"
-	})
-
-	.when('/questions/editquestion/:questionId', {
-		controller : "questionController",
-		templateUrl : "/modules/questions/views/addquestion.html"
-	})
-
-	.otherwise({
-		redirectTo:'/modules/authentication/views/login.html'
-	});
+	
+	
+	
+	
+	
+	
+	
+	$urlRouterProvider.otherwise("/login");
+	
 
 	//to remove the # from the URL
 	//$locationProvider.html5Mode({enabled : true, requireBase : false});
 }])
 
-.run(['$rootScope', '$location', '$http', '$localStorage', function($rootScope, $location, $http, $localStorage) {
+munchapp.run(['$state','$rootScope', '$location', '$http', '$localStorage','$route','$routeParams','$stateParams', function($state,$rootScope, $location, $http, $localStorage,$route,$routeParams,$stateParams) {
 
-	if(!$localStorage.userLoggedIn) {
-		$location.path('/login');
+	if(!$localStorage.userLoggedIn) { 
+		$state.go('/login');
 	}
+	$rootScope.nav=nav;
+
+	$rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams; 
+ //   console.log("asdfdasf",$state.current.name)
+	
+	
 }]);
+
+
+munchapp.directive('compareTo', [function() {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=compareTo"
+        },
+        link: function(scope, element, attributes, ngModel) {
+
+            ngModel.$validators.compareTo = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+
+            scope.$watch("otherModelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    };
+}]);
+munchapp.filter('capitalize', function() {
+    return function(input) {
+      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
+});
+munchapp.filter('dateCompare', function () {
+	//alert(dueDate)
+  return function (dueDate) {
+
+    var onlydate = new Date(dueDate);
+    //console.log("job due ",onlydate)
+    var month = onlydate.getMonth()+1;
+    var day   = onlydate.getDate();
+    var year  = onlydate.getFullYear();
+
+
+
+
+
+
+
+    var end_date2 = new Date();
+
+    var month1 = end_date2.getMonth()+1;
+    var day1   = end_date2.getDate();
+    var year1  = end_date2.getFullYear();
+
+    //console.log(month+' day ' +day+' year '+year1)
+     // console.log(month1+' day1 ' +day1+' year1 '+year1)
+
+    if((month1 >= month  && day1>day && year1>=year) || (month1 > month  && year1>=year) || (year1>year)){
+      return true;
+    }else{
+        return false;
+    }
+
+  };
+});
+munchapp.directive('capitalizeFirst', function($parse) {
+	return {
+		require: 'ngModel',
+		link: function(scope, element, attrs, modelCtrl) {
+			var capitalize = function(inputValue) {
+				if (inputValue === undefined) {
+					inputValue = '';
+				}
+				var capitalized = inputValue.charAt(0).toUpperCase() +
+					inputValue.substring(1);
+				if (capitalized !== inputValue) {
+					modelCtrl.$setViewValue(capitalized);
+					modelCtrl.$render();
+				}
+				return capitalized;
+			}
+			modelCtrl.$parsers.push(capitalize);
+			capitalize($parse(attrs.ngModel)(scope)); // capitalize initial value
+		}
+	};
+});

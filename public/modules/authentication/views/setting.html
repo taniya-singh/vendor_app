@@ -1,0 +1,114 @@
+
+
+  <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div></div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header" data-ng-init="getAllDetail()">
+        <h1>
+           Esscrow Setting
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+            
+            <li>Esscrow Setting</li>                      
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content" data-ng-init="findOne()">
+
+        <div class="row">          
+        <!-- /.col -->
+            <div class="col-md-12">
+             <div class="box box-primary">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs cursurul">
+                        <!-- <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a data-toggle="tab">Profile</a></li>
+                        <li ng-if="admin._id" ng-class="{'active': activeTab === 1} " data-ng-click="moveTabContents(1)"><a   data-toggle="tab">Change Password</a></li> -->
+                         <li ng-if="admin._id" class="active" ><a   data-toggle="tab">Commissions</a></li>
+
+                    </ul>
+
+                    <div class="tab-content">
+ 
+              <div   class="tab-pane active" id="tab_3">
+                  <div ng-class="alerttype" ng-show="showmessage3">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                    <div class="box-body table-responsive">
+                                                                 
+                                    <form method="post" name="frm" role="form" enctype="multipart/form-data">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                        <label>Payment Mode</label><span class="red">*</span>
+                                            <!-- <input type="radio" name="payment_mode"  ng-model="admin.stripe_credential.payment_mode" value="0">&nbsp;Test &nbsp;&nbsp;
+                                            
+                                            <input type="radio" name="payment_mode"  ng-model="admin.stripe_credential.payment_mode" value="1">&nbsp;Live <br> -->
+                                            <br>
+                                            <switch id="enabled" name="enabled" ng-model="admin.stripe_credential.payment_mode" on="Live" off="Test" class="blue"></switch>
+                                            <br>
+                                            <div class="row">
+                                              <div class="col-md-6">
+
+                                                 <label>Stripe secret test key</label><span class="red">*</span>
+                                            <input type="text" name="secret_test_key" class="form-control" ng-model="admin.stripe_credential.secret_test_key" required  ng-maxlength="50">
+                                            <div class="errormsg"ng-show="frm.secret_test_key.$dirty && frm.secret_test_key.$invalid" >
+<span ng-show="frm.secret_test_key.$error.required">Please enter stripe secret test key.</span>
+<span ng-show="frm.secret_test_key.$error.maxlength">This field can be at most 15 characters long.</span>
+
+</div>   
+
+                                              </div>
+                                              <div class="col-md-6">
+                                                <label>Stripe secret live key</label><span class="red">*</span>
+                                            <input type="text" name="secret_live_key" class="form-control" ng-model="admin.stripe_credential.secret_live_key" required  ng-maxlength="50">
+                                            <div class="errormsg"ng-show="frm.secret_live_key.$dirty && frm.secret_live_key.$invalid" >
+<span ng-show="frm.secret_live_key.$error.required">Please enter stripe secret live key.</span>
+<span ng-show="frm.secret_live_key.$error.maxlength">This field can be at most 15 characters long.</span>
+
+</div>  
+
+                                              </div>
+                                            </div>
+                                              
+                                           
+                                           <label>Commission from job poster (%)</label><span class="red">*</span>
+                                            <input type="number" name="job_poster" class="form-control" ng-model="admin.admin_commission.job_poster" required ng-pattern="/^\d{0,2}(\.\d{1,2})?$/" step="0.01" maxlength="" >
+                                            <div class="errormsg"ng-show="frm.job_poster.$dirty && frm.job_poster.$invalid">
+<span ng-show="frm.job_poster.$error.required">Please enter job poster commision.</span>
+<span ng-show="frm.job_poster.$error.number">Please enter numeric value.</span>
+<span ng-show="frm.job_poster.$error.pattern">This field can't have more than  2 decimal places.</span>
+
+</div>  
+
+                                          <label>Commission from job finder (%)</label><span class="red">*</span>
+                                            <input type="number" name="job_finder" class="form-control" ng-model="admin.admin_commission.job_finder" required ng-pattern="/^\d{0,2}(\.\d{1,2})?$/" step="0.01" >
+                                            <div class="errormsg"ng-show="frm.job_finder.$dirty && frm.job_poster.$invalid" >
+<span ng-show="frm.job_finder.$error.required">Please enter job finder commision.</span>
+<span ng-show="frm.job_finder.$error.number">Please enter numeric value.</span>
+<span ng-show="frm.job_finder.$error.pattern">This field can't have more than 2 decimal places.</span>
+</div>  
+  
+                                            
+                                                                                    
+                                    </div><!-- /.box-body -->
+                                    
+                                    <div class="box-footer">
+                                        <button type="button" class="btn btn-primary" ng-click="updateCommision()" ng-disabled="frm.$invalid" >Update</button>
+                                        
+                                    </div>
+                                </form>              
+                                  
+                                </div>
+                                              
+                  </div><!-- /.tab-pane -->
+              </div><!-- /.tab-content -->
+          </div>
+      </div>
+      </div>
+      </div>
+
+  </section><!-- /.content -->
+ 

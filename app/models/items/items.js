@@ -5,8 +5,10 @@ var Schema = mongoose.Schema;
 
 var mySchema = new Schema({
     p_name : String,
+    vendor_id: String,
     p_price: Number,
     p_description: String,
+    p_count:Number,
     is_deleted:{type:Boolean, default:false},
     image:String
 });

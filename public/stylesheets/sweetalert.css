@@ -1,6 +1,6 @@
 body.stop-scrolling {
   height: 100%;
-  overflow: hidden; }
+  overflow: scroll; }
 
 .sweet-overlay {
   background-color: black;
@@ -170,7 +170,9 @@ body.stop-scrolling {
     opacity: 0;
     visibility: hidden; }
   .sweet-alert button {
-    background-color: #8CD4F5;
+    /*background-color: #801517 !important;*/
+    background-color: #3c8dbc  !important;
+    border-color: #367fa9;
     color: white;
     border: none;
     box-shadow: none;
@@ -181,6 +183,8 @@ body.stop-scrolling {
     padding: 10px 32px;
     margin: 26px 5px 0 5px;
     cursor: pointer; }
+    .sweet-alert button.cancel {
+      background-color: #C1C1C1 !important; }
     .sweet-alert button:focus {
       outline: none;
       box-shadow: 0 0 2px rgba(128, 179, 235, 0.5), inset 0 0 0 1px rgba(0, 0, 0, 0.05); }
