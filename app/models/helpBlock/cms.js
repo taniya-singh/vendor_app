@@ -14,10 +14,12 @@ var cms = new Schema({
   description:{
     type:String
   },
+
   isDisabled:{
     type:Boolean,
     default:false
   },
+  
   created: {
     type: Date,
     default: Date.now()
