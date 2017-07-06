@@ -1,0 +1,146 @@
+<section class="content-header" ng-init="getAllVendors()">
+      <h1>
+        Vendor
+       <!--  <small>Vendor Listing</small> -->
+      </h1>
+     <ol class="breadcrumb">
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li>Vendor</li>                       
+                    </ol>
+    </section>
+ <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div></div>
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                       
+                            
+                            <div class="box">
+                                <div class="box-body ">
+                                 <div class="clearfix"></div>
+                                <div class="row">
+                                  <div class="col-xs-8">
+                                    <div ng-class="alerttype" ng-show="showmessage">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                                  </div>
+                                  <div class="col-xs-4 pull-right">
+                                    <div class="pull-right m_btm15"><a href='/#/vendor/add' align='right'  class="btn btn-primary">Add New Vendor</a></div>
+                                  </div>
+                                  <!-- <div class="col-xs-4 pull-left">
+                                   <a href="javascript:void(0);" ng-click="downloadCSV();" title="export Disorder" align='right'  class="btn btn-primary btn-responsive">Export CSV</a>
+                                   </div> -->
+                                </div>
+
+                         
+                                 
+                                 <div class="clearfix"></div> 
+                                   
+                                <form name="searchForm" novalidate ng-submit="getAllVendor()">
+                                    <div class="input-group">
+                                      <!-- <span class="input-group-addon">Except for...
+                                        <input type="checkbox" name="inverted"  ng-model="isInvertedSearch" />
+                                      </span> -->
+                                      <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" required />
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"  ng-click="getAllVendor()">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>
+                                      </span>
+                                    </div>
+                                </form>
+                              </div>                         
+                              <div class="box-body table-responsive">
+                           <form role="form">
+                                   
+                           <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                              <colgroup>
+                                    <col width="10%"/>
+                                    <col width="15%"/>
+                                    <col width="15%"/>
+                                    <col width="15%"/>
+                                    <col width="10%"/>
+                                    <col width="15%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                             
+                              </colgroup>
+
+                              <tr ng-repeat = "vendor in $data">
+                              <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[vendor._id]" ng-change=" (vendor._id)" class="list{{tableParams.page()}}" />
+                                </td>
+                                             
+                              <td data-title="'Name'" sortable="'vendor_name'" filter="{name:'text'}" align="left"><a href="/#/vendor/edit/{{vendor._id}}" alt="Click to edit" title="Click to edit">{{vendor.vendor_name}}</a></td>
+
+                              <td data-title="'Email'" sortable="'vendor_email'" filter="{vendor_email:'email'}" align="left">{{vendor.vendor_email| capitalize}}</td>
+
+                               <!-- <td data-title="'Password'" sortable="'password'" filter="{password:'password'}" align="left">{{vendor.password| capitalize}}</td>-->
+                               <!-- <td data-title="'Facebook_id'" sortable="'facebook_id'" filter="{facebook_id:'email'}" >{{vendor.facebook_id}}</td> -->
+
+                                <td data-title="'Phone'">{{vendor.phone_no}}</td>
+                                <td data-title="'Address'"  filter="{vendor_address:'text'}" >{{vendor.vendor_address}}</td>
+
+                                 <!--  <td data-title="'Latitude'" sortable="'latitude'" filter="{latitude:'text'}" >{{vendor.latitude}}</td>
+                                 <td data-title="'Longitude'" sortable="'longitude'" filter="{longitude:'text'}" >{{vendor.longitude}}</td> -->
+                                 <!-- <td data-title="'VendorAddress'" sortable="'vendor_address'" filter="{gender:'text'}" >{{vendor.vendor_address}}</td> -->
+                            
+                               <td data-title="'Pickup_time'"  filter="{pickup_time:'String'}" >{{vendor.pickup_time}}
+                                 </td>
+
+
+                                 <td data-title="'Created date'" sortable="'created_date'" filter="{created_date:{type:Date, default: Date.now},:'text'}" align="left">{{vendor.created_date |date}}
+                                 </td>
+
+                                 <td data-title="'Status'" sortable="'enable'" align='left'><div ng-if="vendor.enable==true"><img  class="cursur" src='images/enable.png' border='0'  ng-click="performAction1(vendor._id,2)"></div><div ng-if="vendor.enable==false"><img  class="cursur"  src='images/disable.png' border='0'  ng-click="performAction1(vendor._id,1)"></div>
+                                 </td>
+
+                                 <td data-title="'Action'" align="left"><i  class="cursur fa fa-trash-o" ng-click="delete(vendor._id)"></i>
+                                 </td>
+
+                                                 
+                            </tr>
+                             <tr ng-if="$data.length!=0">
+                               <td >
+                                                    
+                            <div class="form-group">
+                              <select class="form-control" name='selectedAction' id='selectedAction'>
+                                   <option value="0">Select</option>
+                                   <option value="1">Enable</option>
+                                   <option value="2">Disable</option>
+                                   <option value="3">Delete</option>
+                                </select> 
+                             </div>
+                        </td>
+
+
+                                <td colspan='7'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()">
+                                </td>
+                              </tr>  
+                                <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b>
+                                     </td>
+                                  </tr>
+                                        </table> 
+                                     </form>  
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            
+
+
+                 
+            <!-- page script -->
+         <script type="text/ng-template" id="headerCheckbox.html">
+                <input type="checkbox" data-ng-click="toggleSelection(0,tableParams.page())" ng-model="checkboxes.checked" class="select-all" value="" />
+            </script>
+            
+               
+

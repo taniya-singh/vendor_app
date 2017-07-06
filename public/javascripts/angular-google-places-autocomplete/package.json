@@ -1,0 +1,99 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "angular-google-places-autocomplete",
+        "scope": null,
+        "escapedName": "angular-google-places-autocomplete",
+        "name": "angular-google-places-autocomplete",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/home/hussainm/Desktop/squadApp"
+    ]
+  ],
+  "_from": "angular-google-places-autocomplete@latest",
+  "_id": "angular-google-places-autocomplete@0.2.9",
+  "_inCache": true,
+  "_location": "/angular-google-places-autocomplete",
+  "_nodeVersion": "4.3.2",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/angular-google-places-autocomplete-0.2.9.tgz_1473301498536_0.3999845285434276"
+  },
+  "_npmUser": {
+    "name": "twaite",
+    "email": "tawaite@gmail.com"
+  },
+  "_npmVersion": "2.14.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "angular-google-places-autocomplete",
+    "scope": null,
+    "escapedName": "angular-google-places-autocomplete",
+    "name": "angular-google-places-autocomplete",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-google-places-autocomplete/-/angular-google-places-autocomplete-0.2.9.tgz",
+  "_shasum": "8d57c42f908e7fec518b6c0ac831fd39db51aa99",
+  "_shrinkwrap": null,
+  "_spec": "angular-google-places-autocomplete",
+  "_where": "/home/hussainm/Desktop/squadApp",
+  "bugs": {
+    "url": "https://github.com/kuhnza/angular-google-places-autocomplete/issues"
+  },
+  "dependencies": {
+    "grunt-contrib-cssmin": "^0.10.0"
+  },
+  "description": "angular-google-places-autocomplete ================",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bower-task": "^0.4.0",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-karma": "~0.11.0",
+    "jshint-stylish": "^2.0.1",
+    "karma": "0.12.0",
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-coverage": "^0.5.0",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-jasmine": "~0.2.1",
+    "karma-mocha-reporter": "^1.1.1",
+    "karma-phantomjs-launcher": "~0.1.1",
+    "load-grunt-tasks": "0.4.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "8d57c42f908e7fec518b6c0ac831fd39db51aa99",
+    "tarball": "https://registry.npmjs.org/angular-google-places-autocomplete/-/angular-google-places-autocomplete-0.2.9.tgz"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "gitHead": "24af9904dace0629443c6ebb9ef95199bac14705",
+  "homepage": "https://github.com/kuhnza/angular-google-places-autocomplete#readme",
+  "maintainers": [
+    {
+      "name": "twaite",
+      "email": "tawaite@gmail.com"
+    }
+  ],
+  "name": "angular-google-places-autocomplete",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kuhnza/angular-google-places-autocomplete.git"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "version": "0.2.9"
+}

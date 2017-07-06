@@ -1,0 +1,299 @@
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        User Profile
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/#/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="/#/users">Users</a></li>
+        <li class="active">User profile</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" data-ng-init="findDetail()">
+
+      <div class="row">
+        <div class="col-md-5">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div ng-if="user.cover_image" style="background: url('assets/upload/profileImg/cover/{{user.cover_image}}') no-repeat center;background-color: #fff !important;background-size:100% 100%" class="widget-user-header bg-black">
+              <!-- <h3 class="widget-user-username">{{user.first_name}} {{user.last_name}}</h3> -->
+              <!-- <h5 class="widget-user-desc">Web Designer</h5> -->
+            </div>
+            <div ng-if="!user.cover_image" class="widget-user-header bg-aqua-active">
+              <!-- <h3 class="widget-user-username">{{user.first_name}} {{user.last_name}}</h3> -->
+              <!-- <h5 class="widget-user-desc">Founder &amp; CEO</h5> -->
+            </div>
+            <div class="widget-user-image">
+              <img ng-if="(user._id && (user.prof_image=='' && !user.prof_image)&& user.provider_image) || (user._id && user.prof_image)" alt="User Avatar" src="assets/upload/profileImg/{{user.prof_image}}" class="img-circle">
+              <img ng-if="!user.prof_image" alt="Defaut" src="images/user_default.jpg" class="img-circle">
+            </div>
+             <div class="box-footer">
+              <div class="row">
+                <div class="col-sm-12">
+            <h3 class="profile-username text-center">{{user.first_name | capitalize}} {{user.last_name | capitalize}}</h3>
+              <!-- <p class="text-muted text-center">Software Engineer</p> -->
+              
+                <h3 class="profile-username text-center" style="color: #3C8DBC;" >
+                <i class="fa fa-star margin-r-5" ng-repeat="i in profile_rating_plus track by $index"></i>
+                 <i class="fa fa-star-half-o margin-r-5" ng-repeat="i in profile_rating_half track by $index"></i>
+                 <i class="fa fa-star-o margin-r-5" ng-repeat="i in profile_rating_loss track by $index"></i>
+
+                <!-- <i class="fa fa-star margin-r-5"></i>
+                <i class="fa fa-star-half-o margin-r-5"></i>
+                <i class="fa fa-star-o margin-r-5"></i>
+                <i class="fa fa-star-o margin-r-5"></i> -->
+              </h3>
+
+              </div>
+              </div>
+              </div>
+               
+            <div class="box-footer">
+              <div class="row">
+              <!-- /.col -->
+                <div class="col-sm-4  border-right">
+                  <div class="description-block cursur" ng-click="moveTabContents(0)">
+                    <h5 class="description-header">{{userPostedInfo.review}}</h5>
+                    <span class="description-text">Review</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block cursur" ng-click="moveTabContents(1)">
+                    <h5 class="description-header">{{userPostedInfo.assigned_job}}</h5>
+                    <span class="description-text">Assigned</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block cursur" ng-click="moveTabContents(2)">
+                    <h5 class="description-header">{{userPostedInfo.posted_job}}</h5>
+                    <span class="description-text">Posted</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                
+              </div>
+              <!-- /.row -->
+            </div>
+
+          </div>
+          <!-- /.widget-user -->         
+
+          <!-- About Me Box -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">About Me</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Description</strong>
+
+              <p class="text-muted">
+                {{user.about_me | capitalize}}
+              </p>
+
+              
+              <hr>
+
+              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+
+              <p ng-init="a = ['label-danger','label-success','label-info','label-warning','label-primary']">
+               
+                 <span  data-ng-repeat="skill in user.skill" class="label label-primary"  style="margin:2px 5px 0 0;float: left;">{{skill.skill | capitalize}}</span> 
+                 <!-- <span class="label label-danger" >UI Design</span>
+                <span class="label label-success">Coding</span>
+                <span class="label label-info">Javascript</span>
+                <span class="label label-warning">PHP</span>
+                <span class="label label-primary">Node.js</span> 
+                <span class="label label-primary">Node.js</span> 
+                <span class="label label-primary">Node.js</span> 
+                <span class="label label-danger" >UI Design</span>
+                <span class="label label-success">Coding</span>
+                <span class="label label-info">Javascript</span>
+                <span class="label label-warning">PHP</span>
+                <span class="label label-primary">Node.js</span> 
+                <span class="label label-primary">Node.js</span> 
+                <span class="label label-primary">Node.js</span>  -->
+                
+              </p>
+              <hr>
+
+              <strong><i class="fa fa-phone margin-r-5"></i> Phone</strong>
+
+              <p class="text-muted">{{user.phone}}</p>
+
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Zipcode</strong>
+
+              <p>{{user.zipcode}}</p>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-7">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs cursurul">
+              <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a  data-toggle="tab">Review</a></li>
+              <li ng-class="{'active': activeTab === 1}" data-ng-click="moveTabContents(1)"><a  data-toggle="tab">Assigned</a></li>
+              <li ng-class="{'active': activeTab === 2}" data-ng-click="moveTabContents(2)"><a  data-toggle="tab">Posted</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" ng-class="{'active': activeTab === 0}" id="review" style="overflow-y: auto;max-height: 596px;">
+                <!-- Post -->
+                <div class="post" data-ng-repeat="review in userPostedInfo.review_list">
+                  <div class="user-block">
+                    <!-- <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+ -->
+                    <img ng-if="review.job_author_id.prof_image" alt="user image" src="assets/upload/profileImg/{{review.job_author_id.prof_image}}" class="img-circle img-bordered-sm">
+                   <img ng-if="!review.job_author_id.prof_image" alt="user image" src="images/user_default.jpg" class="img-circle img-bordered-sm">
+                        <span class="username">
+                          <a href="#">{{review.job_author_id.first_name | capitalize}} {{review.job_author_id.last_name | capitalize}}</a>
+                          <a  class="pull-right btn-box-tool"><span class="text-center" style="color:#3C8DBC;">
+                <i class="fa fa-star margin-r-5" ng-repeat="i in getNumber(review.value) track by $index"></i>
+                 
+                 <i class="fa fa-star-o margin-r-5" ng-repeat="i in getNumber(review.max-review.value) track by $index"></i>
+                
+              </span></a>
+                        </span>
+                    <span class="description">Reviewed publicly - {{review.created_date | date:'medium'}}</span>
+
+
+                  </div>
+                  
+                  <p>                    
+                  {{review.review | capitalize}} 
+                  </p>
+                  
+                </div>
+                <div class="post" ng-if="userPostedInfo.review_list.length==0">
+                  <div class="user-block" align="center">
+                  <b>No review listed.</b>
+                  </div></div>
+                <!-- /.post -->
+
+                
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" ng-class="{'active': activeTab === 1}" id="assigned">
+                <!-- The timeline -->
+                <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                   <colgroup>
+                           <!-- <col width="10%"/> -->
+                           <col width="15%"/>
+                           <col width="10%"/>
+                           <!-- <col width="10%"/>
+                           <col width="10%"/>-->
+                            <col width="10%"/>
+                           <col width="15%"/> 
+                           <col width="10%"/>         
+                    </colgroup>
+                  <tr ng-repeat = "job in $data">
+                <td data-title="'Title'" sortable="'title'" filter="{title:'text'}" align="left">{{job.title | capitalize}}
+                </td>
+
+             <!-- <td data-title="'Job Type'" sortable="'jobtype[0].name'" align="left">{{job.jobtype[0].name | capitalize}}</td>
+
+             <td data-title="'Skill'" sortable="'skill[0].skill'"  align="left">{{job.skill[0].skill | capitalize}}</td>-->
+  
+              <td data-title="'Owner'" align="left">{{job.creator[0].first_name | capitalize }} {{job.creator[0].last_name | capitalize}}</td>  
+
+               <td data-title="'Budget'" sortable="'budget'" filter="{budget:'text'}" align="left">{{job.winner_offer[0].budget | currency}}</td>
+
+              <td data-title="'Assign Date'" sortable="'due_date'" filter="{due_date:'text'}" align="left">{{job.admin_payment[0].txn_date | date}}</td>
+
+                <!-- <td data-title="'Completed Date'" sortable="'created_date'" filter="{created_date:'text'}" align="left">{{job.worker_payment[0].txn_date | date}}</td> -->
+
+              <td data-title="'Status'" sortable="'status'" filter="{job_status:'text'}" align="left">
+                <span ng-show="job.work_status==1" class="label label-info">Todo</span>
+                   <span ng-show="job.work_status==2" class="label label-warning">In progress</span>
+                      <span  ng-show="job.work_status==3" class="label label-primary">To Verify</span>
+                          <span  ng-show="job.work_status==4" class="label label-success">Completed
+                          </span>
+                </td>
+
+          </tr>
+               <tr ng-if="$data.length==0"><td colspan="9" align="center"><b>No record found</b></td></tr> 
+             </table>
+          </div>
+
+              <!-- /.tab-pane -->
+          <div class="tab-pane" ng-class="{'active': activeTab === 2}" id="posted">
+            <table id="example2" class="table table-bordered table-hover" ng-table="tableParams1" show-filter="isFiltersVisible"> 
+              <colgroup>
+                <!-- <col width="10%"/> -->
+                <col width="15%"/>
+               <!--  <col width="10%"/>
+                <col width="10%"/> -->
+                <col width="10%"/>
+                <col width="10%"/>
+                <col width="15%"/> 
+                <col width="10%"/>         
+               <!--  <col width="5%"/> 
+                <col width="5%"/>
+                <col width="5%"/>-->
+               
+              </colgroup>
+
+        <tr ng-repeat = "job in $data">
+             <!-- <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[job._id]" ng-change="toggleSelection(job._id)" class="list{{tableParams.page()}}" /></td> -->
+                                                
+              <td data-title="'Title'" sortable="'title'" filter="{title:'text'}" align="left">{{job.title | capitalize}}
+             <a href='/#/offers/{{job._id}}'>  <span ng-if="job.offers.length" class="badge bg-light-blue cursur" title="" data-toggle="tooltip" data-original-title="{{job.offers.length}}  Offers">{{job.offers.length}}</span></a>
+            </td>
+
+            <!-- <td data-title="'Job Type'" sortable="'jobtype[0].name'" align="left">{{job.jobtype[0].name| capitalize}}</td>
+
+             <td data-title="'Skill'" sortable="'skill[0].skill'"  align="left">{{job.skill[0].skill| capitalize}}</td> -->
+
+              <td data-title="'Budget'" sortable="'budget'" filter="{budget:'text'}" align="left">{{job.budget | currency}}</td>
+
+           <td data-title="'Due Date'" sortable="'due_date'" filter="{due_date:'text'}" align="left">{{job.due_date | date}}</td>
+ 
+              <td data-title="'Posted Date'" sortable="'created_date'" filter="{created_date:'text'}" align="left">{{job.created_date | date}}</td>
+
+              <td data-title="'Status'" align="center" sortable="'job_status'"  filter="{job_status:'text'}">
+              <span ng-show="job.job_status==1" class="label label-info">Open</span>
+              <span ng-show="job.job_status==2" class="label label-warning">Assigned</span>
+              <span  ng-show="job.job_status==3" class="label label-primary">Completed</span>
+             </td>
+         </tr>
+       <!-- <tr ng-if="$data.length!=0">
+         <td>
+            <div class="form-group">
+                <select class="form-control" name='selectedAction' id='selectedAction' >
+                       <option value="0">Select</option>
+                       <option value="1">Enable</option>
+                       <option value="2">Disable</option>
+                       <option value="3">Delete</option>
+                 </select> 
+              </div>
+         </td>
+          <td colspan='8'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()" ></td>
+         </form>
+      </tr> -->
+       <tr ng-if="$data.length==0"><td colspan="9" align="center"><b>No record found</b></td></tr>  
+                 </table>
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+  

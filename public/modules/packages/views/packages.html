@@ -1,0 +1,127 @@
+<section class="content-header" ng-init="packageList()">
+      <h1>
+        Packages
+       <!--  <small>User Listing</small> -->
+      </h1>
+     <ol class="breadcrumb">
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li>Packages</li>                       
+                    </ol>
+    </section>
+  
+ <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div></div>
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                       
+                            
+                            <div class="box">
+                                
+                                <!-- <div class="box-header">
+                                    <h3 class="box-title">Data Table With Full Features</h3>
+                                </div> -->
+                                 <div class="box-body ">
+                                 <div class="clearfix"></div>
+                                <div class="row">
+                                  <div class="col-xs-8">
+                                    <div ng-class="alerttype" ng-show="showmessage">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                                  </div>
+                                  <div class="col-xs-4 pull-right">
+                                    <div class="pull-right m_btm15"><a ui-sref='addpackage' align='right'  class="btn btn-primary">Add New Package</a></div>
+                                  </div>
+                                </div>
+                         
+                                 
+                                 <div class="clearfix"></div> 
+                                   
+                                <form name="searchForm" novalidate ng-submit="packageList()">
+                                    <div class="input-group">
+                                      <!-- <span class="input-group-addon">Except for...
+                                        <input type="checkbox" name="inverted"  ng-model="isInvertedSearch" />
+                                      </span> -->
+                                      <input type="text" id="ser" class="form-control" placeholder="Search title" name="searchTerm" ng-model="search" required />
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"  ng-click="packageList()">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>
+                                      </span>
+                                    </div>
+                                </form>
+                              </div>                         
+                              <div class="box-body table-responsive">
+                           
+                                   
+                                    <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible">
+                                     <colgroup>
+                                              <col width="10%"/>
+                                              <col width="15%"/>
+                                              <col width="15%"/>
+                                              <col width="15%"/>
+                                              <col width="15%"/>
+                                              <col width="5%"/>
+                                              <col width="5%"/>
+                                              
+                                            </colgroup>
+
+                                            <tr ng-repeat = "package in $data">
+                                                <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[package._id]" ng-change="toggleSelection(package._id)" class="list{{tableParams.page()}}" />
+
+                                                </td>
+                                                
+                                                <td data-title="'Title'" sortable="'Title'" filter="{title:'text'}" align="left"><a href="/#/editPackage/{{package._id}}" alt="Click to edit" title="Click to edit">{{package.title}}</a></td>
+
+                                                <td data-title="'Price'" sortable="'price'" filter="{price:'text'}" align="left">{{package.price}}</td>
+
+                                                <td data-title="'Like'" sortable="'like'" filter="{like:'text'}" align="left">{{package.like}}</td>
+
+                                                <td data-title="'Created'" sortable="'created'" filter="{created:'text'}" align="left">{{package.created | date}}</td>
+
+                                                <td data-title="'Status'" sortable="'enable'" align='left'><div ng-if="package.enable==true"><img  class="cursur" src='images/enable.png' border='0'  ng-click="performAction1(package._id,2)"></div><div ng-if="package.enable==false"><img  class="cursur"  src='images/disable.png' border='0'  ng-click="performAction1(package._id,1)"></div></td>
+
+                                                <td data-title="'Action'" align="left"><i  class="cursur fa fa-trash-o" ng-click="delete(package._id)"></i></td>
+
+                                                 
+                                            </tr>
+                                            <tr ng-if="$data.length!=0">
+                                                <td >
+                                                    
+                                                    <div class="form-group">
+                                                                <select class="form-control" name='selectedAction' id='selectedAction'>
+                                                                <option value="0">Select</option>
+                                                                <option value="1">Enable</option>
+                                                                <option value="2">Disable</option>
+                                                                <option value="3">Delete</option>
+                                                            </select> 
+                                                    </div>
+                                                </td>
+                                                <td colspan='7'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()"></td>
+                                               
+                                            </tr>  
+                                            <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b></td></tr>
+                                    </table> 
+                                  
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            
+
+
+                 
+            <!-- page script -->
+         <script type="text/ng-template" id="headerCheckbox.html">
+                <input type="checkbox" data-ng-click="toggleSelection(0,tableParams.page())" ng-model="checkboxes.checked" class="select-all" value="" />
+            </script>
+            
+               

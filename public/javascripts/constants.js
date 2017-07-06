@@ -1,82 +1,91 @@
-//var baseUrl = "http://52.39.212.226:4075";
 var baseUrl = "http://localhost:4075";
 
 var webservices = {	
 
 	"authenticate" : baseUrl + "/adminlogin/authenticate",
+	"logout" : baseUrl + "/adminlogin/logout",
 	"forgot_password" : baseUrl + "/adminlogin/forgot_password",
-	"listVehicleTypes" : baseUrl + "/vehicletypes/list",
-	"addVehicleType": baseUrl + "/vehicletypes/add",
-	"editVehicleType": baseUrl + "/vehicletypes/edit",
-	"updateVehicleType": baseUrl + "/vehicletypes/update",
-	"statusUpdateVehicleType": baseUrl + "/vehicletypes/update_status",
-	"deleteVehicleType": baseUrl + "/vehicletypes/delete",
-
+	"adminResetPassword"	  : baseUrl + "/adminlogin/resetPassword",
+	"changePassword" : baseUrl + "/adminlogin/changePassword",	
+	"findOneAdminInfo" : baseUrl + "/adminlogin/adminInfo",
+	"saveProfile" : baseUrl + "/adminlogin/saveProfile",
+	"uploadProImg" : baseUrl + "/adminlogin/uploadProImg",
+	"commissionSetting": baseUrl + "/adminlogin/commissionSetting",
 
 	//user
 	"addUser" : baseUrl + "/users/add",
 	"userList" : baseUrl + "/users/list",
-	"findOneUser" : baseUrl + "/users/userOne",
-	"bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
 	"update" : baseUrl + "/users/update",
+	"getCurrentUserData":baseUrl + "/users/getCurrentUserData",
+	"resetPassword":baseUrl+"/users/resetPassword",
+	"unSubscribe":baseUrl+"/users/unSubscribe",
+	"allUsersCount":baseUrl+"/users/allUsersCount",
+	"exportUserList":baseUrl + "/users/exportFile",
+	"deleteUser":baseUrl + "/users/deleteUser",
+	"totalUser": baseUrl + "/users/totalUser",
+	"latestUser" : baseUrl + "/users/latestUser",
+
+
+	"bulkUpdateUser" : baseUrl + "/user/bulkUpdate",
+
+	"resetpassword":baseUrl+"/users/reset_password",
+
+//vendor
+	"addVendor" : baseUrl + "/admin/signupVendor",
+	"vendorList" : baseUrl + "/admin/vendorList",
+	"update" : baseUrl + "/vendor/update",
+	"getCurrentVendorData":baseUrl + "/vendor/getCurrentVendorData",
+	"resetPassword":baseUrl+"/vendor/resetPassword",
+	"unSubscribe":baseUrl+"/vendor/unSubscribe",
+	"allVendorCount":baseUrl+"/vendor/allVendorCount",
+	"exportVendorList":baseUrl + "/vendor/exportFile",
+	"deleteVendor":baseUrl + "/vendor/deleteVendor",
+	"totalVendor": baseUrl + "/vendor/totalVendor",
+	"latestVendor" : baseUrl + "/vendor/latestVendor",
+
+
+	"bulkUpdateVendor" : baseUrl + "/vendor/bulkUpdate",
+
+
+
+	//package
+
+	"addPackage" : baseUrl + "/package/add",
+	"packages" : baseUrl + "/package/list",
+	"getPackageDetail" : baseUrl + "/package/getdetail",
+	"updatePackage" : baseUrl + "/package/updatePackage",
+	"deletePackage" : baseUrl + "/package/deletePackage",
+	"bulkUpdatePackage" : baseUrl + "/package/bulkUpdate",
+
+
 	
-	//vehicle webservice listing
-	"listVehicles": baseUrl + "/vehicles/list",
 
+	// help block 
+	"updateHelpBlock":baseUrl+"/help/updateHelpBlock",
+	"getHelpBlockListing":baseUrl+"/help/getHelpBlockListing",
+	"getHelpInformation":baseUrl+"/help/getHelpInformation",
+	"insertHelpInformation":baseUrl+"/help/insertHelpInformation",
+	"deleteHelp":baseUrl+"/help/deleteHelp",
 
-	//category
-	"allQuestions" : baseUrl + "/categories/allQuestions",
-	"categoryList" : baseUrl + "/categories/list",
-	"addCategory" : baseUrl + "/categories/add",
-	"updateCategory" : baseUrl + "/categories/update",
-	"bulkUpdateCategory" : baseUrl + "/categories/bulkUpdate",
-	"findOne" : baseUrl + "/categories/findOne",
-
-	//questionnaire webservice listing
-	// "questionnaireList" : baseUrl + "/questionnaire/listquestionnaire",
-	// "addquestionnaire" : baseUrl + "/questionnaire/addquestionnaire",
-	// "editquestionnaire" : baseUrl + "/questionnaire/editquestionnaire",
-	// "updatequestionnaire" : baseUrl + "/questionnaire/updatequestionnaire",
-	// "deletequestionnaire" : baseUrl + "/questionnaire/removequestionnaire",
-	// "updatestatusquestionnaire" : baseUrl + "/questionnaire/updateStatus",
-
-	"questionnaireList" : baseUrl + "/questionnaire/list",
-	"addquestionnaire" : baseUrl + "/questionnaire/add",
-	"findOneQuestionnaire" : baseUrl + "/questionnaire/questionnaireOne",
-	"bulkUpdateQuestionnaire" : baseUrl + "/questionnaire/bulkUpdate",
-	"updateQuestionnaire" : baseUrl + "/questionnaire/update",
 	
-
-	//question webservice listing
-	"updateQuestion" : baseUrl + "/questions/update",
-	"findOneQuestion" : baseUrl + "/questions/question",
-	"addQuestion" : baseUrl + "/questions/add",
-	"bulkUpdateQuestion" : baseUrl + "/questions/bulkUpdate",
-	"getAnswerList" : baseUrl + "/questions/getanswerlist",
-
-
-	//answertype webservice listing
-	"answerTypeList" : baseUrl + "/answer_type/list",
-  
-  //role
-	"roleList" : baseUrl + "/roles/list",
-	"addRole" : baseUrl + "/roles/add",
-	"updateRole" : baseUrl + "/roles/update",
-	"findOneRole" : baseUrl + "/roles/role",
-	"bulkUpdateRole" : baseUrl + "/roles/bulkUpdate",
-
-	//permission
-	"permissionList" : baseUrl + "/permissions/list",
-	"createPermission" : baseUrl + "/permissions/create",
-	"updatePermission" : baseUrl + "/permissions/update",
-	"findOnePermission" : baseUrl + "/permissions/permission",
-	"bulkUpdatePermission" : baseUrl + "/permissions/bulkUpdate",
-	/******************taniya work*****************/
-
-
-	"resetpassword":baseUrl+"/users/reset_password"
 
 }
+var nav = [
+			{text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'home'},
+		  //{text:'Esscrow Setting', path:'/#/setting',icon:'fa-cog',activeText:'setting'},
+          // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
+          {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
+          {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+            //{text:'Manage Vendors', path:'/#/users',icon:'fa-users',activeText:'users'},
+           // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},
+            
+         //   {text:'CMS Management', path:'/#/cmslisting',icon:'fa-users',activeText:'cmslisting'},
+         
+          //  {text:'Manage Jobs', path:'/#/jobs',icon:'fa-briefcase',activeText:'job'},
+          //  {text:'Payment History', path:'/#/paymentHistory',icon:'fa-money',activeText:'payment'},
+          //   {text:'Feedbacks', path:'/#/feedbacks',icon:'fa-comments',activeText:'feedback'},
+            
+                         ];
 
 var facebookConstants = {
 	"facebook_app_id": "1655859644662114"

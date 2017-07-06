@@ -1,0 +1,92 @@
+<section class="content-header" ng-init="getHelpBlock()">
+      <h1>
+        Content Management System  
+       <!--  <small>User Listing</small> -->
+      </h1>
+     <ol class="breadcrumb">
+                        <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Home</a></li>
+                       <li> cms</li>                        
+                    </ol>
+    </section>
+  
+ <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+        </div>
+        <div class="loader-container"></div></div>
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                       
+                            
+                            <div class="box">
+                                <div class="box-body ">
+                                 <div class="clearfix"></div>
+                                <div class="row">
+                                  <div class="col-xs-8">
+                                    <div ng-class="alerttype" ng-show="showmessage">
+                                                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>
+                                  </div>
+                                  <div class="col-xs-4 pull-right">
+                                    <div class="pull-right m_btm15"><a href='/#/help/cmsManagement' align='right'  class="btn btn-primary">Add New Page</a></div>
+                                  </div>
+                                </div>
+                         
+                                 
+                                 <div class="clearfix"></div> 
+                                   
+                                <!-- <form name="searchForm" novalidate ng-submit="getAllUsers()">
+                                    <div class="input-group">
+                                    
+                                      <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" required />
+                                      <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"  ng-click="getAllUsers()">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>
+                                      </span>
+                                    </div>
+                                </form> -->
+                              </div>                         
+                              <div class="box-body table-responsive">
+                           <form role="form">
+                                   
+                                    <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                                     <colgroup>
+                                              <col width="10%"/>
+                                              <col width="15%"/>
+                                              <col width="15%"/>
+                                              
+                                            </colgroup>
+
+                                          <tr ng-repeat = "data in showCmsPages">
+                                               
+                                                <td data-title="'Title'" align="left">{{data.title}}</td>
+
+                                                <td data-title="'Identifier'" align="left">{{data.identifier}}</td>
+
+                                                <td data-title="'Edit/Delete'" align="left"><span class="glyphicon glyphicon-edit" ng-click="edit(data._id)" style="cursor:pointer;"></span>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <span class="glyphicon glyphicon-trash" ng-click="delete(data._id)" style="cursor:pointer;" ></span>
+
+                                                </td>
+                                                
+                                            </tr>
+                                           
+                                            <tr ng-if="showCmsPages.length==0"><td colspan="6" align="center"><b>No record found</b></td></tr>
+                                    </table> 
+                                     </form>  
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            
+
+
+     
+               

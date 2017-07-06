@@ -1,0 +1,92 @@
+<style type="text/css">
+    .package{margin: 10px 0px 0px 0px}
+    
+    .spaceBT10 { padding-bottom: 10px; }
+    p.requiredClass{margin:0px 0px 0px 0px ;}
+
+</style>
+ <section class="content-header">
+        <h1>
+                Add Package{{packages}}
+                    </h1>
+        <ol class="breadcrumb">        
+            <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a>Add Package</a></li>
+            
+           
+        </ol>
+    </section>
+    <!-- Main content -->
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                         <li ng-class="active"><a data-toggle="tab">Edit Profile</a></li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box marginBT0">
+                            <form  name="packageForm" class="spaceTP10 ">
+                            <div class="package">
+                                <div class="col-sm-3">Title<span class="requiredClass">*</span></div>
+                                <div class="col-sm-9 spaceBT10">
+                                    <input type="text" name="title" class="form-control" ng-model="package.title" ng-pattern="/^[a-z ,.'-]+$/i" required   ng-minlength="2" ng-maxlength="30" maxlength="31">
+                                     <div class="help-block" ng-messages="packageForm.title.$error" ng-if="packageForm.title.$touched">
+                                    <p ng-message="minlength" class="requiredClass">Title is too short.</p>
+                                    <p ng-message="maxlength" class="requiredClass">Title is too long.</p>
+                                    <p ng-message="required" class="requiredClass">Title is required.</p>
+                                    <p ng-message="pattern" class="requiredClass">Use a-z or A-Z</p>
+                                </div>
+                                </div>
+                                <div class="col-sm-3">Price<span class="requiredClass">*</span></div>
+                              
+                                <div class="col-sm-9 spaceBT10">
+                                    <input type="number" name="price" class="form-control" ng-model="package.price" ng-pattern="/^[0-9]{1,7}$/" required   ng-maxlength="3" maxlength="3">
+                                    
+                                  
+                                    <div class="help-block" ng-messages="packageForm.price.$error" ng-if="packageForm.price.$touched">
+                                        <p ng-if="package.price==0" class="requiredClass"> Price must be greater than 0.</p>
+                                        <p ng-message="maxlength" class="requiredClass">Price must be less than 4 digits.</p>
+                                        <p ng-message="required" class="requiredClass">Price is required.</p>
+                                        
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-3">Like<span class="requiredClass">*</span></div>
+                                <div class="col-sm-9 spaceBT10">
+                                    <input type="number" name="like" class="form-control" ng-model="package.like" ng-pattern="/^[0-9]{1,7}$/" required   ng-maxlength="6" maxlength="6" >
+                                    <div class="help-block" ng-messages="packageForm.like.$error" ng-if="packageForm.like.$touched">
+                                        <p ng-if="package.like==0" class="requiredClass"> Likes must be greater than 0.</p>
+                                        <p ng-message="maxlength" class="requiredClass">Likes must be less than 6 digits.</p>
+                                        <p ng-message="required" class="requiredClass">Like is required.</p>
+                                        
+                                    </div>
+
+                                </div>
+                            
+                                <div class="col-sm-3">&nbsp;</div>
+                                 <div class="col-sm-9 spaceBT10">
+                                    <div class="btn-right">
+                                    
+                                        <button class="btn btn-primary" ng-click="addPackage()" ng-if="submitButton" ng-disabled="packageForm.$invalid" >Submit</button>
+                                        <button  ng-if="updateButton" class="btn btn-primary" ng-click="updatePackage()" ng-disabled="packageForm.$invalid">Update</button>
+                                    </div>
+                                  </div>
+                             </div>     
+                            </form>      
+                            </div>
+                              <!-- <div class="box-footer clearfix no-border">
+                                                  <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login" ng-disabled="userForm.$invalid" ng-click="submit()" value="Submit">
+                            <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update"  ng-click="update()" value="Update "> -->
+                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+

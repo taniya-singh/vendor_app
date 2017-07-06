@@ -1,100 +1,134 @@
- <aside class="right-side" ng-init="getAllUsers()">
-                <!-- Content Header (Page header) -->
-                <section class="content-header">
-                    <h1>
-                       Users                       
-                    </h1>
-                    <ol class="breadcrumb">
+<section class="content-header" ng-init="getAllUsers()">
+      <h1>
+        Users
+       <!--  <small>User Listing</small> -->
+      </h1>
+     <ol class="breadcrumb">
                         <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li>Users</li>                       
                     </ol>
-                </section>
-                <!-- Main content -->
-                <section class="content">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box-body table-responsive">
-                                    <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>   
-                            
-                            <div class="box">
-                                
-                                <!-- <div class="box-header">
-                                    <h3 class="box-title">Data Table With Full Features</h3>
-                                </div> -->
-                                 <div class="box-body table-responsive">
-                                    <div class="clearfix" style="padding-bottom:15px;">
-                                            <div class="box-body table-responsive">
-                                            <div class="clearfix">
-                                             <div class="pull-left m_btm15"><a href='/#/users/add' align='right'  class="btn btn-primary">Add New User</a></div>
-                                             <div class="clearfix"></div>
-                               
-                                <form name="searchForm" novalidate ng-submit="applyGlobalSearch()">
-                                    <div class="input-group">
-                                      <span class="input-group-addon">Except for...
-                                        <input type="checkbox" name="inverted" ng-model="isInvertedSearch" />
-                                      </span>
-                                      <input type="text" class="form-control" placeholder="Search term" name="searchTerm" ng-model="globalSearchTerm" required />
-                                      <span class="input-group-btn">
-                                        <button class="btn btn-default" type="submit">
-                                          <span class="glyphicon glyphicon-search"></span>
-                                      </button>
-                                      </span>
-                                    </div>
-                              </form>
-                              </div>                         
+    </section>
+ <div ng-if="loader==true" >
+<div class="loader-image">
+            <i class="fa fa-spinner fa-pulse fa-spin"></i>
+ </div>
+<div class="loader-container"></div></div>
 
-                           <form role="form">
-                                  
-                                    <table id="example1" class="table table-bordered table-striped" ng-table="tableParams" show-filter="isFiltersVisible"> 
-                                     <colgroup>
-                                              <col width="5%"/>
-                                              <col width="5%"/>
-                                              <col width="20%"/>
-                                              <col width="20%"/>
-                                              <col width="20%"/>
-                                             
-                                            </colgroup>
+ <!-- Main content -->
+    <section class="content">
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="box-body table-responsive">
+               <div class="box">
+                   <div class="box-body ">
+                       <div class="clearfix"></div>
+                          <div class="row">
+                             <div class="col-xs-8">
+                                <div ng-class="alerttype" ng-show="showmessage">
+                                    <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}
+                                </div>
+                              </div>
+                             <!-- <div class="col-xs-4 pull-right">
+                               <div class="pull-right m_btm15"><a href='/#/users/add' align='right'  class="btn btn-primary">Add New User</a></div>
+                              </div>
+                              <div class="col-xs-4 pull-left">
+                               <a href="javascript:void(0);" ng-click="downloadCSV();" title="export Disorder" align='right'  class="btn btn-primary btn-responsive">Export CSV</a>
+                            </div> -->
+                          </div>
 
-                                            <tr ng-repeat = "user in $data">
-                                                <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[user._id]" ng-change="toggleSelection(user._id)" /></td>
-                                                <td data-title="'Status'" sortable="'enable'" align='left'><div ng-if="user.enable==true"><img src='images/enable.png' border='0'></div><div ng-if="user.enable==false"><img src='images/disable.png' border='0'></div></td>
+                         <div class="clearfix"></div> 
+                          <form name="searchForm" novalidate ng-submit="getAllUsers()">
+                            <div class="input-group">
+                              <!-- <span class="input-group-addon">Except for...
+                               <input type="checkbox" name="inverted"  ng-model="isInvertedSearch" />
+                               </span> -->
+                               <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" required />
+                               <span class="input-group-btn">
+                              <button class="btn btn-default" type="submit"  ng-click="getAllUsers()">
+                                <span class="glyphicon glyphicon-search"></span>
+                               </button>
+                                 </span>
+                              </div>
+                           </form>
+                         </div> 
 
-                                                <td data-title="'First Name'" sortable="'first_name'" filter="{first_name:'text'}" align="left"><a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit">{{user.first_name}}</a></td>
+             <div class="box-body table-responsive">
+                <form role="form">
+                                   
+                 <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible"> 
+                  <colgroup>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="5%"/>
+                    <col width="5%"/>
+                    </colgroup>
+               <tr ng-repeat = "user in $data">
+                    <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[user._id]" ng-change=" (user._id)" class="list{{tableParams.page()}}" />
+                      </td>
 
-                                                <td data-title="'Last Name'" sortable="'last_name'" filter="{last_name:'text'}" align="left">{{user.last_name}}</td>
+                   <td data-title="'First Name'" sortable="'first_name'" filter="{first_name:'text'}" align="left"><a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit">{{user.first_name}}</a></td>
 
-                                                <td data-title="'Email'" sortable="'email'" filter="{email:'text'}" align="left">{{user.email}}</td>
+                  <td data-title="' Last Name'" sortable="'last_name'" filter="{last_name:'text'}" align="left"><a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit">{{user.last_name}}</a></td>
 
-                                                
-                                            </tr>
-                                            <tr>
-                                                <td colspan='2'>
-                                                    
-                                                    <div class="form-group">
-                                                                <select class="form-control" name='selectedAction' id='selectedAction'>
-                                                                <option value="0">Select</option>
-                                                                <option value="1">Enable</option>
-                                                                <option value="2">Disable</option>
-                                                                <option value="3">Delete</option>
-                                                            </select> 
-                                                    </div>
-                                                </td>
-                                                <td colspan='3'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()"></td>
-                                                </form>
-                                            </tr>  
-                                    </table>   
+                   <td data-title="'Email'" sortable="'email'" filter="{email:'email'}" align="left">{{user.email| capitalize}}</td>
 
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                        </div>
-                    </div>
+                    <!-- <td data-title="'Password'" sortable="'password'" filter="{password:'password'}" align="left">{{user.password| capitalize}}</td>-->
+                  <td data-title="'Gender'" sortable="'vendor_address'" filter="{gender:'text'}" >{{user.gender}}</td>
 
-                </section><!-- /.content -->
-            </aside><!-- /.right-side -->
+                   <td data-title="'Phone'">{{user.phone_no}}</td> 
+                 <!-- <td data-title="'Address'" sortable="'address'" filter="{address:'text'}" >{{user.address}}</td>
+
+                  <td data-title="'Latitude'" sortable="'latitude'" filter="{latitude:'text'}" >{{user.latitude}}</td>
+
+                  <td data-title="'Longitude'" sortable="'longitude'" filter="{longitude:'text'}" >{{user.longitude}}</td> -->
+
+                  <!--  <td data-title="'Facebook_id'" sortable="'facebook_id'" filter="{facebook_id:'email'}" >{{user.facebook_id}}</td>
+
+                   <td data-title="'Google_id'" sortable="'google_id'" filter="{google_id:'email'}" >{{user.google_id}}</td> -->
+
+                    <td data-title="'Created date'" sortable="'created_date'" filter="{created_date:'text'}" align="left">{{user.created_date |date}}</td>
+
+                    <td data-title="'Status'" sortable="'enable'" align='left'><div ng-if="user.enable==true"><img  class="cursur" src='images/enable.png' border='0'  ng-click="performAction1(user._id,2)"></div>
+
+                    <div ng-if="user.enable==false"><img  class="cursur"  src='images/disable.png' border='0'  ng-click="performAction1(user._id,1)"></div></td>
+
+                    <td data-title="'Action'" align="left"><i  class="cursur fa fa-trash-o" ng-click="delete(user._id)"></i></td>
+               </tr>
+                <tr ng-if="$data.length!=0">
+                  <td >
+                     <div class="form-group">
+                       <select class="form-control" name='selectedAction' id='selectedAction'>
+                            <option value="0">Select</option>
+                            <option value="1">Enable</option>
+                            <option value="2">Disable</option>
+                            <option value="3">Delete</option>
+                        </select> 
+                      </div>
+                    </td>
+                  <td colspan='7'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()"></td>
+             </tr>  
+           <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b></td></tr>
+       </table> 
+               </form>  
+             </div>
+           </div><!-- /.box-body -->
+         </div><!-- /.box -->
+        </div>
+     </div>
+
+ </section><!-- /.content -->
+            
 
 
-            <!-- page script -->
-         <script type="text/ng-template" id="headerCheckbox.html">
-                <input type="checkbox" data-ng-click="toggleSelection(0)" ng-model="checkboxes.checked" class="select-all" value="" />
-            </script>
+                 
+   <!-- page script -->
+ <script type="text/ng-template" id="headerCheckbox.html">
+   <input type="checkbox" data-ng-click="toggleSelection(0,tableParams.page())" ng-model="checkboxes.checked" class="select-all" value="" />
+    </script>
+            
                
+

@@ -7,7 +7,117 @@ a {
   color: #00B7FF;
 }*/
 
-.optionSpacing .ng-scope {margin-top: 5px}
+/*.optionSpacing .ng-scope {margin-top: 5px}*/
+.cursur {cursor: pointer;}
+.cursurul li { cursor: pointer; }
+.red {color: red;font-size: 16px;}
+.active-data, .settrue {
+    color: #333333;
+}
+.inactive-data, .setfalse {
+    color: #333333;
+}
+.m_btm15 {
+    margin-bottom: 15px;
+}
+.bodyBack {background-color: #d2d6de;}
+.margin0 {margin-left: 0px !important;}
+
+.loader-container {
+            background: rgb(0, 0, 0) none repeat scroll 0 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0.41;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 99999999;
+        }
+        .loader-image {
+            bottom: 0;
+            color: rgb(255, 255, 255);
+            font-size: 70px;
+            left: 0;
+            position: fixed;
+            right: 0;
+            text-align: center;
+            top: 40%;
+            z-index: 2147483647;
+        }
+
+.img-border {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    height: 135px;
+    width: 194px;
+}
 
 
+.img-border-skill-cover {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    height: 137px;
+    width: 400px;
+}
+.img-border-skill-icon {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    /*height: 137px;
+    width: 400px;*/
+}
+.img-close {
+    position: absolute !important;
+    left: 200px !important;
 
+}
+.padingZero {
+   padding: 0 !important;
+
+}
+.info-box-skill {
+    padding-top: 10% !important;
+}
+.top5>.row {margin-top: 10px;}
+
+ .info-box-icon-skill {
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+     }
+.image-span{
+      position: relative;display: inline-block;
+     }
+.removeImage {
+    color: #374850;
+    font-size: 22px;
+    line-height: 0.9;
+    padding: 2px 3px;
+    position: absolute;
+    right: -10px;
+    text-align: center;
+    top: -12px;
+}
+    
+.cropArea {
+  background: #C9DBE2;
+  overflow: hidden;
+  width:auto;
+  height:300px;
+  border: 2px dotted;
+  border-radius: 5px;
+   padding: 10px 10px 10px 10px;
+}
+.alert{padding: 4px 10px}
+.errormsg{color: red;}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+.requiredClass{color:red;}
