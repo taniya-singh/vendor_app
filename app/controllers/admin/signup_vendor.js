@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs=require('fs');
 var NodeGeocoder = require('node-geocoder');
+var emailService = require('./../email/emailService.js');
+
 
 
 /* Vendor sign up form  */
@@ -55,6 +57,23 @@ exports.signupVendor = function(req, res) {
 							outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
 						}
 						else {
+							/* Send Email to Vendor */
+
+							var userDetails = {};
+							userDetails.email = vendorobj.vendor_email;
+							userDetails.username =vendorobj.vendor_email;
+							userDetails.pass = vendorobj.password;
+							userDetails.firstname = vendorobj.vendor_name;
+							userDetails.app_link = "<a href='http://www.google.com'>Link</a>";
+
+							var frm = '<img src="logo.png">';
+							var emailSubject = 'bridgit Registration';
+
+							var emailTemplate = 'user_signup.html';
+
+							emailService.send(userDetails, emailSubject, emailTemplate, frm);
+
+
 							outputJSON = {'status': 'success', 'messageId':200, 'message':"Vendor successfully added",'data': data};
 						}
 						res.jsonp(outputJSON);
