@@ -1,5 +1,8 @@
 var userObj = require('./../../models/users/users.js');
 var vendor = require('./../../models/vendordetails/vendordetails.js');
+var order = require('./../../models/order/order.js');
+var itemsObj = require('./../../models/items/items.js');
+
 var device=require('./../../models/devices/devices.js')
 var mongoose = require('mongoose');
 var twilio=require('twilio');
@@ -649,3 +652,70 @@ exports.reset_password=function(req,res){
             })
         }
 }
+
+
+
+
+exports.place_order=function(req,res){
+    console.log("order")
+    if(req.body){
+        console.log("req.body",req.body);
+        itemsObj.find({_id:req.body.item_id,is_deleted:false},function(err,item){
+            console.log("inside items",item)
+            if(err){
+                console.log("err",err)
+                outputJSON={'status': 'failure', 'messageId':400, 'message':"Err"};
+                res.jsonp(outputJSON)
+
+            }else{
+                if(item==null){
+
+                }
+                else
+                {
+                    console.log("item",item)
+                    var vendorid=item[0].vendor_id;
+                var orderdetail={};
+                orderdetail.customer_id=req.body.customer_id;
+                orderdetail.item_id=req.body.item_id;
+                orderdetail.vendor_id=vendorid;
+                order(orderdetail).save(orderdetail,function(err,orders){
+                    if(err){
+                        res.jsonp(err);
+                    }else{
+                    outputJSON = {'status': 'success', 'messageId':200, 'message':"Order placed successfully",data:orders};
+                    res.jsonp(outputJSON);
+                }
+                    })
+                }
+                }
+
+            })
+
+        }
+
+
+    }
+
+    /*if(req.body){
+        userObj.findOne({_id:req.body._id},function(err,data){
+            if(err){
+                outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
+                res.jsonp(outputJSON)
+            }
+            else{
+                console.log("req.body",req.body)
+                userObj.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"email":req.body.email,"password":req.body.password}},function(err,updatedresponse){
+                    if(err){
+                        outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
+                        res.jsonp(outputJSON)
+                    }
+                    else{
+                        console.log("inside responmse",updatedresponse);
+                        outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
+                        res.jsonp(outputJSON)
+                     }
+                })
+            }
+        })
+    }*/

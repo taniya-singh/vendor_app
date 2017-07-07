@@ -102,13 +102,14 @@ exports.updateItem = function(req, res) {
 		'messageId': 203,
 		'message': constantObj.messages.errorUpdatingItems
 	};
-		
+	console.log("insiodeee")	
 					reqdata={};
 					reqdata.image=req.body.image;
 					reqdata.p_name=req.body.p_name;
 					reqdata.p_price=req.body.p_price;
 					reqdata.p_description=req.body.p_description;
 					reqdata.p_count=req.body.p_count;
+					console.log("sdrgsr",reqdata)
 						itemsObj.find({_id:req.body.id},function(err,itemdetail){
 							if(err){
 								console.log(err)
@@ -116,9 +117,25 @@ exports.updateItem = function(req, res) {
 					 			res.json(outputJSON);
 							}else
 							{
-								if(itemdetail!="")
+								console.log("itemdetail",itemdetail)
+								if(itemdetail.length!=null)
 								{
+									console.log("ander aa")
 									if(req.body.image != undefined){
+
+									}else{
+										console.log("sssss",req.body._id);
+									itemsObj.update({_id :req.body._id},{$set:{p_name:req.body.p_name,vendor_id:req.body.vendor_id,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
+										if(err){
+											res.json(err)
+
+										}else{
+											outputJSON = {'status':'success', 'messageId':200, 'message':"updates successfully",data:data}, 
+					 					res.json(outputJSON);
+
+
+										}
+									})		
 
 									}
 

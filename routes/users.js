@@ -5,7 +5,7 @@ var userObj = require('./../app/controllers/users/users.js');
 
 
 	var router = express.Router();
-
+	var order = require('./../app/controllers/users/users.js');
 	 var userObj = require('./../app/controllers/users/users.js');
 	 router.get('/list', userObj.list);
 	 router.post('/add', userObj.add);
@@ -21,6 +21,8 @@ var userObj = require('./../app/controllers/users/users.js');
       //router.post('/faceBookLogin',userObj.faceBookLogin);
       router.post('/forgetpassword',userObj.forgetpassword);
       router.post('/reset_password',userObj.reset_password);
+      router.post('/place_order',order.place_order);
+
       //router.post('/userList',userObj.userList);
 
 

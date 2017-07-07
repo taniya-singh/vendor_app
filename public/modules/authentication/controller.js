@@ -121,12 +121,11 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 	
 	//login
 	$scope.login = function() {
-		console.log("lofin***********")
 			
 			inputJSON = '{"username":' + '"' + $scope.username + '", "password":' + '"' + $scope.password + '"}';
 			$scope.loader=true;
 			AuthenticationService.Login(inputJSON, function(response) {
-				console.log("response",response)
+				console.log("reghfhfghdfghsponse",response)
 
 			var errorMessage = '';
 						
