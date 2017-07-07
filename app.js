@@ -180,6 +180,38 @@ function findByUsername(username, fn) {
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
 
+  passport.use('adminLogin',new LocalStrategy(
+    function(username, password, done) {
+      
+      adminLoginObj.findOne({username: username}, function(err, adminuser) {
+       
+        if(err) {
+               return done(err);
+        }
+        
+        if(!adminuser) {
+           console.log("in adminuser");
+          return done(null, false);
+        }
+
+        if(adminuser.password != password) {
+              return done(null, false);
+        }
+
+
+        //returning specific data
+        return done(null, {id: adminuser._id});
+
+      });
+    }
+  ));
+
+passport.serializeUser(adminLoginObj.serializeUser);
+passport.deserializeUser(adminLoginObj.deserializeUser);
+
+//vendor login
+var LocalStrategy = require('passport-local').Strategy;
+
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
 

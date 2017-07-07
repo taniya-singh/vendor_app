@@ -145,3 +145,20 @@ exports.update_vendor_info2=function(req,res){
 		})
 	}
 }
+
+
+exports.vendorList = function(req,res){
+	console.log("inside &&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+
+        vendor.find({},function(err,data){
+                    if(err){
+                        res.json("Error: "+err);
+                        
+                    }
+                    else{
+                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                    res.json(outputJSON);
+                    }
+                });
+    }
