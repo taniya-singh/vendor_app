@@ -6,6 +6,7 @@ module.exports = function(app, express,passport) {
 	router.post('/signupVendor', vendor.signupVendor);
 	router.post('/update_vendor_info2', vendor.update_vendor_info2);
 	router.post('/vendor_login',passport.authenticate('vendorLogin'), vendor.vendor_login);
+	router.post('/vendorList', vendor.vendorList);
 	app.use('/admin', router);
 
 }

@@ -215,7 +215,7 @@
               <!-- <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> -->
               <img ng-show="displayImage" class="user-image" src="assets/upload/adminProfile/{{displayImage}}" alt="User Image" >
 
-              <img ng-hide="displayImage" class="user-image" src="images/user_default.jpg" alt="User Image">
+              <img ng-hide="displayImage" class="user-image" src="images/avatar5.png" alt="User Image">
               <span class="hidden-xs">{{displayName}}</span>
             </a>
             <ul class="dropdown-menu">
@@ -224,7 +224,7 @@
                 <!-- <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
                 <img ng-show="displayImage" class="img-circle" src="assets/upload/adminProfile/{{displayImage}}" alt="User Image" >
 
-              <img ng-hide="displayImage" class="img-circle" src="images/user_default.jpg" alt="User Image">
+              <img ng-hide="displayImage" class="img-circle" src="images/avatar5.png" alt="User Image">
                 <p>
                   {{displayName}} 
                  <!--  <small>Member since Nov. 2012</small> -->
@@ -249,7 +249,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="/#/profile" class="btn btn-default btn-flat">Profile</a>
+                  <!-- <a href="/#/profile" class="btn btn-default btn-flat">Profile</a> -->
                 </div>
                 <div class="pull-right">
                    <a href="javascript:void(0)" class="btn btn-default btn-flat" ng-click="logout()" ng-controller="loginController">Sign out</a>
@@ -263,4 +263,4 @@
           </li> -->
         </ul>
       </div>
-    </nav>
+    </nav> 
