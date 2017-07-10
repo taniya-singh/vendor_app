@@ -66,6 +66,7 @@ uploadSkillImg= function(data,callback){
 		     }else{
 		     	var base64Data = data.image.base64;
 		     }
+		     //console.log("TTTT",base64Data)
 		     if(base64Data!=undefined){
 		     	 fs.writeFile(imageName, base64Data, 'base64', function(err) {
 				        if (err) {
@@ -95,6 +96,7 @@ uploadSkillImg= function(data,callback){
  */
 
 exports.updateItem = function(req, res) {
+	console.log("insoseeeeeeeeeeeeee")
 	var reqdata={};
 
 	var outputJSON = {
@@ -103,52 +105,83 @@ exports.updateItem = function(req, res) {
 		'message': constantObj.messages.errorUpdatingItems
 	};
 	console.log("insiodeee")	
-					reqdata={};
-					reqdata.image=req.body.image;
-					reqdata.p_name=req.body.p_name;
-					reqdata.p_price=req.body.p_price;
-					reqdata.p_description=req.body.p_description;
-					reqdata.p_count=req.body.p_count;
-					console.log("sdrgsr",reqdata)
-						itemsObj.find({_id:req.body.id},function(err,itemdetail){
+		reqdata={};
+		reqdata.id=req.body.id;
+		reqdata.image=req.body.image;
+		reqdata.p_name=req.body.p_name;
+		reqdata.p_price=req.body.p_price;
+		reqdata.p_description=req.body.p_description;
+		reqdata.p_count=req.body.p_count;
+		itemsObj.find({_id:req.body.id},function(err,itemdetail){
+			if(err){
+				console.log(err)
+				outputJSON = {'status':'failure', 'messageId':400, 'message':"error"}, 
+				res.json(outputJSON);
+			}else{
+				if(itemdetail.length!=null){
+					if(req.body.image != undefined){
+						var photoname = Date.now() + ".png";
+		      			var imageName = __dirname+"/../../../public/images/upload/"+photoname;
+		      			//console.log("aaaaaaa",reqdata.image)
+		  				if(reqdata.image.indexOf("base64,")!=-1){	
+		  					console.log("inside not base 64")
+				         	var Data = reqdata.image.split('base64,'); 
+				         	var ext=Data[0].split('/');		          
+				         	var format= ext[1].replace(';','');        
+				         	var photoname = Date.now() + "."+format;
+				         	var imageName = __dirname+"/../../../public/images/upload/"+photoname;
+				         	var base64Data = Data[1];
+				         	var base64Data = base64Data;     
+		     			}else{
+		     				var base64Data = reqdata.image.base64;
+		     			}
+		     			//console.log("base64Data",base64Data)
+			    		if(base64Data!=undefined){
+			    			console.log("insideee")
+				     	 	fs.writeFile(imageName, base64Data, 'base64', function(err) {
+							      if (err) {
+										outputJSON = {'status':'failure', 'messageId':400, 'message':"Failure upload"}, 
+					 					res.json(outputJSON);							       }else{
+				                 	itemsObj.update({_id :reqdata.id},{$set:{image:photoname,
+									    p_name:req.body.p_name,
+									    vendor_id:req.body.vendor_id,
+									    p_price:req.body.p_price,
+									    p_description:req.body.p_description,
+										p_count:req.body.p_count}},function(err,data){
+											
+											if(err) {
+												console.log("err",err)
+												outputJSON = {'status':'failure', 'messageId':400, 'message':"Wrong id"}, 
+					 							res.json(outputJSON);	
+					 						}
+					 						else{
+					 							
+												outputJSON = {'status':'success', 'messageId':200, 'message':"updated successfully",data:data}, 
+					 							res.json(outputJSON);
+					 						}
+										});  
+					        		}
+					      	}); //file write
+			     			}else{
+			     				outputJSON = {'status':'failure', 'messageId':400, 'message':"Wrong format"}, 
+					 							res.json(outputJSON);
+			     			}			       
+					}else{
+						console.log("inside simple update without images",req.body.id);
+						itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
 							if(err){
-								console.log(err)
-					 			outputJSON = {'status':'failure', 'messageId':400, 'message':"error"}, 
-					 			res.json(outputJSON);
-							}else
-							{
-								console.log("itemdetail",itemdetail)
-								if(itemdetail.length!=null)
-								{
-									console.log("ander aa")
-									if(req.body.image != undefined){
-
-									}else{
-										console.log("sssss",req.body._id);
-									itemsObj.update({_id :req.body._id},{$set:{p_name:req.body.p_name,vendor_id:req.body.vendor_id,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
-										if(err){
-											res.json(err)
-
-										}else{
-											outputJSON = {'status':'success', 'messageId':200, 'message':"updates successfully",data:data}, 
-					 					res.json(outputJSON);
-
-
-										}
-									})		
-
-									}
-
-								
-								
-								}else{
-										outputJSON = {'status':'failure', 'messageId':400, 'message':"Wrong id"}, 
-					 					res.json(outputJSON);
-								}
-
+								outputJSON = {'status':'failure', 'messageId':400, 'message':"Error"}, 
+								res.json(outputJSON)
+							}else{
+							outputJSON = {'status':'success', 'messageId':200, 'message':"updates successfully",data:data}, 
+						 		res.json(outputJSON);
 							}
-						})
-				}
+						})		
+					}
+				} // item detail != null
+			}
+		})
+}		
 
 
 exports.removeItem = function(req, res) {

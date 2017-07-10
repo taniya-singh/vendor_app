@@ -3,7 +3,9 @@
 angular.module("Vendor",['oitozero.ngSweetAlert']);
 
 munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scope', '$rootScope', '$localStorage', 'VendorService', 'ngTableParams', '$route','$location','$timeout','SweetAlert','$filter',  function($http,$stateParams, $state,$scope, $rootScope, $localStorage, VendorService, ngTableParams, $route, $location,$timeout,SweetAlert,$filter){
-        
+        	$scope.settings = {};
+  		$scope.timeSettings = {};
+  		
 	console.log ('controller loaded');
         if($localStorage.userLoggedIn) {
 			$rootScope.userLoggedIn = true;
@@ -13,7 +15,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		else {
 			$rootScope.userLoggedIn = false;
 		}
-
+  	
         $rootScope.sideBar="vendor";
         var currentDate = new Date();
 	    var currentdate = new Date()
@@ -31,6 +33,41 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		$scope.vendor = {}
         $scope.selection = [];
 	    $scope.selectionAll;
+	    $scope.checkAddressValid = function(){
+	    	console.log("here in console")
+	    	if(!$scope.vendor.vendor_address){
+	    		$scope.addressValid = true;
+	    	}
+	    }
+	    $scope.mytime = new Date();
+
+  $scope.hstep = 1;
+  $scope.mstep = 15;
+
+  $scope.options = {
+    hstep: [1, 2, 3],
+    mstep: [1, 5, 10, 15, 25, 30]
+  };
+
+  $scope.ismeridian = true;
+  $scope.toggleMode = function() {
+    $scope.ismeridian = ! $scope.ismeridian;
+  };
+
+  $scope.update = function() {
+    var d = new Date();
+    d.setHours( 14 );
+    d.setMinutes( 0 );
+    $scope.mytime = d;
+  };
+
+  $scope.changed = function () {
+    console.log('Time changed to: ' + $scope.mytime);
+  };
+
+  $scope.clear = function() {
+    $scope.mytime = null;
+  };
 		$scope.$on('gmPlacesAutocomplete::placeChanged', function(){
 
 			var location = $scope.vendor.vendor_address.getPlace().geometry.location;
@@ -111,6 +148,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		}
 
         $scope.emailval="test";
+
 
 
 		$scope.applyGlobalSearch = function() {
@@ -234,28 +272,40 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
  
 
   		$scope.submit = function(){
+
+  			//console.log($settings.fetchDataOnTimeFiltering(data));
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
+                console.log("aasdaas",$scope.timeSettings);
+                return false;
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
-				VendorService.saveVendor($scope.vendor,function(response){
-						console.log(response);
-						if(response.messageId ==401){
-							$scope.emailValid=response.message;
-						}
-						if(response.messageId == 200) {
-							$scope.message = response.message;
-							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-success';
-							$state.go( "/users" );
-                            $timeout(function(argument) {
-		                                          $scope.showmessage = false;
-		                                          $state.go( "/vendor" );
-		                    }, 2000)									
-						}
-					})
+				// VendorService.saveVendor($scope.vendor,function(response){
+				// 		console.log(response);
+				// 		if(response.messageId ==401){
+				// 			$scope.emailValid=response.message;
+				// 		}
+				// 		console.log("response.messageId",response.messageId);
+				// 		if(response.messageId == 200) {
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-success';
+				// 		//	$state.go("/vendor");
+				// 			$location.path('/vendor'); 
+    //                   //       $timeout(function(argument) {
+		  //                   //                       $scope.showmessage = false;
+		  //                   //                       $state.go( "/vendor" );
+		  //                   // }, 2000)									
+				// 		} else{
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-error';
+
+
+				// 		}
+				// 	})
 
   			}
 
@@ -316,7 +366,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 							params.total(response.count);
 							// console.log(response.count)
 							$scope.data = response.data;
-							 console.log("ResponseData",$scope.data);
+							
 							$scope.simpleList = response.data;
 				$scope.simpleList2 = response.data;
 							$defer.resolve($scope.data);
@@ -678,5 +728,230 @@ munchapp.filter('typeof', function() {
 // };
 
 
+munchapp.directive('timeFilter', function () {
+  return {
+		restrict: 'E',
+			replace: true,
+			template: 
+			'<div class="startingHour">'+
+  			'<div>'+
+          'Start:'+
+            '<select ng-model="startingHour">'+
+              '<option ng-repeat="option in startingTimeHoursRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
+            '</select>'+
+            ':'+
+            '<select ng-model="startingMinute">'+
 
+              '<option ng-repeat="option in startingTimeHMinutesRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
+            '</select>'+
+          '</div>'+
+          '<div class="endingHour">'+
+            'End:'+
+            '<select ng-model="endingHour">'+
+              '<option ng-repeat="option in endingTimeHoursRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
+            '</select>'+
+            ':'+
+            '<select ng-model="endingMinute">'+
+              '<option ng-repeat="option in endingTimeHMinutesRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
+            '</select>'+
+        '</div>'+
+      '</div>',
+			scope: {
+				timeSettings: '=',
+				applyCallback: '&',
+				clearCallback: '&'
+			},
+			link: function (scope) {
+				var i;
+				var timeHoursRange = [],
+					timeMinutesRange = [];
+				scope.startingTimeHoursRange = [];
+				scope.endingTimeHoursRange = [];
+				scope.startingTimeHMinutesRange = [];
+				scope.endingTimeHMinutesRange = [];
+
+				scope.timeDropDownToggleState = false;
+
+				// For hours dropdown (0 - 23)
+				for (i = 0; i < 24; i++) {
+					timeHoursRange.push({
+						name: (i < 10) ? ('0' + i) : i + '',
+						value: (i < 10) ? ('0' + i) : i + ''
+					});
+				}
+
+				// For minutes dropdown (0 - 59)
+				for (i = 0; i < 60; i++) {
+					timeMinutesRange.push({
+						name: (i < 10) ? ('0' + i) : i + '',
+						value: (i < 10) ? ('0' + i) : i + ''
+					});
+				}
+
+				// making a copy so each dropdown for time filter works independently
+				angular.copy(timeHoursRange, scope.startingTimeHoursRange);
+				angular.copy(timeHoursRange, scope.endingTimeHoursRange);
+
+				angular.copy(timeMinutesRange, scope.startingTimeHMinutesRange);
+				angular.copy(timeMinutesRange, scope.endingTimeHMinutesRange);
+
+				/**
+				 * Update the time being shown in time filter once its being updated and the req is being sent
+				 */
+				scope.updateTimeRangeFilter = function () {
+					scope.timeSettings.fromHour = scope.startingHour;
+					scope.timeSettings.toHour = scope.endingHour;
+
+					scope.timeSettings.fromMinute = scope.startingMinute;
+					scope.timeSettings.toMinute = scope.endingMinute;
+				};
+
+				/**
+				 * set (00:00 - 23:59) to be the default time which is the entire time duraion for a particular day
+				 */
+				scope.setInitialTimeRange = function () {
+					scope.startingHour = scope.timeSettings.fromHour = scope.startingTimeHoursRange[0].value;
+					scope.endingHour = scope.timeSettings.toHour = scope.startingTimeHoursRange[23].value;
+
+					scope.startingMinute = scope.timeSettings.fromMinute = scope.endingTimeHMinutesRange[0].value;
+					scope.endingMinute = scope.timeSettings.toMinute = scope.endingTimeHMinutesRange[59].value;
+				};
+				scope.setInitialTimeRange();
+
+				scope.clearTimeRange = function () {
+					scope.isCustomTimeFilter = false;
+					scope.clearCallback({data: {
+						isCustomTimeFilter: scope.isCustomTimeFilter
+					}});
+					scope.closeTimeFilterDropdown();
+				};
+
+				/**
+				 * Set time filter flag, update the time shown in time filter and finally update the sessions list
+				 */
+				scope.applyTimeRangeFilter = function () {
+					scope.isCustomTimeFilter = true;
+					scope.updateTimeRangeFilter();
+					scope.applyCallback({data: {
+						isCustomTimeFilter: scope.isCustomTimeFilter
+					}});
+					scope.closeTimeFilterDropdown();
+				};
+				/**
+				 * CLoses time filter and reset the dropdown values if time filter is not applied
+				 */
+				scope.closeTimeFilterDropdown = function () {
+					scope.timeDropDownToggleState = false;
+
+					scope.startingHour = scope.timeSettings.fromHour;
+					scope.startingMinute = scope.timeSettings.fromMinute;
+					scope.endingHour = scope.timeSettings.toHour;
+					scope.endingMinute = scope.timeSettings.toMinute;
+				};
+
+				/**
+				 * Whenever hours changed, need to validate the time (start time < end time)
+				 * Also, make the items in dropdown disabled if not applicable
+				 */
+				scope.updateHour = function () {
+					if (scope.startingHour !== scope.endingHour) {
+						for (i = 0; i < timeMinutesRange.length; i++) {
+							scope.startingTimeHMinutesRange[i].disabled = false;
+							scope.endingTimeHMinutesRange[i].disabled = false;
+						}
+					} else if (scope.startingMinute > scope.endingMinute) {
+						scope.startingMinute = scope.endingMinute - 1;
+						if (scope.endingMinute === '00') {
+							scope.endingMinute = '01';
+						}
+						else {
+							scope.updateStartingMinuteTime();
+						}
+					} else if (scope.startingHour === scope.endingHour) {
+						scope.updateStartingMinuteTime();
+						scope.updateEndingMinuteTime();
+					}
+				};
+
+				/**
+				 * Whenever starting minutes changed, need to validate the time (start time < end time)
+				 * Also, make the items in dropdown disabled if not applicable
+				 */
+				scope.updateStartingMinuteTime = function () {
+					for (var i = 0; i < timeMinutesRange.length; i++) {
+						if (i > (parseInt(scope.endingMinute, 10) - 1) && i < timeMinutesRange.length) {
+							scope.startingTimeHMinutesRange[i].disabled = true;
+						}
+						else {
+							scope.startingTimeHMinutesRange[i].disabled = false;
+						}
+					}
+				};
+
+				/**
+				 * Whenever ending minutes changed, need to validate the time (start time < end time)
+				 * Also, make the items in dropdown disabled if not applicable
+				 */
+				scope.updateEndingMinuteTime = function () {
+					for (var i = 0; i < timeMinutesRange.length; i++) {
+						if (i >= 0 && i < (parseInt(scope.startingMinute, 10) + 1)) {
+							scope.endingTimeHMinutesRange[i].disabled = true;
+						}
+						else {
+							scope.endingTimeHMinutesRange[i].disabled = false;
+						}
+					}
+				};
+
+				scope.$watch('startingHour', function (newValue, oldValue) {
+					if (!newValue || newValue === oldValue) { return; }
+					
+					var i;
+					for (i = 0; i < timeHoursRange.length; i++) {
+						if (i >= 0 && i < parseInt(scope.startingHour, 10)) {
+							scope.endingTimeHoursRange[i].disabled = true;
+						}
+						else {
+							scope.endingTimeHoursRange[i].disabled = false;
+						}
+					}
+					scope.updateHour(scope.startingHour, scope.endingTimeHoursRange);
+				});
+
+				scope.$watch('endingHour', function (newValue, oldValue) {
+					if (!newValue || newValue === oldValue) { return; }
+
+					var i;
+					for (i = 0; i < timeHoursRange.length; i++) {
+						if (i > parseInt(scope.endingHour, 10) && i < timeHoursRange.length) {
+							scope.startingTimeHoursRange[i].disabled = true;
+						}
+						else {
+							scope.startingTimeHoursRange[i].disabled = false;
+						}
+					}
+					scope.updateHour(scope.endingHour, scope.startingTimeHoursRange);
+				});
+
+				scope.$watch('startingMinute', function (newValue, oldValue) {
+					if (!newValue || newValue === oldValue || scope.startingHour !== scope.endingHour) { return; }
+					scope.updateEndingMinuteTime();
+				});
+
+				scope.$watch('endingMinute', function (newValue, oldValue) {
+					if (!newValue || newValue === oldValue || scope.startingHour !== scope.endingHour) { return; }
+					scope.updateStartingMinuteTime();
+				});
+
+				// Whenevr custom time filter is reset, reset the time filter applied time and set the initial default values
+				// (00:00 - 23:59)
+				scope.$watch('isCustomTimeFilter', function (newValue) {
+					// if time filter is not applied / reset
+					if (!newValue) {
+						scope.setInitialTimeRange();
+					}
+				});
+			}
+  };
+});
 

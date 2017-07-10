@@ -28,6 +28,7 @@ exports.items_added_by_vendor = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
 
         itemsObj.find({vendor_id:req.body.vendor_id},function(err,data){
+            console.log("dadtaa",data)
                     if(err){
                     	console.log("err",err)
                         res.json("Error: "+err);

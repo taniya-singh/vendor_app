@@ -309,7 +309,8 @@ passport.use('userLogin',new LocalStrategy(
                     phone_no: user.phone_no,
                     user_type: user.user_type,            
                     facebook_id:user.facebook_id,
-                    loginType:user.loginType
+                    loginType:user.loginType,
+                    
         });
       });
     }
