@@ -3,8 +3,9 @@
 angular.module("Vendor",['oitozero.ngSweetAlert']);
 
 munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scope', '$rootScope', '$localStorage', 'VendorService', 'ngTableParams', '$route','$location','$timeout','SweetAlert','$filter',  function($http,$stateParams, $state,$scope, $rootScope, $localStorage, VendorService, ngTableParams, $route, $location,$timeout,SweetAlert,$filter){
-  $scope.settings = {};
-  $scope.timeSettings = {};
+        	$scope.settings = {};
+  		$scope.timeSettings = {};
+  		
 	console.log ('controller loaded');
         if($localStorage.userLoggedIn) {
 			$rootScope.userLoggedIn = true;
@@ -14,7 +15,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		else {
 			$rootScope.userLoggedIn = false;
 		}
-
+  	
         $rootScope.sideBar="vendor";
         var currentDate = new Date();
 	    var currentdate = new Date()
@@ -149,6 +150,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
         $scope.emailval="test";
 
 
+
 		$scope.applyGlobalSearch = function() {
 			
 			        var term = $scope.globalSearchTerm;
@@ -270,30 +272,40 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
  
 
   		$scope.submit = function(){
+
+  			//console.log($settings.fetchDataOnTimeFiltering(data));
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
+                console.log("aasdaas",$scope.timeSettings);
+                return false;
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
-				VendorService.saveVendor($scope.vendor,function(response){
-						console.log(response);
-						if(response.messageId ==401){
-							$scope.emailValid=response.message;
-						}
-						console.log("response.messageId",response.messageId);
-						if(response.messageId == 200) {
-							$scope.message = response.message;
-							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-success';
-						//	$state.go("/vendor");
-							$location.path('/vendor'); 
-                      //       $timeout(function(argument) {
-		                    //                       $scope.showmessage = false;
-		                    //                       $state.go( "/vendor" );
-		                    // }, 2000)									
-						}
-					})
+				// VendorService.saveVendor($scope.vendor,function(response){
+				// 		console.log(response);
+				// 		if(response.messageId ==401){
+				// 			$scope.emailValid=response.message;
+				// 		}
+				// 		console.log("response.messageId",response.messageId);
+				// 		if(response.messageId == 200) {
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-success';
+				// 		//	$state.go("/vendor");
+				// 			$location.path('/vendor'); 
+    //                   //       $timeout(function(argument) {
+		  //                   //                       $scope.showmessage = false;
+		  //                   //                       $state.go( "/vendor" );
+		  //                   // }, 2000)									
+				// 		} else{
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-error';
+
+
+				// 		}
+				// 	})
 
   			}
 
@@ -714,6 +726,8 @@ munchapp.filter('typeof', function() {
 //     format: 24,
 //     noValidation: false
 // };
+
+
 munchapp.directive('timeFilter', function () {
   return {
 		restrict: 'E',
@@ -727,13 +741,13 @@ munchapp.directive('timeFilter', function () {
             '</select>'+
             ':'+
             '<select ng-model="startingMinute">'+
-            
+
               '<option ng-repeat="option in startingTimeHMinutesRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
             '</select>'+
           '</div>'+
           '<div class="endingHour">'+
             'End:'+
-            '<select ng-model="endingHour" >'+
+            '<select ng-model="endingHour">'+
               '<option ng-repeat="option in endingTimeHoursRange" ng-disabled="option.disabled" value="{{option.value}}">{{option.name}}</option>'+
             '</select>'+
             ':'+
@@ -940,6 +954,4 @@ munchapp.directive('timeFilter', function () {
 			}
   };
 });
-
-
 
