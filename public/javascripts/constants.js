@@ -1,5 +1,5 @@
-var baseUrl = "http://52.39.212.226:4075";
-//var baseUrl = "http://localhost:4075";
+//var baseUrl = "http://52.39.212.226:4075";
+var baseUrl = "http://localhost:4075";
 
 var webservices = {	
 
@@ -75,7 +75,7 @@ var nav = [
 			{text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'home'},
 		  //{text:'Esscrow Setting', path:'/#/setting',icon:'fa-cog',activeText:'setting'},
           // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
-          {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
+          {text:'Manage Restaurants', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
           {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
             //{text:'Manage Vendors', path:'/#/users',icon:'fa-users',activeText:'users'},
            // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},

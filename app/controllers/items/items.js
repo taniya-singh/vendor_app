@@ -93,7 +93,6 @@ uploadSkillImg= function(data,callback){
 /**
  * a middleware controller to get all products
  */
-
 exports.updateItem = function(req, res) {
 	var reqdata={};
 
@@ -132,6 +131,10 @@ exports.updateItem = function(req, res) {
 							}
 						})
 				}
+
+
+
+				
 
 
 exports.removeItem = function(req, res) {

@@ -292,7 +292,7 @@ require('./routes/adminlogin')(app, express, passport);
 require('./routes/users')(app, express, passport);
 require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
-require('./routes/vendor')(app, express, passport);
+//require('./routes/vendor')(app, express, passport);
 
 
 

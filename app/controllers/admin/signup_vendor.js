@@ -14,12 +14,14 @@ exports.signupVendor = function(req, res) {
 	var vendorobj = {};
 	
 	vendorobj = req.body;
-	vendor.findOne({"vendor_email":vendorobj.vendor_email,"vendor_name":vendorobj.vendor_name},function(err,ven){
+	console.log("req.body",req.body);
+	vendor.findOne({"vendor_email":vendorobj.vendor_email},function(err,ven){
 		if(err){
 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
 			res.jsonp(outputJSON);	
 		}
 		else{
+			console.log("ven",ven);
 			if(ven==null){
 				var options = {
 				provider: 'google'
@@ -145,3 +147,19 @@ exports.update_vendor_info2=function(req,res){
 		})
 	}
 }
+
+
+exports.vendorList = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+
+        vendor.find({},function(err,data){
+                    if(err){
+                        res.json("Error: "+err);
+                        
+                    }
+                    else{
+                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                    res.json(outputJSON);
+                    }
+                });
+    }
