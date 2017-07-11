@@ -176,36 +176,7 @@ function findByUsername(username, fn) {
   return fn(null, null);
 }
 
-var LocalStrategy = require('passport-local').Strategy;
 
-  passport.use('adminLogin',new LocalStrategy(
-    function(username, password, done) {
-      
-      adminLoginObj.findOne({username: username}, function(err, adminuser) {
-       
-        if(err) {
-               return done(err);
-        }
-        
-        if(!adminuser) {
-           console.log("in adminuser");
-          return done(null, false);
-        }
-
-        if(adminuser.password != password) {
-              return done(null, false);
-        }
-
-
-        //returning specific data
-        return done(null, {id: adminuser._id});
-
-      });
-    }
-  ));
-
-passport.serializeUser(adminLoginObj.serializeUser);
-passport.deserializeUser(adminLoginObj.deserializeUser);
 
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
@@ -240,8 +211,6 @@ passport.serializeUser(adminLoginObj.serializeUser);
 passport.deserializeUser(adminLoginObj.deserializeUser);
 
 //vendor login
-var LocalStrategy = require('passport-local').Strategy;
-
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
 
@@ -285,7 +254,6 @@ passport.deserializeUser(function(adminLoginObj,done){
 //userlogin
 passport.use('userLogin',new LocalStrategy(
     function(username, password, done) {
-       
       userObj.findOne({email: username}, function(err, user) {
         if(err) {
           console.log("errrr")
@@ -356,6 +324,8 @@ require('./routes/users')(app, express, passport);
 require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
+require('./routes/payment')(app, express, passport);
+
 
 
 
