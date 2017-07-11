@@ -176,7 +176,7 @@ console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<",inputJSON)
 
 
 	//forgot password
-	/*$scope.resendPassword = function() {
+	$scope.resendPassword = function() {
 
 		inputJSON = '{"username":' + '"' + $scope.username + '"}';
 
@@ -211,7 +211,7 @@ console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<",inputJSON)
 
 		});
 	}
-	*/
+	
 
 	$scope.activeTab = 0;
 $scope.findOne = function () { 

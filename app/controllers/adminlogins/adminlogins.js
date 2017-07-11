@@ -19,8 +19,14 @@ var commonjs = require('./../commonFunction/common.js');
 exports.authenticate = function(req, res) {
 	//console.log(res.req.user);
 	
-	res.jsonp({'status':'success', 'messageId':200, 'message':'User logged in successfully','displayName':res.req.user.firstname+" "+res.req.user.lastname,'access_token':res.req.user.token,image:res.req.user.image});
+	res.jsonp({'status':'success', 'messageId':200, 'message':'User logged in successfully',
+		        'displayName':res.req.user.firstname+" "+res.req.user.lastname,
+		         'access_token':res.req.user.token,image:res.req.user.image});
 }
+
+
+
+
 //logout
 exports.logout = function(req, res) {
 	if(req.body.access_token){
@@ -29,14 +35,14 @@ exports.logout = function(req, res) {
 				outputJSON = {'status':'failure', 'messageId':203, 'message': errorRetreivingData};
 		
 			}else{
-				outputJSON = {'status':'success', 'messageId':200, 'message': "logout susseccfuly user or admin Id "+req.body.loginId}
+				outputJSON = {'status':'success', 'messageId':200, 'message': "logout successfully user or admin Id "+req.body.loginId}
 			
 			}
 			res.jsonp(outputJSON);
 		})
 	}
 	
-	}
+}
 
 exports.forgotPassword = function(req, res) {
 
@@ -84,19 +90,19 @@ exports.forgotPassword = function(req, res) {
                         var transporter = nodemailer.createTransport({
                             service: 'gmail',
                             auth: {
-                                user: 'osgroup.sdei@gmail.com',
-                                pass: 'mohali2378'
+                                user: 'bridgit871@gmail.com',
+                                pass: 'bridgit8711'
                             }
                         });
                         var message = '<html><body style="background-color: #f2f2f2"><div style="width:90%; padding: 15px; background-color: #fff; box-shadow: 3px 3px #dddddd;"><div style="padding-top:10px; background-color: #f0f0f0; height: 100px"><img src="http://' + req.headers.host + '/images/logo2.png" height="60px" style="padding: 15px"></div><div style="padding-top:10px">Hi,</div><div style="padding-top:30px">Your email has been used in a password reset request.</div><div style="padding-top:20px">If you did not initiate this request, then ignore this message.</div><div style="padding-top:20px">Copy the link below into your browser to reset your password.</div><div style="padding-top:30px"><a href="' + resetUrl + '">Reset Password</a></div><div style="padding-top:50px">Regards,<br>FirtMe</div></div></body></html>'
 
                         transporter.sendMail({
-                            from: 'osgroup.sdei@gmail.com',
+                            from: 'bridgit871@gmail.com',
                             //to: 'hshussain86',
                             to: details,
                             //cc: 'vpdev@smartdatainc.net',
                             //bcc:'hshussain86@hotmail.com',
-                            subject: 'Password for FlirtMe App',
+                            subject: 'Password for bridgit App',
                             html: message
                         });
 

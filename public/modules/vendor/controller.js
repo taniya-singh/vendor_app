@@ -272,13 +272,19 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
  
 
   		$scope.submit = function(){
+  							console.log("AAAAAAAA",$scope.vendor.vendor_address)
+  							console.log("AAAAAAAA",$scope.vendor.vendor_time)
+
 
   			console.log($settings.startingHour)
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
-                console.log("aasdaas",$scope.settings)
+
+                console.log("aasdaas",$scope.timeSettings.fromHour);
+                
+
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
 				VendorService.saveVendor($scope.vendor,function(response){
@@ -329,12 +335,12 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
                 });                
 	        }
 
-            $scope.getAllVendors = function() {
+            $scope.getAllVendor = function() {
             	console.log("insoide get all vendor ******)")
 				var passingDate = {};
 				// usSpinnerService.spin('spinner-1');
 				passingDate.search = $scope.search;
-				console.log(passingDate.search)
+				//console.log(passingDate.search)
 				$scope.tableParams = new ngTableParams({
 					page: 1,
 					count: 5,
@@ -407,7 +413,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				
 				SweetAlert.swal({
 				   title: "Are you sure?",
-				   text: "You will not be able to see this page!",
+				   text: "You will not be able to see this Vendor details!",
 				   type: "warning",
 				   showCancelButton: true,
 				   confirmButtonColor: "#DD6B55",
@@ -423,16 +429,15 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				 			//toastr.success('Deleted.');
 				 			$scope.getAllVendor();
 				 		})
-				     SweetAlert.swal("Deleted!", "Your  file has been deleted.", "success");
+				     SweetAlert.swal("Deleted!", "Vendor details has been deleted.", "success");
 				   } else {
-				     SweetAlert.swal("Cancelled", "Your page  is safe :)", "error");
+				     SweetAlert.swal("Cancelled", "Vendor details are safe :)", "error");
 				  }
 				});
 		
  	        }
 
- 
-		$scope.performAction = function(id,action) {
+ $scope.performAction = function(id,action) {
 
 			var actionsArr=["enable","disable" ,"delete"];
             $scope.selectedAction = selectedAction.value;
@@ -441,6 +446,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 			        $scope.selectedAction=action;
 			       
 			}
+
 			if($scope.selection.length==0){
 				SweetAlert.swal("Error!", "Please check atleast one vendor", "error"); 
 		    	
@@ -485,7 +491,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				                    var inputJson = {
 				                        data: updatedData
 				                    }
-				                   VendorService.updateVendorStatus(inputJson, function(response) {
+				                    UserService.updateVendorStatus(inputJson, function(response) {
 				                      $scope.getAllVendor();
 				                      selectedAction.value=0;
 				                      $scope.selection=[];
@@ -559,7 +565,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 							            $scope.selection=[];
 							            $scope.showmessage = true;
 			                            $scope.alerttype = 'alert alert-success';
-			                            $scope.message = "Vendor"+actionsArr[$scope.selectedAction-1]+"d successfully." ;
+			                            $scope.message = "Vendor "+actionsArr[$scope.selectedAction-1]+"d successfully." ;
 			                                $timeout(function(argument) {
 			                                  $scope.showmessage = false;
 
@@ -567,7 +573,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 						                });
 					            }else{
 					                    VendorService.updateVendorStatus(inputJson, function(response) {
-					                      $scope.getAllVendor();				                      
+					                      $scope.getAllVendors();				                      
 					                      $scope.selection=[];
 					                      $scope.showmessage = true;
 	                                        $scope.alerttype = 'alert alert-success';
@@ -810,10 +816,10 @@ munchapp.directive('timeFilter', function () {
 				 */
 				scope.setInitialTimeRange = function () {
 					scope.startingHour = scope.timeSettings.fromHour = scope.startingTimeHoursRange[0].value;
-					scope.endingHour = scope.timeSettings.toHour = scope.startingTimeHoursRange[23].value;
+					scope.endingHour = scope.timeSettings.toHour = scope.startingTimeHoursRange[0].value;
 
 					scope.startingMinute = scope.timeSettings.fromMinute = scope.endingTimeHMinutesRange[0].value;
-					scope.endingMinute = scope.timeSettings.toMinute = scope.endingTimeHMinutesRange[59].value;
+					scope.endingMinute = scope.timeSettings.toMinute = scope.endingTimeHMinutesRange[0].value;
 				};
 				scope.setInitialTimeRange();
 

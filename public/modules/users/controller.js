@@ -352,7 +352,7 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 				
 				SweetAlert.swal({
 				   title: "Are you sure?",
-				   text: "You will not be able to see this page!",
+				   text: "You will not be able to see this Customer details!",
 				   type: "warning",
 				   showCancelButton: true,
 				   confirmButtonColor: "#DD6B55",
@@ -368,9 +368,9 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 				 			//toastr.success('Deleted.');
 				 			$scope.getAllUsers();
 				 		})
-				     SweetAlert.swal("Deleted!", "Your  file has been deleted.", "success");
+				     SweetAlert.swal("Deleted!", "Customer details has been deleted.", "success");
 				   } else {
-				     SweetAlert.swal("Cancelled", "Your page  is safe :)", "error");
+				     SweetAlert.swal("Cancelled", "Customer details  are safe :)", "error");
 				  }
 				});
 		
@@ -387,7 +387,7 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 			       
 			}
 			if($scope.selection.length==0){
-				SweetAlert.swal("Error!", "Please check atleast one user", "error"); 
+				SweetAlert.swal("Error!", "Please check atleast one customer", "error"); 
 		    	
 		    	 return false;
 		    }
@@ -454,7 +454,7 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 		    $scope.selection=[id];
 			$scope.selectedAction=action;
 			if($scope.selection.length==0){
-					SweetAlert.swal("Error!", "Please check atleast one user", "error"); 
+					SweetAlert.swal("Error!", "Please check atleast one customer", "error"); 
 			    	return false;
 			}
 			if($scope.selectedAction==0){

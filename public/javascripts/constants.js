@@ -1,5 +1,5 @@
-var baseUrl = "http://52.39.212.226:4075";
-//var baseUrl = "http://localhost:4075";
+//var baseUrl = "http://52.39.212.226:4075";
+var baseUrl = "http://172.24.5.36:4075";
 
 var webservices = {	
 
@@ -25,9 +25,10 @@ var webservices = {
 	"deleteUser":baseUrl + "/users/deleteUser",
 	"totalUser": baseUrl + "/users/totalUser",
 	"latestUser" : baseUrl + "/users/latestUser",
+	"deleteUser" : baseUrl + "/users/deleteUser",
 
 
-	"bulkUpdateUser" : baseUrl + "/user/bulkUpdate",
+	"bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
 
 	"resetpassword":baseUrl+"/users/reset_password",
 
@@ -40,12 +41,13 @@ var webservices = {
 	"unSubscribe":baseUrl+"/vendor/unSubscribe",
 	"allVendorCount":baseUrl+"/vendor/allVendorCount",
 	"exportVendorList":baseUrl + "/vendor/exportFile",
-	"deleteVendor":baseUrl + "/vendor/deleteVendor",
-	"totalVendor": baseUrl + "/vendor/totalVendor",
+	"deleteVendor":baseUrl + "/admin/deleteVendor",
+	"totalVendor": baseUrl + "/admin/totalVendor",
 	"latestVendor" : baseUrl + "/vendor/latestVendor",
+	"deleteVendor" : baseUrl + "/admin/deleteVendor",
 
 
-	"bulkUpdateVendor" : baseUrl + "/vendor/bulkUpdate",
+	"bulkUpdateVendor" : baseUrl + "/admin/bulkUpdate",
 
 
 

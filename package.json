@@ -39,6 +39,7 @@
     "multer": "^1.2.0",
     "ng-file-upload": "^12.2.13",
     "node-cron": "^1.1.2",
+    "node-geocoder": "^3.18.0",
     "nodemailer": "^4.0.1",
     "nodemailer-smtp-transport": "^1.0.3",
     "nodemon": "^1.11.0",

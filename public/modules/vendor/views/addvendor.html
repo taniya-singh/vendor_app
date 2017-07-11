@@ -47,7 +47,7 @@
                      <div class="">
                         <div class="box-body table-responsive">  
                              <div class="box-body">
-                                 <form name="vendorForm" class="clear" novalidate onsubmit="window.scroll(0, 0); return true;">
+                                 <form name="vendorForm" autocomplete="off" class="clear" novalidate onsubmit="window.scroll(0, 0); return true;">
                                 <div class="col-md-7">
 
              <div ng-show="vendorForm.$invalid && vendorForm.$submitted" class="alert alert-danger    alert-margin">
@@ -73,7 +73,7 @@
                   </div>
 
                   <label ng-if="!updateButton">Email<span class="requiredClass">*</span></label>
-                    <input ng-if="!updateButton" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
+                    <input ng-if="!updateButton" autocomplete="off" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
 
                     <div class="validationError" ng-messages="vendorForm.vendor_email.$error" ng-show="
                       vendorForm.vendor_email.$touched &&vendorForm.vendor_email.$invalid && (!vendorForm.vendor_email.$pristine || vendorForm.$submitted)" role="alert">
@@ -123,9 +123,9 @@
                     </div>
                         
                    <label>Mobile Number:<span class="requiredClass">*</span></label>
-                     <div  class="input-group">
+                     
                        <input  type="text" class="form-control" ng-model="vendor.phone_no" mask="(999) 999-9999" name="phone_no" mask-clean='true' placeholder="(xxx) xxx-xxxx" mask-restrict='reject' ng-minlength="14" ng-maxlength="14" maxlength="14" required/>
-                     </div>
+                     
 
                      <p class="help-block">
                       <span style="color:red"  ng-show="vendorForm.phone_no.$touched && vendorForm.phone_no.$invalid && vendorForm.phone_no.$error.required">Phone is required.</span>
@@ -135,8 +135,8 @@
                        </div>
 
                         <label>Address<span class="requiredClass">*</span></label>
-                      <div class="input-group"> <input type="text" class="form-control" ng-model="vendor.vendor_address" required placeholder="Enter address" name="vendor_address" gm-places-autocomplete ng-blur="checkAddressValid()" >
-                    </div>
+                     <input type="text" class="form-control" ng-model="vendor.vendor_address" required placeholder="Enter address" name="vendor_address" gm-places-autocomplete ng-blur="checkAddressValid()" >
+                    
 
                    
 
@@ -151,10 +151,11 @@
                       <span style="color:red" ng-if="vendor_addressValid">Please enter your detailed address.</span>
                   </div>
 
+
                        <label>Pickup Time<span class="requiredClass">*</span></label>
-                          <div class="input-group">
-                           <time-filter
-        data-starting-hour="settings.startingHour"
+                          <div class="input-group" name="vendor_time" ng-model ="vendor.vendor_time">
+                           <time-filter 
+        data-starting-hour="vendor_time.startingHour"
         data-ending-hour="settings.endingHour"
         data-starting-minute="settings.startingMinute"
         data-ending-minute="settings.endingMinute"
@@ -271,7 +272,7 @@
                
 
     <div class="box-footer clearfix no-border">
-     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login" ng-disabled="vendorForm.$invalid" ng-click="submit()" value="Submit" >
+     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" >
      <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update"  ng-click="update()" value="Update ">
      </div>
 

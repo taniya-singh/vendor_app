@@ -44,8 +44,9 @@ var client = new twilio(accountSid, authToken);
         var outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
         res.jsonp(outputJSON)
         }
-        }         
+                 
     
+}
 }
     
 //update vendor information
@@ -400,7 +401,7 @@ exports.register = function(req, res) {
          */
          exports.list = function(req, res) {
             var outputJSON = "";
-            userObj.find({}, function(err, data) {
+            userObj.find({is_deleted:false}, function(err, data) {
                 if(err) {
                     outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
                 }
@@ -700,3 +701,33 @@ exports.place_order=function(req,res){
             }
         })
     }*/
+
+    exports.deleteUser = function(req,res){
+console.log("asdasdas",req.body._id)
+    if(req.body._id){
+        userObj.update({
+                _id: req.body._id
+            }, {
+                $set: {
+                    is_deleted:true
+                }
+            }, function(err, updRes) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("device id updated", updRes);
+                    outputJSON = {
+                    'status': 'failure',
+                    'messageId': 203,
+                    'data': updRes,
+                    'message': "Customer has been deleted successfully"
+                     };
+                res.jsonp(outputJSON);
+
+
+                }
+
+            })
+    }
+    
+}
