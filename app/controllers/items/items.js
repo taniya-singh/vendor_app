@@ -21,7 +21,6 @@ exports.additems = function(req,res){
 					reqdata.p_price=req.body.p_price;
 					reqdata.p_description=req.body.p_description;
 					reqdata.p_count=req.body.p_count;
-					console.log("reqdata",reqdata)
 					uploadSkillImg(reqdata,function(response){
 						vendor.find({_id:req.body.vendor_id},function(err,vendetail){
 							if(err){
@@ -56,7 +55,6 @@ exports.additems = function(req,res){
 					reqdata.p_description=req.body.p_description;
 					reqdata.p_count=req.body.p_count;
 					reqdata.image=req.body.image;
-					console.log("reqdata",reqdata)
 					vendor.find({_id:req.body.vendor_id},function(err,vendetail){
 							if(err){
 								console.log(err)
@@ -149,6 +147,7 @@ exports.updateItem = function(req, res) {
 		reqdata.p_price=req.body.p_price;
 		reqdata.p_description=req.body.p_description;
 		reqdata.p_count=req.body.p_count;
+		console.log("req",reqdata)
 		itemsObj.find({_id:req.body.id},function(err,itemdetail){
 			if(err){
 				console.log(err)
@@ -158,9 +157,10 @@ exports.updateItem = function(req, res) {
 				console.log("sssssssss",itemdetail)
 				if(itemdetail.length>0){
 					if(req.body.image != ""){
+						console.log("image update")
 						var photoname = Date.now() + ".png";
 		      			var imageName = __dirname+"/../../../public/images/upload/"+photoname;
-		      			//console.log("aaaaaaa",reqdata.image)
+		      			console.log("aaaaaaa",reqdata.image)
 		  				if(reqdata.image.indexOf("base64,")!=-1){	
 		  					console.log("inside not base 64")
 				         	var Data = reqdata.image.split('base64,'); 
@@ -179,10 +179,10 @@ exports.updateItem = function(req, res) {
 				     	 	fs.writeFile(imageName, base64Data, 'base64', function(err) {
 							      if (err) {
 										outputJSON = {'status':'failure', 'messageId':400, 'message':"Failure upload"}, 
-					 					res.json(outputJSON);							       
-					 				}else{
+					 					res.json(outputJSON);							       }else{
 				                 	itemsObj.update({_id :reqdata.id},{$set:{image:photoname,
 									    p_name:req.body.p_name,
+									    vendor_id:req.body.vendor_id,
 									    p_price:req.body.p_price,
 									    p_description:req.body.p_description,
 										p_count:req.body.p_count}},function(err,data){
