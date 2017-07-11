@@ -63,6 +63,7 @@ var client = new twilio(accountSid, authToken);
                         if (user == null) {
                                 userObj(details).save(req.body,function(err, adduser) {
                                     if (err) {
+					console.log("err",err);
                                         res.jsonp({
                                             'status': 'failure',
                                             'messageId': 401,
