@@ -64,7 +64,7 @@ angular.module('Vendor')
 	}
 
 	service.updateVendorStatus = function(inputJsonString, callback) {
-			communicationService.resultViaPost(webservices.bulkUpdatevendor, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			communicationService.resultViaPost(webservices.bulkUpdateVendor, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	}

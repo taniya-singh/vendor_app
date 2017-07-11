@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //mongoose.connect('mongodb://munchapp:munchapp2780@52.39.212.226:27017/munchapp');
-mongoose.connect('mongodb://localhost/vendorapp(local)');
+mongoose.connect('mongodb://172.24.5.36:4075/vendorapp2');
 
 
 mongoose.connection.on('connected', function(error,data) {

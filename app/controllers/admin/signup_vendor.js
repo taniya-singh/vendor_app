@@ -37,7 +37,7 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-				console.log("dfgfgfgh",vendorobj)
+				console.log("GVSHBVVVVVVVVVVVV");
 					vendor(vendorobj).save(vendorobj, function(err, data) { 
 						if(err) {
 							console.log("data if err",err)
@@ -58,7 +58,9 @@ exports.signupVendor = function(req, res) {
 							outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
 						}
 						else {
+
 							/* Send Email to Vendor */
+							
 
 							var userDetails = {};
 							userDetails.email = vendorobj.vendor_email;
@@ -92,6 +94,10 @@ exports.signupVendor = function(req, res) {
 		}
 	})
 }
+
+
+
+
 /* Vendor login api*/
 exports.vendor_login = function(req,res){
     	console.log("login ", res.req.user)
@@ -163,3 +169,64 @@ exports.vendorList = function(req,res){
 
     }
 
+
+ 
+
+       exports.bulkUpdate = function(req, res) {
+	var outputJSON = "";
+	var inputData = req.body;
+	var roleLength = inputData.data.length;
+	var bulk = vendor.collection.initializeUnorderedBulkOp();
+	for (var i = 0; i < roleLength; i++) {
+		var userData = inputData.data[i];
+		var id = mongoose.Types.ObjectId(userData.id);
+		bulk.find({
+			_id: id
+		}).update({
+			$set: userData
+		});
+	}
+	bulk.execute(function(data) {
+		outputJSON = {
+			'status': 'success',
+			'messageId': 200,
+			'message': constantObj.messages.userStatusUpdateSuccess
+		};
+		res.jsonp(outputJSON);
+	});
+	console.log("delllllllllllllete");
+
+}
+
+
+
+
+    exports.deleteVendor = function(req,res){
+
+    if(req.body._id){
+        vendor.update({
+                _id: req.body._id
+            }, {
+                $set: {
+                    isDeleted:true
+                }
+            }, function(err, updRes) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("device id updated", updRes);
+                    outputJSON = {
+                    'status': 'failure',
+                    'messageId': 203,
+                    'data': updRes,
+                    'message': "Customer has been deleted successfully"
+                     };
+                res.jsonp(outputJSON);
+
+
+                }
+
+            })
+    }
+    
+}

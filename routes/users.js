@@ -13,10 +13,12 @@ var userObj = require('./../app/controllers/users/users.js');
 	 // router.param('id', userObj.user);
 	 // router.post('/update/:id', passport.authenticate('basic', {session:false}), userObj.update);
 	 // router.get('/userOne/:id', passport.authenticate('basic', {session:false}), userObj.findOne);
-	 // router.post('/bulkUpdate', passport.authenticate('basic', {session:false}), userObj.bulkUpdate);
+	 router.post('/bulkUpdate', userObj.bulkUpdate);
 	  router.post('/userlogin', passport.authenticate('userLogin'),userObj.userlogin);
 	  router.post('/update_vendor_info',userObj.update_vendor_info);
 	  router.post('/register', userObj.register);
+	  router.post('/deleteUser', userObj.deleteUser);
+
 
       //router.post('/faceBookLogin',userObj.faceBookLogin);
       router.post('/forgetpassword',userObj.forgetpassword);

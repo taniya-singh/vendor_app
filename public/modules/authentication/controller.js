@@ -175,7 +175,7 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 
 
 	//forgot password
-	/*$scope.resendPassword = function() {
+	$scope.resendPassword = function() {
 
 		inputJSON = '{"username":' + '"' + $scope.username + '"}';
 
@@ -210,7 +210,7 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 
 		});
 	}
-	*/
+	
 
 	$scope.activeTab = 0;
 $scope.findOne = function () { 

@@ -270,7 +270,7 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 
 	.state('/admin/signupVendor', {
 
-		/*resolve: {
+		resolve: {
 				mess: function($location, $localStorage) {
 
 					if ($localStorage.userLoggedIn != true) {
@@ -279,7 +279,7 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 					
 						
 				}
-			},*/
+			},
 		url: "/vendor/add",
 		controller : "vendorController",
 		templateUrl : "/modules/vendor/views/addvendor.html"

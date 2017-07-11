@@ -11,6 +11,8 @@ const messages = {
 	"userDeleteSuccess": "User(s) deleted successfully",
 	"userUpdateSuccess": "User updated successfully",
 
+"vendorUpdateSuccess": "Vendor updated successfully",
+
 
 	//Email message
 	"emailExist":"Phone number already exist",
