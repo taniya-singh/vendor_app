@@ -23,6 +23,7 @@ var client = new twilio(accountSid, authToken);
          var data = res.req.user;
          console.log("data",data)
 <<<<<<< HEAD
+<<<<<<< HEAD
         if(req.body.loginType==2)
         {
             console.log("inside faceBookLogin")
@@ -97,6 +98,8 @@ var client = new twilio(accountSid, authToken);
                             }else {
 =======
 >>>>>>> d3560097c7521adbf48d19ed56ae6f19418834c0
+=======
+>>>>>>> 163082e0988fc4fb42dc982269c48c2af7eb56c8
 
         if(req.body.loginType==1)
         {

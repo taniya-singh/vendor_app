@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 0 info it worked if it ends with ok
 <<<<<<< HEAD
 1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'start' ]
@@ -71,3 +72,5 @@
 23 error     npm owner ls munchapp
 23 error There is likely additional logging output above.
 24 verbose exit [ 1, true ]
+=======
+>>>>>>> 163082e0988fc4fb42dc982269c48c2af7eb56c8
