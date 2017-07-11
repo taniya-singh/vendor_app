@@ -10,15 +10,18 @@ var fs = require('fs');
 
  /*Add item along with the valid vendor ID*/
 exports.additems = function(req,res){
+	console.log("req.body",req.body)
       var outputJSON = {'status':'failure', 'messageId':400, 'message': constantObj.messages.errorAddingItems};
-	 if (req.body.image != undefined){	
-					reqdata={};
+	 if (req.body.image != ""){	
+	 	console.log("image ander")
+					var reqdata={};
 					reqdata.image=req.body.image;
 					reqdata.p_name=req.body.p_name;
 					reqdata.vendor_id=req.body.vendor_id;
 					reqdata.p_price=req.body.p_price;
 					reqdata.p_description=req.body.p_description;
 					reqdata.p_count=req.body.p_count;
+					console.log("reqdata",reqdata)
 					uploadSkillImg(reqdata,function(response){
 						vendor.find({_id:req.body.vendor_id},function(err,vendetail){
 							if(err){
@@ -44,6 +47,41 @@ exports.additems = function(req,res){
 							}
 						})
 					});
+			}else{
+				console.log("without image")
+				var reqdata={};
+					reqdata.p_name=req.body.p_name;
+					reqdata.vendor_id=req.body.vendor_id;
+					reqdata.p_price=req.body.p_price;
+					reqdata.p_description=req.body.p_description;
+					reqdata.p_count=req.body.p_count;
+					reqdata.image=req.body.image;
+					console.log("reqdata",reqdata)
+					vendor.find({_id:req.body.vendor_id},function(err,vendetail){
+							if(err){
+								console.log(err)
+					 			outputJSON = {'status':'failure', 'messageId':400, 'message':"error in vendor_id"}, 
+					 			res.json(outputJSON);
+							}else{
+								if(vendetail==""){
+									outputJSON = {'status':'failure', 'messageId':400, 'message': "Vendor doesnot exists"}, 
+					 				res.json(outputJSON);	
+								}else{
+									itemsObj(reqdata).save(reqdata,function(err,vendors){
+									if(err){
+										outputJSON = {'status':'failure', 'messageId':400, 'message':"Err"}
+										res.json(outputJSON);
+									}else{
+					 					outputJSON = {'status':'success', 'messageId':200, 'message':"item added successfully", "data":vendors }, 
+					 					res.json(outputJSON);
+									}
+								})
+
+								}
+							}
+						})
+					
+
 			}
 }		
 
@@ -96,7 +134,6 @@ uploadSkillImg= function(data,callback){
  */
 
 exports.updateItem = function(req, res) {
-	console.log("insoseeeeeeeeeeeeee")
 	var reqdata={};
 
 	var outputJSON = {
@@ -118,8 +155,9 @@ exports.updateItem = function(req, res) {
 				outputJSON = {'status':'failure', 'messageId':400, 'message':"error"}, 
 				res.json(outputJSON);
 			}else{
-				if(itemdetail.length!=null){
-					if(req.body.image != undefined){
+				console.log("sssssssss",itemdetail)
+				if(itemdetail.length>0){
+					if(req.body.image != ""){
 						var photoname = Date.now() + ".png";
 		      			var imageName = __dirname+"/../../../public/images/upload/"+photoname;
 		      			//console.log("aaaaaaa",reqdata.image)
@@ -141,10 +179,10 @@ exports.updateItem = function(req, res) {
 				     	 	fs.writeFile(imageName, base64Data, 'base64', function(err) {
 							      if (err) {
 										outputJSON = {'status':'failure', 'messageId':400, 'message':"Failure upload"}, 
-					 					res.json(outputJSON);							       }else{
+					 					res.json(outputJSON);							       
+					 				}else{
 				                 	itemsObj.update({_id :reqdata.id},{$set:{image:photoname,
 									    p_name:req.body.p_name,
-									    vendor_id:req.body.vendor_id,
 									    p_price:req.body.p_price,
 									    p_description:req.body.p_description,
 										p_count:req.body.p_count}},function(err,data){
@@ -178,10 +216,15 @@ exports.updateItem = function(req, res) {
 							}
 						})		
 					}
-				} // item detail != null
-			}
-		})
-}		
+				}else{   
+				console.log("id soestnt exists",itemdetail) // item detail != null
+					outputJSON = {'status':'failure', 'messageId':400, 'message':"Id does not exist"}, 
+						 		res.json(outputJSON);
+					}
+				} 
+			})
+		}
+		
 
 
 exports.removeItem = function(req, res) {

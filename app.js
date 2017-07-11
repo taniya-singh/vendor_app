@@ -176,8 +176,14 @@ function findByUsername(username, fn) {
   return fn(null, null);
 }
 
+
+<<<<<<< HEAD
+=======
+
+//admin login
 var LocalStrategy = require('passport-local').Strategy;
 
+>>>>>>> d3560097c7521adbf48d19ed56ae6f19418834c0
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
       
@@ -203,12 +209,14 @@ var LocalStrategy = require('passport-local').Strategy;
       });
     }
   ));
+<<<<<<< HEAD
+=======
+
+>>>>>>> d3560097c7521adbf48d19ed56ae6f19418834c0
 passport.serializeUser(adminLoginObj.serializeUser);
 passport.deserializeUser(adminLoginObj.deserializeUser);
 
 //vendor login
-var LocalStrategy = require('passport-local').Strategy;
-
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
 
@@ -252,7 +260,6 @@ passport.deserializeUser(function(adminLoginObj,done){
 //userlogin
 passport.use('userLogin',new LocalStrategy(
     function(username, password, done) {
-       
       userObj.findOne({email: username}, function(err, user) {
         if(err) {
           console.log("errrr")
@@ -323,6 +330,8 @@ require('./routes/users')(app, express, passport);
 require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
+require('./routes/payment')(app, express, passport);
+
 
 
 
