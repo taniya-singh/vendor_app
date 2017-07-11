@@ -20,7 +20,7 @@ var userObj = require('./../app/controllers/users/users.js');
 	  router.post('/deleteUser', userObj.deleteUser);
 
 
-      //router.post('/faceBookLogin',userObj.faceBookLogin);
+      router.post('/faceBookLogin',userObj.faceBookLogin);
       router.post('/forgetpassword',userObj.forgetpassword);
       router.post('/reset_password',userObj.reset_password);
       router.post('/place_order',order.place_order);

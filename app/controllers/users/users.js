@@ -22,103 +22,8 @@ var client = new twilio(accountSid, authToken);
     exports.userlogin = function(req,res){
          var data = res.req.user;
          console.log("data",data)
-        if(req.body.loginType==2)
-        {
-            console.log("inside faceBookLogin")
-                if (!req.body.facebook_id) {
-                    res.jsonp({
-                        'status': 'failure',
-                        'messageId': 401,
-                        'message': 'Facebook Authentication Failed.'
-                    });
-                }else{ 
-                var details = {};
-                if (req.body.first_name) {
-                    details.first_name = req.body.first_name;
-                }
-                if (req.body.last_name) {
-                    details.last_name = req.body.last_name;
-                }
-                if (req.body.phone_no) {
-                    details.phone_no = req.body.phone_no;
-                }
-                if (req.body.email) {
-                    details.email = req.body.username;
-                }  
-                if(req.body.password){
-                    details.password=req.body.password;
-                }
-                details.facebook_id = req.body.facebook_id;
-                details.loginType=2;
-                userObj.findOne({facebook_id:req.body.facebook_id},function(err, user) {
-                    if (err) {
-                        console.log("err",err)
-                        res.jsonp({ "status": 'faliure',
-                            "messageId": "401",
-                            "message": "Sorry, Problem to login with facebook."
-                                                });
-                    } 
-                    else {
-                        console.log("user find is",user)
-                        if (user == null) {
-                                userObj(details).save(req.body,function(err, adduser) {
-                                    if (err) {
-                                        res.jsonp({
-                                            'status': 'failure',
-                                            'messageId': 401,
-                                            'message': 'User is not found'
-                                        });
-                                    }else {
-                                        var data = {};
-                                        data.user_id = adduser._id;
-                                        data.device_id = req.body.device_id;
-                                        data.device_type = req.body.device_type;
-                                        
-                                        device(device).save(data,function(err, devicedata) {
-                                            if (err) {
-                                                res.jsonp({
-                                                    'status': 'faliure',
-                                                    'messageId': 401,
-                                                    'message': 'Either device_id or device_type is not available!'
-                                                });
-                                            } else {
-                                                res.jsonp({
-                                                    'status': 'success',
-                                                    'messageId': 200,
-                                                    'message': 'User logged in successfully',
-                                                    "data": adduser
-                                                });
-                                            }
-                                        })
-                                    }
-                                })
-                            }else {
 
-                                var dev = {};
-                                dev.user_id = user._id;
-                                dev.device_id = req.body.device_id;
-                                dev.device_type = req.body.device_type;
-                                device(dev).save(dev,function(err, data) {
-                                    if (err) {
-                                        res.jsonp({
-                                            'status': 'faliure',
-                                            'messageId': 401,
-                                            'message': 'Either device_id or device_type is not available!'
-                                        });
-                                    } else {
-                                        res.jsonp({
-                                            'status': 'success',
-                                            'messageId': 200,
-                                            'message': 'Facebook credentials already exists',
-                                            "data": user
-                                        });
-                                    }
-                                })
-                            }
-                        }       
-                 })
-            }   
-        }
+
         if(req.body.loginType==1)
         {
           if(data.message=='Invalid username')
@@ -140,13 +45,9 @@ var client = new twilio(accountSid, authToken);
         var outputJSON = {'status': 'success', 'messageId':200, 'message':"login successfully","data":data}; 
         res.jsonp(outputJSON)
         }
-        }
-          
-
-           
-        
-            
+                 
     
+}
 }
     
 //update vendor information
@@ -176,8 +77,90 @@ exports.update_vendor_info=function(req,res){
     }
 }
 
-/*exports.faceBookLogin = function(req, res) {
- else if (req.body.loginType == 3) {  // loginType= 3  for google login
+exports.faceBookLogin = function(req, res) {
+
+    if(req.body.loginType==2)
+      {  
+        console.log("inside faceBookLogin")
+        if (!req.body.facebook_id){
+            res.jsonp({'status': 'failure','messageId': 401,'message': 'Facebook Authentication Failed.'});
+        }else{ 
+            var details = {};
+            if (req.body.first_name) {
+                details.first_name = req.body.first_name;
+            }
+            if (req.body.last_name) {
+                 details.last_name = req.body.last_name;
+            }
+            if (req.body.phone_no) {
+                details.phone_no = req.body.phone_no;
+            }
+            if (req.body.email) {
+                details.email = req.body.username;
+            }  
+            if(req.body.password){
+                details.password=req.body.password;
+            }
+            details.facebook_id = req.body.facebook_id;
+            details.loginType=2;
+            userObj.findOne({facebook_id:req.body.facebook_id},function(err, user) {
+                    if (err) {
+                        console.log("err",err)
+                        res.jsonp({ "status": 'faliure',"messageId": "401","message": "Sorry, Problem to login with facebook."});
+                    } 
+                    else {
+                        console.log("user find is",user)
+                        if (user == null) {
+                                userObj(details).save(req.body,function(err, adduser) {
+                                    if (err) {
+                                        console.log("err",err)
+                                        res.jsonp({'status': 'failure','messageId': 401,'message': 'User is not found'});
+                                    }else {
+                                        var data = {};
+                                        data.user_id = adduser._id;
+                                        data.device_id = req.body.device_id;
+                                        data.device_type = req.body.device_type;
+                                        
+                                        device(device).save(data,function(err, devicedata) {
+                                            if (err) {
+                                                res.jsonp({'status': 'faliure','messageId': 401,'message': 'Either device_id or device_type is not available!'});
+                                            } else {
+                                                res.jsonp({
+                                                    'status': 'success','messageId': 200,'message': 'User logged in successfully',"data": adduser});
+                                            }
+                                        })
+                                    }
+                                })
+                            }else {
+
+                                var dev = {};
+                                dev.user_id = user._id;
+                                dev.device_id = req.body.device_id;
+                                dev.device_type = req.body.device_type;
+                                device(dev).save(dev,function(err, data) {
+                                    if (err) {
+                                        res.jsonp({
+                                            'status': 'faliure',
+                                            'messageId': 401,
+                                            'message': 'Either device_id or device_type is not available!'
+                                        });
+                                    } else {
+                                        res.jsonp({
+                                            'status': 'success',
+                                            'messageId': 200,
+                                            'message': 'Facebook credentials already exists',
+                                            "data": user
+                                        });
+                                    }
+                                })
+                            }
+                        }       
+                 })
+            } 
+
+        }     
+    }
+/* else if (req.body.loginType == 3) {  // loginType= 3  for google login
         if (!req.body.google_id) {
             res.jsonp({
                 'status': 'faliure',
@@ -286,9 +269,9 @@ exports.update_vendor_info=function(req,res){
             'messageId': 401,
             'message': 'something wrong here'
         });
-    }
-}
-*/
+    }*/
+
+
 exports.register = function(req, res) {
                     var errorMessage = "";
                     var outputJSON = "";

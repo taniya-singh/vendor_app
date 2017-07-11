@@ -157,7 +157,7 @@ exports.update_vendor_info2=function(req,res){
 
 exports.vendorList = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-        vendor.find({},function(err,data){
+        vendor.find({is_deleted:false},function(err,data){
                     if(err){
                         res.json("Error: "+err);   
                     }
@@ -208,7 +208,7 @@ exports.vendorList = function(req,res){
                 _id: req.body._id
             }, {
                 $set: {
-                    isDeleted:true
+                    is_deleted:true
                 }
             }, function(err, updRes) {
                 if (err) {

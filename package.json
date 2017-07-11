@@ -49,6 +49,7 @@
     "passport-local": "^1.0.0",
     "request": "^2.81.0",
     "serve-favicon": "~2.3.0",
+    "stripe": "^4.23.1",
     "twilio": "^3.4.0"
   },
   "devDependencies": {

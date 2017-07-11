@@ -276,13 +276,15 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
   							console.log("AAAAAAAA",$scope.vendor.vendor_time)
 
 
-  			//console.log($settings.fetchDataOnTimeFiltering(data));
+  			console.log($settings.startingHour)
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
+
                 console.log("aasdaas",$scope.timeSettings.fromHour);
                 
+
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
 				VendorService.saveVendor($scope.vendor,function(response){
@@ -333,7 +335,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
                 });                
 	        }
 
-            $scope.getAllVendors = function() {
+            $scope.getAllVendor = function() {
             	console.log("insoide get all vendor ******)")
 				var passingDate = {};
 				// usSpinnerService.spin('spinner-1');
