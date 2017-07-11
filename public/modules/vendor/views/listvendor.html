@@ -89,7 +89,7 @@
                                  <td data-title="'Longitude'" sortable="'longitude'" filter="{longitude:'text'}" >{{vendor.longitude}}</td> -->
                                  <!-- <td data-title="'VendorAddress'" sortable="'vendor_address'" filter="{gender:'text'}" >{{vendor.vendor_address}}</td> -->
                             
-                               <td data-title="'Pickup_time'"  filter="{pickup_time:'text'}" >{{vendor.pickup_time}}
+                               <td data-title="'Pickup_time'"  filter="{pickup_time:'String'}" >{{vendor.pickup_time}}
                                  </td>
 
 
@@ -121,7 +121,7 @@
                                 <td colspan='7'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()">
                                 </td>
                               </tr>  
-                                <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b>
+                          <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b>
                                      </td>
                                   </tr>
                                         </table> 

@@ -273,38 +273,39 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 
   		$scope.submit = function(){
 
-  			console.log($settings.startingHour)
+  			//console.log($settings.fetchDataOnTimeFiltering(data));
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
-                console.log("aasdaas",$scope.settings)
+                console.log("aasdaas",$scope.timeSettings);
+                return false;
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
-				VendorService.saveVendor($scope.vendor,function(response){
-						console.log(response);
-						if(response.messageId ==401){
-							$scope.emailValid=response.message;
-						}
-						console.log("response.messageId",response.messageId);
-						if(response.messageId == 200) {
-							$scope.message = response.message;
-							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-success';
-						//	$state.go("/vendor");
-							$location.path('/vendor'); 
-                      //       $timeout(function(argument) {
-		                    //                       $scope.showmessage = false;
-		                    //                       $state.go( "/vendor" );
-		                    // }, 2000)									
-						} else{
-							$scope.message = response.message;
-							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-error';
+				// VendorService.saveVendor($scope.vendor,function(response){
+				// 		console.log(response);
+				// 		if(response.messageId ==401){
+				// 			$scope.emailValid=response.message;
+				// 		}
+				// 		console.log("response.messageId",response.messageId);
+				// 		if(response.messageId == 200) {
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-success';
+				// 		//	$state.go("/vendor");
+				// 			$location.path('/vendor'); 
+    //                   //       $timeout(function(argument) {
+		  //                   //                       $scope.showmessage = false;
+		  //                   //                       $state.go( "/vendor" );
+		  //                   // }, 2000)									
+				// 		} else{
+				// 			$scope.message = response.message;
+				// 			$scope.showmessage = true;
+				// 			$scope.alerttype = 'alert alert-error';
 
 
-						}
-					})
+				// 		}
+				// 	})
 
   			}
 

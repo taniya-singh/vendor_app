@@ -126,6 +126,8 @@ var gcmObject = new gcm.AndroidGcm('AIzaSyC_5mrHRfwNhN-xHNJ4_tv1hXpsmPbZnss');
           
           
       });*/ 
+
+
 passport.use('bearer', new BearerStrategy(function(token, done) {
   //console.log("HERE IN THE CODE");
   tokenService.verifyToken(token, function(e, s) {
@@ -174,10 +176,9 @@ function findByUsername(username, fn) {
     }
   }
   return fn(null, null);
-
+}
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
-
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
       
