@@ -178,8 +178,10 @@ function findByUsername(username, fn) {
 
 
 
+
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
+
 
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
