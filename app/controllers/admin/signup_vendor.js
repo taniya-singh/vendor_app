@@ -158,7 +158,7 @@ exports.vendorList = function(req,res){
                         
                     }
                     else{
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                        outputJSON = {'status':'sueeeeeccess', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
                     res.json(outputJSON);
                     }
                 });
