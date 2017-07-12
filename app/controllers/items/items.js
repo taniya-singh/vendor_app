@@ -223,9 +223,9 @@ exports.updateItem = function(req, res) {
 					}
 				} 
 			})
-		}
 		
-
+		
+}
 
 exports.removeItem = function(req, res) {
 	var outputJSON = {

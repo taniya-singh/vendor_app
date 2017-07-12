@@ -84,10 +84,14 @@
                       vendorForm.vendor_email.$error.required &&  vendorForm.vendor_email.$touched && vendorForm.vendor_email.$invalid" role="alert">
                      <span style="color:red" ng-message="required" class="error-message">Email is required</span>
                    </div>
+
+                   
                    
                     <div class="validationError" ng-if="emailValid" role="alert">
                       <span style="color:red" class="error-message">Email Already exist</span>
                    </div>
+
+
 
                   <label ng-if="!updateButton">Password<span class="requiredClass">*</span></label>
                    <input ng-if="!updateButton" type="password"  class="form-control" name="password" ng-if="!updateButton" placeholder="Enter password" ng-model="vendor.password" ng-minlength="8" ng-maxlength="20" maxlength="21" required>

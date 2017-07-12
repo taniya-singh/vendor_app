@@ -126,6 +126,8 @@ var gcmObject = new gcm.AndroidGcm('AIzaSyC_5mrHRfwNhN-xHNJ4_tv1hXpsmPbZnss');
           
           
       });*/ 
+
+
 passport.use('bearer', new BearerStrategy(function(token, done) {
   //console.log("HERE IN THE CODE");
   tokenService.verifyToken(token, function(e, s) {
@@ -164,8 +166,6 @@ passport.use('bearer', new BearerStrategy(function(token, done) {
 
 
 
-
-
 function findByUsername(username, fn) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
@@ -177,11 +177,8 @@ function findByUsername(username, fn) {
 }
 
 
-
-
 //admin login
 var LocalStrategy = require('passport-local').Strategy;
-
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
       
@@ -208,7 +205,6 @@ var LocalStrategy = require('passport-local').Strategy;
       });
     }
   ));
-
 passport.serializeUser(adminLoginObj.serializeUser);
 passport.deserializeUser(adminLoginObj.deserializeUser);
 

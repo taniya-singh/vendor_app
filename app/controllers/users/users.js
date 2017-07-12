@@ -22,7 +22,6 @@ var client = new twilio(accountSid, authToken);
     exports.userlogin = function(req,res){
          var data = res.req.user;
          console.log("data",data)
-
         if(req.body.loginType==1)
         {
           if(data.message=='Invalid username')
