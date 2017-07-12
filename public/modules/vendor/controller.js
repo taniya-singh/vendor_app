@@ -573,7 +573,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 						                });
 					            }else{
 					                    VendorService.updateVendorStatus(inputJson, function(response) {
-					                      $scope.getAllVendors();				                      
+					                      $scope.getAllVendor();				                      
 					                      $scope.selection=[];
 					                      $scope.showmessage = true;
 	                                        $scope.alerttype = 'alert alert-success';

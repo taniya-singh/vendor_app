@@ -13,7 +13,7 @@ var userSchema = new mongoose.Schema({
   enable: {type: Boolean, default:false},
   phone:{type:String},
   is_deleted:{type:Boolean, default:false},
-  facebook_id:{type:Number},
+  facebook_id:{type:String},
   google_id:{type:Number},
   loginType:{type: Number, default:1},// 1 simple,2 facebook, 3 google
   user_type:{type:String,default:"customer"},
