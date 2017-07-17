@@ -2,7 +2,6 @@ var userObj = require('./../../models/users/users.js');
 var vendor = require('./../../models/vendordetails/vendordetails.js');
 var order = require('./../../models/order/order.js');
 var itemsObj = require('./../../models/items/items.js');
-
 var device=require('./../../models/devices/devices.js')
 var mongoose = require('mongoose');
 var twilio=require('twilio');
@@ -21,7 +20,7 @@ var client = new twilio(accountSid, authToken);
 
     exports.userlogin = function(req,res){
          var data = res.req.user;
-         console.log("data",data)
+         console.log("dataaaaa",data)
         if(req.body.loginType==1)
         {
           if(data.message=='Invalid username')
@@ -52,14 +51,14 @@ var client = new twilio(accountSid, authToken);
 
 exports.update_vendor_info=function(req,res){
     if(req.body){
-        userObj.findOne({_id:req.body._id},function(err,data){
+        vendor.findOne({_id:req.body._id},function(err,data){
             if(err){
                 outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
                 res.jsonp(outputJSON)
             }
             else{
                 console.log("req.body",req.body)
-                userObj.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"email":req.body.email,"password":req.body.password}},function(err,updatedresponse){
+                vendor.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"email":req.body.email,"password":req.body.password}},function(err,updatedresponse){
                     if(err){
                         outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
                         res.jsonp(outputJSON)
@@ -269,94 +268,6 @@ exports.faceBookLogin = function(req, res) {
         });
     }*/
 
-
-exports.register = function(req, res) {
-                    var errorMessage = "";
-                    var outputJSON = "";
-                    var userModelObj = {};
-                    questionnaireModelObj = req.body;
-
-                    console.log(questionnaireModelObj)
-                    userObj(questionnaireModelObj).save(req.body, function(err, data) { 
-                        if(err) {
-                            switch(err.name) {
-                                case 'ValidationError':
-
-                                for(field in err.errors) {
-                                    if(errorMessage == "") {
-                                        errorMessage = err.errors[field].message;
-                                    }
-                                    else {                          
-                                        errorMessage+=", " + err.errors[field].message;
-                                    }
-                                }//for
-                                break;
-                        }//switch
-                        
-                        outputJSON = {'status': 'failure', 'messageId':401, 'message':err};
-                    }//if
-                    else {
-                        outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userSuccess, 'data': data};
-                    }
-                    
-                    
-                    login(data, res);
-
-                    //res.jsonp(outputJSON);
-
-                });
-
-                 }
-
-
-          exports.register111=function(req,res){
-    console.log(req.body);
-            userObj.findOne({"email":req.body.email},function(err,data){
-        if(err){
-            res.json("Sorry : "+err);
-        }
-                 
-            
-            else{
-
-                if(data==null){
-
-                    var user=new userObj({
-                    //_id:req.body.id,
-                    first_name:req.body.first_name,
-                    last_name:req.body.last_name,
-                    user_name:req.body.user_name,
-                    address:req.body.Address,
-                    //phone:req.body.Phone,
-                    email:req.body.email,
-                    password:req.body.password,
-                    type:req.body.type
-                });
-                console.log("user",user);
-                user.save(function(err){
-                    if(err){
-                        console.log(err);
-                        res.send({"Error":"data not inserted"});
-                    }
-                    else{
-                        res.send({"Success":"Data inserted successfully"});
-                    }
-                });
-
-
-
-                }
-                
-            }
-    });
-}
-
-
-
-
-
-
-
          exports.user = function(req, res, next, id) {
             userObj.load(id, function(err, user) {
                 if (err){
@@ -471,42 +382,50 @@ exports.register = function(req, res) {
          * Input: User object
          * Output: User json object with success
          */
-         exports.update = function(req, res) {
+        exports.update_user_info = function(req, res) {
             console.log('update_user')
             var errorMessage = "";
             var outputJSON = "";
-            var user = req.userData;
-            user.first_name = req.body.first_name;
-            user.last_name = req.body.last_name;
-            user.email = req.body.email;
-            user.user_name = req.body.user_name;
-            user.display_name = req.body.display_name;
-            user.role = req.body.role;
-            user.enable = req.body.enable;
-            user.save(function(err, data) {
-                console.log(err);
-                console.log(data);
-                if(err) {
-                    switch(err.name) {
-                        case 'ValidationError':
-                        for(field in err.errors) {
-                            if(errorMessage == "") {
-                                errorMessage = err.errors[field].message;
+            userObj.find({_id:req.body._id},function(err,user_found){
+                if(err){
+                    console.log(err);
+                    outputJSON = {'status': 'Failure', 'messageId':400, 'message':"Error"};
+                    res.jsonp(outputJSON) 
+                }else{
+                    if(user_found==""){
+                        outputJSON = {'status': 'success', 'messageId':200, 'message':"Not a valid _id"};
+                        res.jsonp(outputJSON) 
+
+                    }else{
+                        console.log("user is",user_found);
+                        userObj.find({email:req.body.email},function(err,useremail){
+                            if(err){
+                                console.log(err);
+                                outputJSON = {'status': 'Failure', 'messageId':400, 'message':"Error"};
+                                res.jsonp(outputJSON)   
+                            }else{
+                                console.log("useremail",useremail)
+                                if(useremail==""){
+                                    userObj.update({_id:req.body._id},{$set:{first_name:req.body.first_name,last_name:req.body.last_name,email:req.body.email}},function(err, data) {
+                                        if(err) {
+                                            console.log("err",err);
+                                            outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
+                                            res.jsonp(outputJSON);
+                                        }else {
+                                            outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully",'data':data};
+                                            res.jsonp(outputJSON);
+                                        }
+                                    });
+                                }else{
+                                    outputJSON = {'status': 'success', 'messageId':200, 'message':"Email already exists"};
+                                    res.jsonp(outputJSON)
+                                }
                             }
-                            else {                          
-                                errorMessage+="\r\n" + err.errors[field].message;
-                            }
-                                    }//for
-                                    break;
-                            }//switch
-                            outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
-                        }//if
-                        else {
-                            outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userStatusUpdateSuccess};
-                        }
-                        res.jsonp(outputJSON);
-                    });
-         }
+                        })            
+                    }
+                }
+            })                    
+        }
 
 
          /**
@@ -611,7 +530,7 @@ exports.reset_password=function(req,res){
                             from: "abc",
                             to: req.body.email,
                             subject: 'Reset password',
-                            html: 'Welcome to MunchApp!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
                         };
                     transporter.sendMail(mailOptions, function(error, response) {
                         if (error) {
@@ -637,46 +556,6 @@ exports.reset_password=function(req,res){
 
 
 
-exports.place_order=function(req,res){
-    console.log("order")
-    if(req.body){
-        console.log("req.body",req.body);
-        itemsObj.find({_id:req.body.item_id,is_deleted:false},function(err,item){
-            console.log("inside items",item)
-            if(err){
-                console.log("err",err)
-                outputJSON={'status': 'failure', 'messageId':400, 'message':"Err"};
-                res.jsonp(outputJSON)
-
-            }else{
-                if(item==null){
-
-                }
-                else
-                {
-                    console.log("item",item)
-                    var vendorid=item[0].vendor_id;
-                var orderdetail={};
-                orderdetail.customer_id=req.body.customer_id;
-                orderdetail.item_id=req.body.item_id;
-                orderdetail.vendor_id=vendorid;
-                order(orderdetail).save(orderdetail,function(err,orders){
-                    if(err){
-                        res.jsonp(err);
-                    }else{
-                    outputJSON = {'status': 'success', 'messageId':200, 'message':"Order placed successfully",data:orders};
-                    res.jsonp(outputJSON);
-                }
-                    })
-                }
-                }
-
-            })
-
-        }
-
-
-    }
 
     /*if(req.body){
         userObj.findOne({_id:req.body._id},function(err,data){

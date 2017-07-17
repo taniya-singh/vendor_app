@@ -214,7 +214,6 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
 
       vendor.findOne({vendor_email: username}, function(err, adminuser) {
         if(err) {
-
                return done(err,{"message":"Error"});
         }
         
@@ -272,7 +271,8 @@ passport.use('userLogin',new LocalStrategy(
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,
-                    phone_no: user.phone_no,
+                    password:user.password,
+                    phone: user.phone,
                     user_type: user.user_type,            
                     facebook_id:user.facebook_id,
                     loginType:user.loginType,
@@ -323,7 +323,7 @@ require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
 require('./routes/payment')(app, express, passport);
-
+require('./routes/order')(app, express, passport);
 
 
 

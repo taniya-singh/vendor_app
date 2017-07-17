@@ -26,6 +26,8 @@ angular.module('Vendor')
 
 	}
 	service.saveVendor = function(inputJsonString, callback) {
+		console.log("inputJsonString",inputJsonString)
+		console.log("inside save vendor service")
 			communicationService.resultViaPost(webservices.addVendor, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});

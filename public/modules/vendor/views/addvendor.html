@@ -276,7 +276,7 @@
                
 
     <div class="box-footer clearfix no-border">
-     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" >
+     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" ng-disabled="vendorForm.$invalid" value="Submit" >
      <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update"  ng-click="update()" value="Update ">
      </div>
 

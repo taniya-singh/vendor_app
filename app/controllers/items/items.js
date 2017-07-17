@@ -102,7 +102,6 @@ uploadSkillImg= function(data,callback){
 		     }else{
 		     	var base64Data = data.image.base64;
 		     }
-		     //console.log("TTTT",base64Data)
 		     if(base64Data!=undefined){
 		     	 fs.writeFile(imageName, base64Data, 'base64', function(err) {
 				        if (err) {
@@ -111,10 +110,9 @@ uploadSkillImg= function(data,callback){
 				         var updateField={};
 						 updateField={'image':photoname};	  
                        	 var item=new itemsObj({
-					      image:photoname
+					     image:photoname
 				   		});
                  item.save(function(err,data){
-					console.log("***********",data)
 					if(data) {
 					callback(data);
 					}
@@ -128,7 +126,7 @@ uploadSkillImg= function(data,callback){
 
 
 /**
- * a middleware controller to get all products
+Update item details with and without image
  */
 
 exports.updateItem = function(req, res) {
@@ -147,22 +145,17 @@ exports.updateItem = function(req, res) {
 		reqdata.p_price=req.body.p_price;
 		reqdata.p_description=req.body.p_description;
 		reqdata.p_count=req.body.p_count;
-		console.log("req",reqdata)
 		itemsObj.find({_id:req.body.id},function(err,itemdetail){
 			if(err){
 				console.log(err)
 				outputJSON = {'status':'failure', 'messageId':400, 'message':"error"}, 
 				res.json(outputJSON);
 			}else{
-				console.log("sssssssss",itemdetail)
 				if(itemdetail.length>0){
 					if(req.body.image != ""){
-						console.log("image update")
 						var photoname = Date.now() + ".png";
 		      			var imageName = __dirname+"/../../../public/images/upload/"+photoname;
-		      			console.log("aaaaaaa",reqdata.image)
 		  				if(reqdata.image.indexOf("base64,")!=-1){	
-		  					console.log("inside not base 64")
 				         	var Data = reqdata.image.split('base64,'); 
 				         	var ext=Data[0].split('/');		          
 				         	var format= ext[1].replace(';','');        
@@ -173,16 +166,13 @@ exports.updateItem = function(req, res) {
 		     			}else{
 		     				var base64Data = reqdata.image.base64;
 		     			}
-		     			//console.log("base64Data",base64Data)
 			    		if(base64Data!=undefined){
-			    			console.log("insideee")
 				     	 	fs.writeFile(imageName, base64Data, 'base64', function(err) {
 							      if (err) {
 										outputJSON = {'status':'failure', 'messageId':400, 'message':"Failure upload"}, 
 					 					res.json(outputJSON);							       }else{
 				                 	itemsObj.update({_id :reqdata.id},{$set:{image:photoname,
 									    p_name:req.body.p_name,
-									    vendor_id:req.body.vendor_id,
 									    p_price:req.body.p_price,
 									    p_description:req.body.p_description,
 										p_count:req.body.p_count}},function(err,data){
@@ -205,7 +195,6 @@ exports.updateItem = function(req, res) {
 					 							res.json(outputJSON);
 			     			}			       
 					}else{
-						console.log("inside simple update without images",req.body.id);
 						itemsObj.update({_id :req.body.id},{$set:{p_name:req.body.p_name,p_price:req.body.p_price,p_description:req.body.p_description,p_count:req.body.p_count}},{multi:true},function(err,data){
 							if(err){
 								outputJSON = {'status':'failure', 'messageId':400, 'message':"Error"}, 
@@ -347,7 +336,7 @@ exports.item_listing_for_user = function(req, res) {
 						coordinates: [lat,long]
 					},
 				distanceField: "dist.calculated",
-				maxDistance: 250000,
+				maxDistance: 25000,
 				includeLocs: "dist.location",
 				spherical: true
 			}
