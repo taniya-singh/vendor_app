@@ -271,12 +271,15 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 
 
   		$scope.submit = function(){
-  				console.log("AAAAAAAA",$scope.vendor)
+
+  			//console.log($settings.fetchDataOnTimeFiltering(data));
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
-
+               
+               //$scope.vendor.phone="+1"+$scope.vendor.phone_no
+                console.log($scope.vendor);
 				 VendorService.saveVendor($scope.vendor,function(response){
 						console.log(response);
 				 		if(response.messageId ==401){
