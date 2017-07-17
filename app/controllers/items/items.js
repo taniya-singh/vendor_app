@@ -182,7 +182,7 @@ exports.updateItem = function(req, res) {
 					 					res.json(outputJSON);							       }else{
 				                 	itemsObj.update({_id :reqdata.id},{$set:{image:photoname,
 									    p_name:req.body.p_name,
-									    vendor_id:req.body.vendor_id,
+									  
 									    p_price:req.body.p_price,
 									    p_description:req.body.p_description,
 										p_count:req.body.p_count}},function(err,data){

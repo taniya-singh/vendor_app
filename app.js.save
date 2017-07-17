@@ -126,8 +126,6 @@ var gcmObject = new gcm.AndroidGcm('AIzaSyC_5mrHRfwNhN-xHNJ4_tv1hXpsmPbZnss');
           
           
       });*/ 
-
-
 passport.use('bearer', new BearerStrategy(function(token, done) {
   //console.log("HERE IN THE CODE");
   tokenService.verifyToken(token, function(e, s) {
@@ -166,6 +164,8 @@ passport.use('bearer', new BearerStrategy(function(token, done) {
 
 
 
+
+
 function findByUsername(username, fn) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
@@ -176,13 +176,11 @@ function findByUsername(username, fn) {
   return fn(null, null);
 }
 
-
-//admin login
 var LocalStrategy = require('passport-local').Strategy;
+
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
       
-      console.log("inside admin login")
       adminLoginObj.findOne({username: username}, function(err, adminuser) {
        
         if(err) {
@@ -205,10 +203,13 @@ var LocalStrategy = require('passport-local').Strategy;
       });
     }
   ));
+
 passport.serializeUser(adminLoginObj.serializeUser);
 passport.deserializeUser(adminLoginObj.deserializeUser);
 
 //vendor login
+var LocalStrategy = require('passport-local').Strategy;
+
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
 
@@ -252,6 +253,7 @@ passport.deserializeUser(function(adminLoginObj,done){
 //userlogin
 passport.use('userLogin',new LocalStrategy(
     function(username, password, done) {
+       
       userObj.findOne({email: username}, function(err, user) {
         if(err) {
           console.log("errrr")
@@ -272,8 +274,7 @@ passport.use('userLogin',new LocalStrategy(
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,
-		    password:user.password,
-                    phone: user.phone,
+                    phone_no: user.phone_no,
                     user_type: user.user_type,            
                     facebook_id:user.facebook_id,
                     loginType:user.loginType,
@@ -323,8 +324,6 @@ require('./routes/users')(app, express, passport);
 require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
-require('./routes/payment')(app, express, passport);
-
 
 
 
