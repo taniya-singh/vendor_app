@@ -6,18 +6,10 @@ module.exports = function(app, express, passport) {
 	router.post('/updateHelpBlock', passport.authenticate('bearer', {
 		session: true
 	}), helpBlock.updateHelpBlock);
-	router.get('/getHelpBlockListing', passport.authenticate('bearer', {
-		session: true
-	}),helpBlock.getHelpBlockListing);
-	router.post('/getHelpInformation',  passport.authenticate('bearer', {
-		session: true
-	}),helpBlock.getHelpInformation);
-	router.post('/insertHelpInformation', passport.authenticate('bearer', {
-		session: true
-	}), helpBlock.insertHelpInformation);
-	router.post('/deleteHelp', passport.authenticate('bearer', {
-		session: true
-	}), helpBlock.deleteHelp);
+	router.get('/getHelpBlockListing',helpBlock.getHelpBlockListing);
+	router.post('/getHelpInformation',helpBlock.getHelpInformation);
+	router.post('/insertHelpInformation',helpBlock.insertHelpInformation);
+	router.post('/deleteHelp',helpBlock.deleteHelp);
 	// router.get('/aboutUs',helpBlock.aboutUs);
 	// router.get('/termsCondition',helpBlock.termsCondition);
 	router.get('/page/:indentifier',helpBlock.page);

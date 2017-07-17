@@ -10,11 +10,11 @@
 <div class="login-box" data-ng-init="noHeader()"  >
   <div class="login-logo" ng-show='userLoggedIn==false'>
    <!-- <img src="images/logo.png"  alt="logo" style="height:40px"/> -->
-  <b><img src="images/logo.png"  alt="logo" style="height:40px;width:70px"/></b>
+  <b>Bridgit</b>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body" ng-show='userLoggedIn==false'>
-    <p class="login-box-msg">Sign in to start your session</p>
+    <p class="login-box-msg">Sign in</p>
 
     <form name="login_form" role="form" id="login_form" novalidate>
     <!-- <span style="color:red" ng-show="error" >
@@ -37,18 +37,12 @@
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
-        <!-- <div class="col-xs-8">
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox"> Remember Me
-            </label>
-          </div>
-        </div> -->
-        <!-- /.col -->
         <div class="col-xs-4">
           <button type="submit" onsubmit="return false;"  class="btn btn-primary btn-block btn-flat"name="login" ng-click="login()" ng-disabled="login_form.$invalid">Sign In</button>
         </div>
-        <!-- /.col -->
+        <div class="col-xs-8 text-right">
+          <a href="/#/forgot-password" class="forgot">I forgot my password</a>
+        </div>
       </div>
     </form>
 
@@ -60,8 +54,6 @@
         Google+</a>
     </div> -->
     <!-- /.social-auth-links -->
-
-    <a href="/#/forgot-password">I forgot my password</a><br>
     <!-- <a href="register.html" class="text-center">Register a new membership</a>
  -->
   </div>

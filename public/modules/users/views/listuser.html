@@ -1,25 +1,26 @@
 <section class="content-header" ng-init="getAllUsers()">
-      <h1>
-        Users
-       <!--  <small>User Listing</small> -->
-      </h1>
-     <ol class="breadcrumb">
-                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li>Users</li>                       
-                    </ol>
-    </section>
- <div ng-if="loader==true" >
-<div class="loader-image">
-            <i class="fa fa-spinner fa-pulse fa-spin"></i>
- </div>
-<div class="loader-container"></div></div>
+  <h1>
+    Customers
+   <!--  <small>Customer Listing</small> -->
+  </h1>
+  <ol class="breadcrumb">
+                <li><a href="/#/home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Customers</li>                       
+  </ol>
+</section>
+<div ng-if="loader==true">
+  <div class="loader-image">
+    <i class="fa fa-spinner fa-pulse fa-spin"></i>
+  </div>
+  <div class="loader-container"></div>
+</div>
 
  <!-- Main content -->
     <section class="content">
       <div class="row">
          <div class="col-xs-12">
-            <div class="box-body table-responsive">
-               <div class="box">
+            <div class="">
+               <div class="box box-primary">
                    <div class="box-body ">
                        <div class="clearfix"></div>
                           <div class="row">
@@ -57,29 +58,29 @@
                                    
                  <table id="example1" class="table table-bordered table-hover" ng-table="tableParams" show-filter="isFiltersVisible"> 
                   <colgroup>
-                    <col width="10%"/>
+                    <col width="2%"/>
+                    <col width="13%"/>
                     <col width="15%"/>
+                    <col width="20%"/>
                     <col width="15%"/>
-                    <col width="15%"/>
-                    <col width="10%"/>
-                    <col width="15%"/>
-                    <col width="5%"/>
-                    <col width="5%"/>
-                    </colgroup>
+                    <col width="12%"/>
+                    <col width="7%"/>
+                    <col width="7%"/>
+                  </colgroup>
                <tr ng-repeat = "user in $data">
-                    <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[user._id]" ng-change=" (user._id)" class="list{{tableParams.page()}}" />
+                    <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[user._id]" ng-change="toggleSelection(user._id)" class="list{{tableParams.page()}}" />
                       </td>
 
-                   <td data-title="'First Name'" sortable="'first_name'" filter="{first_name:'text'}" align="left"><a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit">{{user.first_name}}</a></td>
+                   <td data-title="'First Name'" sortable="'first_name'" filter="{first_name:'text'}" align="left"><!-- <a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit"> -->{{user.first_name}}</td>
 
-                  <td data-title="' Last Name'" sortable="'last_name'" filter="{last_name:'text'}" align="left"><a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit">{{user.last_name}}</a></td>
+                  <td data-title="' Last Name'" sortable="'last_name'" filter="{last_name:'text'}" align="left"><!-- <a href="/#/users/edit/{{user._id}}" alt="Click to edit" title="Click to edit"> -->{{user.last_name}}</td>
 
                    <td data-title="'Email'" sortable="'email'" filter="{email:'email'}" align="left">{{user.email| capitalize}}</td>
 
                     <!-- <td data-title="'Password'" sortable="'password'" filter="{password:'password'}" align="left">{{user.password| capitalize}}</td>-->
-                  <td data-title="'Gender'" sortable="'vendor_address'" filter="{gender:'text'}" >{{user.gender}}</td>
+                  <!-- <td data-title="'Gender'" sortable="'vendor_address'" filter="{gender:'text'}" >{{user.gender}}</td> -->
 
-                   <td data-title="'Phone'">{{user.phone_no}}</td> 
+                   <td data-title="'Phone'">{{user.phone}}</td> 
                  <!-- <td data-title="'Address'" sortable="'address'" filter="{address:'text'}" >{{user.address}}</td>
 
                   <td data-title="'Latitude'" sortable="'latitude'" filter="{latitude:'text'}" >{{user.latitude}}</td>
@@ -99,7 +100,7 @@
                     <td data-title="'Action'" align="left"><i  class="cursur fa fa-trash-o" ng-click="delete(user._id)"></i></td>
                </tr>
                 <tr ng-if="$data.length!=0">
-                  <td >
+                  <td colspan="2">
                      <div class="form-group">
                        <select class="form-control" name='selectedAction' id='selectedAction'>
                             <option value="0">Select</option>

@@ -7,13 +7,13 @@ module.exports = function(app, express, passport) {
 	router.post('/logout', adminLoginObj.logout);
 	router.post('/forgot_password', adminLoginObj.forgotPassword);
 	router.post('/resetPassword', adminLoginObj.resetPassword);	
-	router.post('/changePassword', [passport.authenticate('bearer', {session:true})], adminLoginObj.changePassword);	
-	router.post('/saveProfile',[passport.authenticate('bearer', {session:true})], adminLoginObj.saveProfile);	
-	router.post('/commissionSetting',[passport.authenticate('bearer', {session:true})], adminLoginObj.commissionSetting);		
-	router.get('/getCommission',[passport.authenticate('bearer', {session:true})], adminLoginObj.getCommission);	
-	router.post('/uploadProImg',[passport.authenticate('bearer', {session:true})], adminLoginObj.uploadProImg);	
+	router.post('/changePassword', adminLoginObj.changePassword);	
+	router.post('/saveProfile', adminLoginObj.saveProfile);	
+//	router.post('/commissionSetting',[passport.authenticate('bearer', {session:true})], adminLoginObj.commissionSetting);		
+//	router.get('/getCommission',[passport.authenticate('bearer', {session:true})], adminLoginObj.getCommission);	
+	router.post('/uploadProImg', adminLoginObj.uploadProImg);	
 	router.param('adminId', adminLoginObj.admin);
-	router.get('/adminInfo/:adminId',[passport.authenticate('bearer', {session:true})], adminLoginObj.findOne);
+	router.get('/adminInfo/:adminId', adminLoginObj.findOne);
 	app.use('/adminlogin', router);
 
 }

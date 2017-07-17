@@ -32,7 +32,7 @@ exports.updateHelpBlock = function (req,res) {
 exports.getHelpBlockListing = function(req,res){
     cmsObj.find({isDisabled:false},{title:1,identifier:1},function(err,data){
         if(err){
-            onsole.log(err);
+            console.log(err);
                  outputJSON = {
                 'status': 'failure',
                 'messageId': 203,
@@ -52,7 +52,7 @@ exports.getHelpBlockListing = function(req,res){
 exports.getHelpInformation = function(req,res){
     cmsObj.find({_id:req.body._id},{title:1,identifier:1,description:1},function(err,data){
         if(err){
-            onsole.log(err);
+            console.log(err);
                  outputJSON = {
                 'status': 'failure',
                 'messageId': 203,

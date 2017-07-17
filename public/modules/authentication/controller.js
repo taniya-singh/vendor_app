@@ -124,18 +124,16 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 			
 			inputJSON = '{"username":' + '"' + $scope.username + '", "password":' + '"' + $scope.password + '"}';
 			$scope.loader=true;
-console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<",inputJSON)
 			AuthenticationService.Login(inputJSON, function(response) {
-				console.log("reghfhfghdfghsponse",response)
 
 			var errorMessage = '';
 						
 			if(response.messageId == 200) {
 				console.log(response)
-				$localStorage.displayImage = response.prof_image;
+				$localStorage.displayImage = response.image;
 				$localStorage.userLoggedIn = true;
 				$localStorage.loggedInUsername = $scope.username;
-				$localStorage.displayName = response.username;
+				$localStorage.displayName = response.displayName;
 				$localStorage.authorizationToken = response.access_token;						
 				$state.go('/');
 			}
@@ -211,14 +209,46 @@ console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<",inputJSON)
 
 		});
 	}
-	
+	//forgot password
+	$scope.resetPassword = function() {
+		
+		inputJSON = '{"newpwd":' + '"' + $scope.newpwd + '","cnfpwd":' + '"' + $scope.cnfpwd + '","email":' + '"' + $stateParams.email + '"}';
+		
+		AuthenticationService.resetPassword(inputJSON, function(response) {
+
+			if(response.messageId == 200) {
+				
+				//SweetAlert.swal("Success", response.message, "success");
+							$scope.showmessage = true;
+							$scope.alerttype = 'alert alert-success';
+							$scope.message = response.message;
+							$timeout(function(argument) {
+								$scope.showmessage = false;
+								$state.go('/login')
+							}, 2000)
+				
+			}
+			else {
+				
+				//SweetAlert.swal("Error!", response.message, "error");
+				//$scope.error=response.message;
+							$scope.showmessage = true;
+							$scope.alerttype = 'alert alert-danger';
+							$scope.message = response.message;
+							$timeout(function(argument) {
+								$scope.showmessage = false;
+								
+							}, 2000)
+			}
+
+		});
+	}
 
 	$scope.activeTab = 0;
 $scope.findOne = function () { 
-	console.log("$localStorage.loggedInUsername",$localStorage.loggedInUsername)
 if ($localStorage.loggedInUsername) {
 	AuthenticationService.getadminInfo($localStorage.loggedInUsername, function(response) {
-		console.log("aaaaaaaaaa",response);
+		console.log(response);
 		if(response.messageId == 200) {
 			$scope.admin = response.data;
 			$scope.admin.preusername=response.data.username;
@@ -239,7 +269,6 @@ $scope.activeTab = tab;
 //console.log($localStorage.loggedInUsername);
 	//change  password
 	$scope.saveProfile = function() {
-		console.log("inside save profiless")
 
 		
 		
@@ -390,6 +419,8 @@ $scope.activeTab = tab;
 		
 	}
 	}
+
+
 
 	$scope.resetpassword=function(){	
 		console.log("insisde resetpassword",$stateParams.id)

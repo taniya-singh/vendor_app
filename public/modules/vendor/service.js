@@ -153,7 +153,7 @@ angular.module('Vendor')
      
 
     service.updateVendordata = function(inputJsonString, callback) {
-			communicationService.resultViaPost("/vendor/updateVendordata", appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			communicationService.resultViaPost("/admin/updateVendordata", appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	} 

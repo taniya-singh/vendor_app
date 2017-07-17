@@ -26,11 +26,8 @@ var webservices = {
 	"totalUser": baseUrl + "/users/totalUser",
 	"latestUser" : baseUrl + "/users/latestUser",
 	"deleteUser" : baseUrl + "/users/deleteUser",
-
-
-	"bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
-
-	"resetpassword":baseUrl+"/users/reset_password",
+    "bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
+    "resetpassword":baseUrl+"/users/reset_password",
 
 //vendor
 	"addVendor" : baseUrl + "/admin/signupVendor",
@@ -45,10 +42,10 @@ var webservices = {
 	"totalVendor": baseUrl + "/admin/totalVendor",
 	"latestVendor" : baseUrl + "/vendor/latestVendor",
 	"deleteVendor" : baseUrl + "/admin/deleteVendor",
+    "bulkUpdateVendor" : baseUrl + "/admin/bulkUpdate",
 
-
-	"bulkUpdateVendor" : baseUrl + "/admin/bulkUpdate",
-
+    "updateVendordata" : baseUrl + "/admin/updateVendordata",
+    "getCurrentVendorData" : baseUrl + "/admin/getCurrentVendorData",
 
 
 	//package
@@ -79,10 +76,10 @@ var nav = [
           // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
           {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
           {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
-            //{text:'Manage Vendors', path:'/#/users',icon:'fa-users',activeText:'users'},
+           //{text:'Manage Issues', path:'/#/cmsListing',icon:'fa-list',activeText:'/cmsListing'},
            // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},
             
-         //   {text:'CMS Management', path:'/#/cmslisting',icon:'fa-users',activeText:'cmslisting'},
+      //  {text:'CMS Management', path:'/#/cmslisting',icon:'fa-users',activeText:'cmslisting'},
          
           //  {text:'Manage Jobs', path:'/#/jobs',icon:'fa-briefcase',activeText:'job'},
           //  {text:'Payment History', path:'/#/paymentHistory',icon:'fa-money',activeText:'payment'},

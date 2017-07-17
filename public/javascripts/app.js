@@ -92,7 +92,6 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 					if ($localStorage.userLoggedIn != true) {
 						$state.go('/login');
 					}
-					
 						
 				}
 			},
@@ -285,7 +284,7 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		templateUrl : "/modules/vendor/views/addvendor.html"
 	})
 
-	/*.state('/admin/edit/:id' , {
+	.state('/admin/edit/:id' , {
 
 		resolve: {
 				mess: function($location, $localStorage) {
@@ -300,7 +299,7 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		url: "/vendor/edit/:id",
 		controller: "vendorController",
 		templateUrl : "/modules/vendor/views/addvendor.html"
-	})*/
+	})
   .state('/admin/profile/:id' , {
 
 		resolve: {

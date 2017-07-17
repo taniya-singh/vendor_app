@@ -25,7 +25,7 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 							if(response.messageId == 200) {
 							  
 								$scope.totalUser=response.data;
-								console.log($scope.totalUser)
+								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalUser)
 
 							}
 						});

@@ -71,14 +71,14 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		$scope.$on('gmPlacesAutocomplete::placeChanged', function(){
 
 			var location = $scope.vendor.vendor_address.getPlace().geometry.location;
-			var zip = $scope.vendor.vendor_address.getPlace();
-		    $scope.vendor.vendor_address = zip.formatted_address
+			var zipcode = $scope.vendor.vendor_address.getPlace();
+		    $scope.vendor.vendor_address = zipcode.formatted_address
 		    var postal_code = 0;
-		    for (var i=0;i<zip.address_components.length;i++){
-		      	console.log(zip.address_components[i].types);
-		      	if(zip.address_components[i].types == "postal_code"){
+		    for (var i=0;i<zipcode.address_components.length;i++){
+		      	console.log(zipcode.address_components[i].types);
+		      	if(zipcode.address_components[i].types == "postal_code"){
 		      		// console.log("zip.address_components[i].types",zip.address_components[i].types);
-		      		 postal_code = zip.address_components[i].short_name;
+		      		 postal_code = zipcode.address_components[i].short_name;
 		      		console.log(postal_code);
 		      		
 		      	}
@@ -270,49 +270,43 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		}
 
  
+$scope.submit = function(){
 
-  		$scope.submit = function(){
-  							console.log("AAAAAAAA",$scope.vendor.vendor_address)
-  							console.log("AAAAAAAA",$scope.vendor.vendor_time)
-
-
-  			console.log($settings.startingHour)
+  			//console.log($settings.fetchDataOnTimeFiltering(data));
   			
 				if(typeof $scope.vendor.profile_image=='object'){
                        $scope.vendor.profile_image=$scope.myCroppedIconImage;
                 }
-
-                console.log("aasdaas",$scope.timeSettings.fromHour);
-                
-
+               
                //$scope.vendor.phone="+1"+$scope.vendor.phone_no
                 console.log($scope.vendor);
-				VendorService.saveVendor($scope.vendor,function(response){
+				 VendorService.saveVendor($scope.vendor,function(response){
 						console.log(response);
-						if(response.messageId ==401){
+				 		if(response.messageId ==401){
 							$scope.emailValid=response.message;
 						}
-						console.log("response.messageId",response.messageId);
-						if(response.messageId == 200) {
-							$scope.message = response.message;
+				 		console.log("response.messageId",response.messageId);
+				 		if(response.messageId == 200) {
+				 			$scope.message = response.message;
 							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-success';
-						//	$state.go("/vendor");
-							$location.path('/vendor'); 
-                      //       $timeout(function(argument) {
-		                    //                       $scope.showmessage = false;
-		                    //                       $state.go( "/vendor" );
-		                    // }, 2000)									
-						} else{
-							$scope.message = response.message;
-							$scope.showmessage = true;
-							$scope.alerttype = 'alert alert-error';
+			 			$scope.alerttype = 'alert alert-success';
+				 		//	$state.go("/vendor");
+				 			$location.path('/vendor'); 
+                       //       $timeout(function(argument) {
+		                     //                       $scope.showmessage = false;
+		                     //                       $state.go( "/vendor" );
+		                     // }, 2000)									
+				 		} else{
+			 			$scope.message = response.message;
+				 			$scope.showmessage = true;
+				 			$scope.alerttype = 'alert alert-error';
 
 
-						}
-					})
+				 		}
+			 	})
 
   			}
+
 
 
   			$scope.resetPassword = function() {
@@ -343,7 +337,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				//console.log(passingDate.search)
 				$scope.tableParams = new ngTableParams({
 					page: 1,
-					count: 5,
+					count: 2,
 					sorting: {
 						created: "desc"
 					}
@@ -466,7 +460,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				for(var i = 0; i< skillLength; i++){
 					var id =  $scope.selection[i];
 					  if($scope.selectedAction == 3) {
-					  updatedData.push({id: id, isDeleted: true});
+					  updatedData.push({id: id, is_deleted: true});
 					}
 					else if($scope.selectedAction == 1) {
 						updatedData.push({id: id, enable: true});
@@ -491,7 +485,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 				                    var inputJson = {
 				                        data: updatedData
 				                    }
-				                    UserService.updateVendorStatus(inputJson, function(response) {
+				                    VendorService.updateVendorStatus(inputJson, function(response) {
 				                      $scope.getAllVendor();
 				                      selectedAction.value=0;
 				                      $scope.selection=[];
@@ -532,7 +526,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 			for(var i = 0; i< skillLength; i++){
 				var id =  $scope.selection[i];
 				  if($scope.selectedAction == 3) {
-				  updatedData.push({id: id, isDeleted: true});
+				  updatedData.push({id: id, is_deleted: true});
 				}
 				else if($scope.selectedAction == 1) {
 					updatedData.push({id: id, enable: true});
@@ -573,7 +567,7 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 						                });
 					            }else{
 					                    VendorService.updateVendorStatus(inputJson, function(response) {
-					                      $scope.getAllVendors();				                      
+					                      $scope.getAllVendor();				                      
 					                      $scope.selection=[];
 					                      $scope.showmessage = true;
 	                                        $scope.alerttype = 'alert alert-success';

@@ -398,22 +398,279 @@ exports.register = function(req, res) {
          /**
          * List all user object
          * Input: 
-         * Output: User json object
-         */
-         exports.list = function(req, res) {
-            var outputJSON = "";
-            userObj.find({is_deleted:false}, function(err, data) {
-                if(err) {
-                    outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-                }
-                else {
-                    outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 
-                    'data': data}
-                }
-                res.jsonp(outputJSON);
-            });
-         }
+         * Output: User json object*/
+ 
 
+
+
+exports.list = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+        userObj.find({is_deleted:false},function(err,data){
+
+            var page = req.body.page || 1,
+        count = req.body.count || 1;
+    var skipNo = (page - 1) * count;
+
+    var sortdata = {};
+    var sortkey = null;
+    for (key in req.body.sort) {
+        sortkey = key;
+    }
+    if (sortkey) {
+        var sortquery = {};
+        sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+    }
+     //console.log("-----------query-------", query);
+    console.log("sortquery", sortquery);
+    console.log("page", page);
+    console.log("count", count);
+    console.log("skipNo",skipNo)
+    var query = {};
+    var searchStr = req.body.search;
+    if (req.body.search) {
+        query.$or = [{
+            first_name:new RegExp(searchStr, 'i')
+            
+        }, {
+            email: new RegExp(searchStr, 'i')
+        },{
+            phone: new RegExp(searchStr, 'i')
+        }]
+    }
+    query.is_deleted=false;
+    console.log("-----------query-------", query);
+    userObj.find(query).exec(function(err, data) {
+        console.log(data)
+                    if(err){
+                        res.json("Error: "+err);   
+                    }
+                    else{
+                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                        res.json(outputJSON);
+                    }
+                });
+
+    });
+
+}
+
+
+
+
+
+
+ 
+// exports.list = function(req, res) {
+//             var outputJSON = "";
+//             userObj.find({}, function(err, data) {
+// var page = req.body.page || 1,
+//         count = req.body.count || 1;
+//     var skipNo = (page - 1) * count;
+
+//     var sortdata = {};
+//     var sortkey = null;
+//     for (key in req.body.sort) {
+//         sortkey = key;
+//     }
+//     if (sortkey) {
+//         var sortquery = {};
+//         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+//     }
+//      //console.log("-----------query-------", query);
+//     console.log("sortquery", sortquery);
+//     console.log("page", page);
+//     console.log("count", count);
+//     console.log("skipNo",skipNo)
+//     var query = {};
+//     var searchStr = req.body.search;
+//     if (req.body.search) {
+//         query.$or = [{
+//             first_name:new RegExp(searchStr, 'i')
+            
+//         }, {
+//             last_name: new RegExp(searchStr, 'i')
+//         },{
+//             email: new RegExp(searchStr, 'i')
+//         },{
+//             phone: new RegExp(searchStr, 'i')
+//         }]
+//     }
+//     query.is_deleted=false;
+//     console.log("-----------query-------", query);
+//     userObj.find(query).exec(function(err, data) {
+
+
+//                 if(err) {
+//                     outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+//                 }
+//                 else {
+
+//                    var length = data.length;
+//             userObj.find(
+//                  query
+//             ).skip(skipNo).limit(count).sort(sortquery)
+//             .exec(function(err, data1) {
+//                 console.log("asdasd",data1)
+
+//                 if(err) {
+//                     outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+//                 }
+//                 else {
+//                     outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 
+//                     'data': data}
+//                 }
+//                 res.jsonp(outputJSON);
+//             })
+//          }
+
+//      });
+// });
+//         }
+    //      exports.list = function(req, res) {
+    //         var outputJSON = "";
+    //         userObj.find({is_deleted:false}, function(err, data) {
+
+
+    //         var page = req.body.page || 1,
+    //     count = req.body.count || 1;
+    // var skipNo = (page - 1) * count;
+
+    // var sortdata = {};
+    // var sortkey = null;
+    // for (key in req.body.sort) {
+    //     sortkey = key;
+    // }
+    // if (sortkey) {
+    //     var sortquery = {};
+    //     sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+    // }
+    //  //console.log("-----------query-------", query);
+    // console.log("sortquery", sortquery);
+    // console.log("page", page);
+    // console.log("count", count);
+    // console.log("skipNo",skipNo)
+    // var query = {};
+    // var searchStr = req.body.search;
+    // if (req.body.search) {
+    //     query.$or = [{
+    //         first_name:new RegExp(searchStr, 'i')
+            
+    //     }, {
+    //         last_name: new RegExp(searchStr, 'i')
+    //     },{
+    //         email: new RegExp(searchStr, 'i')
+    //     },{
+    //         phone: new RegExp(searchStr, 'i')
+    //     }]
+    // }
+    // query.is_deleted=false;
+    // console.log("-----------query-------", query);
+    // userObj.find(query).exec(function(err, data) {
+
+
+    //             if(err) {
+    //                 outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+    //             }
+    //             else {
+
+    //                var length = data.length;
+    //         userObj.find(
+    //              query
+    //         ).skip(skipNo).limit(count).sort(sortquery)
+    //         .exec(function(err, data1) {
+    //             console.log("asdasd",data1)
+    //             if (err) {
+    //                 console.log("tttte",err)
+    //                 outputJSON = {
+    //                     'status': 'failure',
+    //                     'messageId': 203,
+    //                     'message': 'data not retrieved '
+    //                 };
+    //                 res.jsonp(outputJSON);
+    //             } else {
+    //                 outputJSON = {
+    //                     'status': 'success',
+    //                     'messageId': 200,
+    //                     'message': 'data retrieve from products',
+    //                     'data': data1,
+    //                     'count': length
+    //                 }
+    //             }
+    //             res.status(200).jsonp(outputJSON);
+    //         })
+    //             }
+                
+    //         });
+    //      });
+    // }
+
+// exports.list = function(req, res) {
+//     console.log(req.body)
+//     var page = req.body.page || 1,
+//         count = req.body.count || 1;
+//     var skipNo = (page - 1) * count;
+
+//     var sortdata = {};
+//     var sortkey = null;
+//     for (key in req.body.sort) {
+//         sortkey = key;
+//     }
+//     if (sortkey) {
+//         var sortquery = {};
+//         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+//     }
+//      //console.log("-----------query-------", query);
+//     console.log("sortquery", sortquery);
+//     console.log("page", page);
+//     console.log("count", count);
+//     console.log("skipNo",skipNo)
+//     var query = {};
+//     var searchStr = req.body.search;
+//     if (req.body.search) {
+//         query.$or = [{
+//             first_name:new RegExp(searchStr, 'i')
+            
+//         }, {
+//             last_name: new RegExp(searchStr, 'i')
+//         },{
+//             gender: new RegExp(searchStr, 'i')
+//         },{
+//             phone: new RegExp(searchStr, 'i')
+//         }]
+//     }
+//     query.is_deleted=false;
+//     console.log("-----------query-------", query);
+//     userObj.find(query).exec(function(err, data) {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             var length = data.length;
+//             userObj.find(
+//                  query
+//             ).skip(skipNo).limit(count).sort(sortquery)
+//             .exec(function(err, data1) {
+//                 //console.log(data)
+//                 if (err) {
+//                     console.log("tttte",err)
+//                     outputJSON = {
+//                         'status': 'failure',
+//                         'messageId': 203,
+//                         'message': 'data not retrieved '
+//                     };
+//                 } else {
+//                     outputJSON = {
+//                         'status': 'success',
+//                         'messageId': 200,
+//                         'message': 'data retrieve from products',
+//                         'data': data1,
+//                         'count': length
+//                     }
+//                 }
+//                 res.status(200).jsonp(outputJSON);
+//             })
+//         }
+//     })
+// }
 
         /**
          * Create new user object
@@ -732,3 +989,31 @@ console.log("asdasdas",req.body._id)
     }
     
 }
+
+
+
+
+    exports.totalUser = function(req, res) {
+
+    var outputJSON = "";
+    userObj.count({
+        is_deleted: false
+    }, function(err, data) {
+        if (err) {
+            outputJSON = {
+                'status': 'failure',
+                'messageId': 203,
+                'message': constantObj.messages.errorRetreivingData
+            };
+        } else {
+            outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': constantObj.messages.successRetreivingData,
+                'data': data
+            }
+        }
+        res.jsonp(outputJSON);
+    });
+}
+
