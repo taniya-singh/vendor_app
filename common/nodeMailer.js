@@ -9,8 +9,8 @@ exports.pushRequest = function(email, message,subject,callback) {
     var transporter = nodemailer.createTransport({
                             service: 'gmail',
                             auth: {
-                                user: 'sharpsuter@gmail.com',
-                                pass: 'shivenjuneja'
+                                user: 'bridgit871@gmail.com',
+                                pass: 'bridgit8711'
                             }
                         });
       var message = message;

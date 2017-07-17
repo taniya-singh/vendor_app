@@ -53,8 +53,8 @@ const messages = {
 const gmailSMTPCredentials = {
 	"service": "gmail",
 	"host": "smtp.gmail.com",
-	"username": "osgroup.sdei@gmail.com",
-	"password": "mohali2378"
+	"username": "bridgit871@gmail.com",
+	"password": "bridgit8711"
 }
 var obj = {messages:messages, gmailSMTPCredentials:gmailSMTPCredentials};
 module.exports = obj; 

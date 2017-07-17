@@ -2,12 +2,12 @@
 
 angular.module('Authentication')
 
-.factory('AuthenticationService', ['communicationService', '$rootScope',function(communicationService, $rootScope) {
+.factory('AuthenticationService', ['communicationService', '$rootScope', 
+	function(communicationService, $rootScope) {
 
 	var service = {};
 
 	service.Login = function(inputJsonString, callback) {
-		console.log("hiiiiiiiiiii")
                 
 			communicationService.resultViaPost(webservices.authenticate, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 
@@ -24,7 +24,6 @@ angular.module('Authentication')
 		});	
 	};
 	service.getadminInfo = function(adminId, callback) {
-		console.log("hihihihihohihoi taniya soingh")
 			var serviceURL = webservices.findOneAdminInfo + "/" + adminId;
 			communicationService.resultViaGet(serviceURL, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
@@ -58,13 +57,6 @@ angular.module('Authentication')
 	}
 	service.changePassword = function(inputJsonString, callback) {
 		communicationService.resultViaPost(webservices.changePassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
-			callback(response.data);
-		});
-	} 
-	service.resetpassword = function(inputJsonString, callback) {
-	console.log("hiiiiiii")
-	console.log("json data from service",inputJsonString)
-		communicationService.resultViaPost(webservices.resetpassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	} 

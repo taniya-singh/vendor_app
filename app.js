@@ -200,7 +200,17 @@ var LocalStrategy = require('passport-local').Strategy;
 
 
         //returning specific data
-        return done(null, {id: adminuser._id});
+        //return done(null, {id: adminuser._id});
+
+         //generate a token here and return 
+        var authToken = tokenService.issueToken({sid: adminuser});
+        // save token to db  ; 
+        var tokenObj = new userTokenObj({"admin":adminuser._id,"token": authToken});
+
+        tokenObj.save(function(e,s){});
+        // console.log("Type is " , adminuser.type);
+        //return permission from here .
+        return done(null, {id: adminuser._id,username:adminuser.username,firstname:adminuser.firstname,lastname:adminuser.lastname,token: authToken,image:adminuser.prof_image });
 
       });
     }

@@ -10,10 +10,10 @@ var adminloginSchema = new Schema({
 	email:String,
 	verifyStr:String,
 	prof_image:String,
-	admin_commission: {
-		job_poster: Number,
-		job_finder: Number
-	},
+	// admin_commission: {
+	// 	job_poster: Number,
+	// 	job_finder: Number
+	// },
 	stripe_credential:{
 		payment_mode: {type : Boolean, default : false},		
 		secret_test_key:{type:String},

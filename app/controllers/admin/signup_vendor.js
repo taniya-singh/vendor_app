@@ -15,7 +15,7 @@ exports.signupVendor = function(req, res) {
 	
 	vendorobj = req.body;
 	console.log("vendorobj",vendorobj)
-	vendor.findOne({"vendor_email":vendorobj.vendor_email,"vendor_name":vendorobj.vendor_name},function(err,ven){
+	vendor.findOne({"vendor_email":vendorobj.vendor_email},function(err,ven){
 		if(err){
 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
 			res.jsonp(outputJSON);	
@@ -158,6 +158,41 @@ exports.update_vendor_info2=function(req,res){
 exports.vendorList = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         vendor.find({is_deleted:false},function(err,data){
+
+        	var page = req.body.page || 1,
+		count = req.body.count || 1;
+	var skipNo = (page - 1) * count;
+
+	var sortdata = {};
+	var sortkey = null;
+	for (key in req.body.sort) {
+		sortkey = key;
+	}
+	if (sortkey) {
+		var sortquery = {};
+		sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+	}
+	 //console.log("-----------query-------", query);
+	console.log("sortquery", sortquery);
+	console.log("page", page);
+	console.log("count", count);
+	console.log("skipNo",skipNo)
+	var query = {};
+	var searchStr = req.body.search;
+	if (req.body.search) {
+		query.$or = [{
+			vendor_name:new RegExp(searchStr, 'i')
+			
+		}, {
+			vendor_email: new RegExp(searchStr, 'i')
+		},{
+			phone_no: new RegExp(searchStr, 'i')
+		}]
+	}
+	query.is_deleted=false;
+    console.log("-----------query-------", query);
+	vendor.find(query).exec(function(err, data) {
+		console.log(data)
                     if(err){
                         res.json("Error: "+err);   
                     }
@@ -167,9 +202,9 @@ exports.vendorList = function(req,res){
                     }
                 });
 
-    }
+    });
 
-
+}
  
 
        exports.bulkUpdate = function(req, res) {
@@ -194,7 +229,7 @@ exports.vendorList = function(req,res){
 		};
 		res.jsonp(outputJSON);
 	});
-	console.log("delllllllllllllete");
+	
 
 }
 
@@ -229,4 +264,194 @@ exports.vendorList = function(req,res){
             })
     }
     
+}
+
+
+
+exports.getCurrentVendorData = function(req, res) {
+ vendor.findOne({
+			_id: req.body._id
+		}, {
+			password: 0
+		})
+		.exec(function(err, data) {
+			if (err) {
+				onsole.log(err);
+				outputJSON = {
+					'status': 'failure',
+					'messageId': 203,
+					'message': req.headers.lang=="ch" ? chConstantObj.messages.errorRetreivingData : constantObj.messages.errorRetreivingData
+			
+				};
+				res.status(200).jsonp(outputJSON);
+			} else {
+				res.status(200).jsonp({
+					'status': 'success',
+					'messageId': 200,
+					'data': data
+				});
+			}
+		})
+}
+
+// var generateOtp = function () {
+// var text = "";
+// var possible = "0123456789";
+//  for (var i = 0; i < 4; i++){
+// 	text += possible.charAt(Math.floor(Math.random() * possible.length));
+//  }
+//  return text;
+// }
+
+
+exports.updateVendorInformation = function(req, res) {
+	// console.log("inside update user information");
+	console.log("daada",req.body);
+	console.log(req.files);
+	var _id = req.body._id;
+	var details = {};
+	// details._id = _id;
+	var imagesToDelete = [];
+	if(req.body.deleteImages){
+		var imgArray = req.body.deleteImages;
+	 	imagesToDelete = JSON.parse(imgArray.toString('utf8'));	
+	}
+	
+	var detailsData = JSON.parse(JSON.stringify(req.body));
+	console.log("detailsData",detailsData);
+	console.log("imagesToDelete",imagesToDelete);
+	
+	
+	console.log(req.body._id);
+	
+	// var utfString = fields.conditions;
+	// conditions = JSON.parse(utfString.toString('utf8'));
+	 var allImages = {};
+
+	if(req.body.WebRequest=="WebRequest"){
+		if (req.body.password) {
+			detailsData.password = md5(req.body.password);
+		}
+	if (req.body.UploadMultipleImages) {
+		var userimg = [];
+		
+		if ((req.files) && (req.files.length > 0)) {
+			for (var i = 0; i < req.files.length; i++) {
+				var obj = {};
+				obj.name = req.files[i].filename;
+				userimg.push(obj);
+			}
+			detailsData.userImages = userimg;
+			// detailsData.userImages = req.files[0].filename;
+		}
+	}
+  }
+}
+
+
+exports.updateVendordata = function(req, res) {
+
+	reqdata = {};
+	reqdata._id = req.body._id;
+
+
+	if (req.body.profile_image != undefined)
+		reqdata.profile_image = req.body.profile_image;
+
+	if (req.body.profile_image != undefined)
+		reqdata.profile_image = req.body.profile_image;
+	if (req.body.profile_image != undefined || req.body.profile_image != undefined) {
+
+		//console.log("req",req.body)
+		uploadProImg(reqdata, function(responce) {
+			console.log(responce);
+			//outputJSON = {'status':'success', 'messageId':200, 'message':constantObj.messages.userStatusUpdateSuccess,'data':responce};
+			//	res.jsonp(outputJSON);
+			delete req.body.profile_image;
+			delete req.body.userImages;
+			
+			vendor.update({
+					'_id': req.body._id
+				}, {
+					$set: req.body
+				}, function(err, res1) {
+					console.log(err);
+					if (err) {
+						outputJSON = {
+							'status': 'failure',
+							'messageId': 203,
+							'message': constantObj.messages.errorRetreivingData
+						};
+					}
+					outputJSON = {
+						'status': 'success',
+						'messageId': 200,
+						'message': constantObj.messages.userStatusUpdateSuccess,
+						'data': res1[0]
+					};
+					res.jsonp(outputJSON);
+				});
+
+			
+		});
+	} else {
+
+
+
+
+		outputJSON = {
+			'status': 'failure',
+			'messageId': 203,
+			'message': "Please select image."
+		};
+		res.jsonp(outputJSON);
+	}
+}
+
+
+uploadProImg = function(data, callback) {
+
+	//console.log("data",data);
+	var photoname = data._id + '_' + Date.now() + '.jpg';
+
+	var folder = "";
+	var updateField = {
+		'profile_image': photoname
+	};
+	var height = 125;
+	var width = 125;
+	
+	var imagename = __dirname + "/../../../public/assets/upload/profileImg/" + folder + photoname;
+	if (data.profile_image.indexOf("base64,") != -1) {
+		var Data = data.profile_image.split('base64,');
+		var base64Data = Data[1];
+		var saveData={};
+
+		saveData.userImages = [{name:photoname}];
+
+		//console.log("asdfasdsa",saveData)
+
+		fs.writeFile(imagename, base64Data, 'base64', function(err) {
+			if (err) {
+				console.log(err);
+				callback("Failure Upload");
+
+
+			} else {
+	
+				vendor.update({
+					'_id': data._id
+				}, {
+					$set:{"profileImg":photoname}
+				}, function(err, res) {
+					console.log(res);
+					callback(saveData);
+				});
+
+
+			}
+		});
+	} else {
+		callback("Image  not selected");
+	}
 }

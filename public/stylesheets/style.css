@@ -87,7 +87,7 @@ a {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
      }
 .image-span{
-      position: relative;display: inline-block;
+      position: relative;display: inline-block; vertical-align: middle; margin-left:10px; 
      }
 .removeImage {
     color: #374850;
@@ -121,3 +121,25 @@ input[type=number] {
     -moz-appearance:textfield;
 }
 .requiredClass{color:red;}
+.forgot{color: #3c8dbc; line-height: 34px;}
+.navbar-custom-menu > .navbar-nav > li.user.user-menu{height: 50px;}
+.navbar-custom-menu > .navbar-nav > li.user.user-menu a{height: 100%;}
+.navbar-custom-menu > .navbar-nav > li.user.user-menu a img{margin-right: 0px;}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer{padding: 0px;}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a{padding: 12px;}
+.input-group, .input-group .startingHour{width: 100%;}
+.input-group .startingHour > *{width: 50%; float: left;}
+.form-group > label{color: #555; font-weight: 600; display: block;}
+.p_left35{padding-left: 35px;}
+
+content-wrapper{position: relative;}
+.content-wrapper::before {
+  content: "";
+  position: absolute;
+  left: -230px;
+  top: 0;
+  height: 100%;
+  width: 230px;
+  background: #222d32;
+  z-index: 1;
+}

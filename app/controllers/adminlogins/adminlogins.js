@@ -15,16 +15,18 @@ var path = require('path');
 var emailService = require('./../email/emailService.js');
 var userTokenObj = require('./../../models/users/userTokens.js');
 var commonjs = require('./../commonFunction/common.js');
+
+
+
+
 //authenticate
 exports.authenticate = function(req, res) {
 	//console.log(res.req.user);
-	
+	console.log("daataaaaa",res.req.user.firstname+" "+res.req.user.lastname);
 	res.jsonp({'status':'success', 'messageId':200, 'message':'User logged in successfully',
 		        'displayName':res.req.user.firstname+" "+res.req.user.lastname,
 		         'access_token':res.req.user.token,image:res.req.user.image});
 }
-
-
 
 
 //logout
@@ -131,21 +133,19 @@ exports.forgotPassword = function(req, res) {
 
 
 
-
 exports.resetPassword = function(req, res) {
 
-					console.log("reset ",req.body);
-					var key = 'MySecretKey12345';
-			        var iv = '1234567890123456';
-			        var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-			        var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-			       	var encrypted = cipher.update(req.body.newpwd, 'utf8', 'binary');
-			        encrypted += cipher.final('binary');
-			        hexVal = new Buffer(encrypted, 'binary');
-			        newEncrypted = hexVal.toString('hex');
-			        console.log("decipherPassword ",newEncrypted);
-
-			        console.log(commonjs.decrypt(req.body.email))
+	console.log("reset ",req.body);
+	var key = 'MySecretKey12345';
+	var iv = '1234567890123456';
+	var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
+	var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+	var encrypted = cipher.update(req.body.newpwd, 'utf8', 'binary');
+	encrypted += cipher.final('binary');
+	hexVal = new Buffer(encrypted, 'binary');
+	newEncrypted = hexVal.toString('hex');
+	console.log("decipherPassword ",newEncrypted);
+	console.log(commonjs.decrypt(req.body.email))
 		
 	adminLoginObj.update({ email:commonjs.decrypt(req.body.email) },{$set:{password:newEncrypted,verifyStr:""}}, function(err, data) {
 
@@ -154,64 +154,59 @@ exports.resetPassword = function(req, res) {
 			outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorSendingForgotPasswordEmail};
 		}
 		else {
-					if(data.nModified>0){
+				if(data.nModified>0){
+				outputJSON = {'status':'success', 'messageId':200, 'message': 'Password has been chaged successfully'}
+				}
 
-					outputJSON = {'status':'success', 'messageId':200, 'message': 'Password has been chaged successfully'}
-			
-					}else{
-						outputJSON = {'status':'failure', 'messageId':203, 'message': 'You have already changed your password.'};
-		
-					}
-				
-
-		}
-
-
+				else{
+				outputJSON = {'status':'failure', 'messageId':203, 'message': 'You have already changed your password.'};
+				}
+			}
 		res.jsonp(outputJSON);
-
 	});
 }
-/**
-		 * Find jobtype by id
-		 * Input: jobtypeId
-		 * Output: Jobtype json object
-		 * This function gets called automatically whenever we have a jobtypeId parameter in route. 
-		 * It uses load function which has been define in role model after that passes control to next calling function.
-		 */
-		 exports.admin = function(req, res, next, id) {
-		 	
-		 	adminLoginObj.load(id, function(err, admin) {
-		 		console.log(admin);
-		 		if (err){
-		 			res.jsonp(err);
-		 		}
-		 		else if (!admin){
-		 			res.jsonp({err:'Failed to load admin ' + id});
-		 		}
-		 		else{
-		 			req.admin = admin;
-		 			next();
-		 		}
-		 	});
-		 };
-/**
-		 * Show admin by id
-		 * Input: admin json object
-		 * Output: admin json object
-		 * This function gets role json object from exports.role 
-		 */
-		 exports.findOne = function(req, res) {
-		 	console.log(req.admin);
-		 	if(!req.admin) {
-		 		outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-		 	}
-		 	else {
-		 		outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 
-		 		'data': req.admin}
-		 	}
-		 	res.jsonp(outputJSON);
-		 };
 
+/**
+	 * Find jobtype by id
+	 * Input: jobtypeId
+	 * Output: Jobtype json object
+	 * This function gets called automatically whenever we have a jobtypeId parameter in route. 
+	 * It uses load function which has been define in role model after that passes control to next calling function.
+	 */
+	 exports.admin = function(req, res, next, id) {
+	 	
+	 	adminLoginObj.load(id, function(err, admin) {
+	 		console.log(admin);
+	 		if (err){
+	 			res.jsonp(err);
+	 		}
+	 		else if (!admin){
+	 			res.jsonp({err:'Failed to load admin ' + id});
+	 		}
+	 		else{
+	 			req.admin = admin;
+	 			next();
+	 		}
+	 	});
+	 };
+
+/**
+	 * Show admin by id
+	 * Input: admin json object
+	 * Output: admin json object
+	 * This function gets role json object from exports.role 
+	 */
+	 exports.findOne = function(req, res) {
+	 	console.log(req.admin);
+	 	if(!req.admin) {
+	 		outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+	 	}
+	 	else {
+	 		outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 
+	 		'data': req.admin}
+	 	}
+	 	res.jsonp(outputJSON);
+	 };
 //change password
 exports.changePassword = function(req, res) {
 
@@ -234,7 +229,7 @@ exports.changePassword = function(req, res) {
 			        hexVal = new Buffer(encrypted, 'binary');
 			        newEncrypted = hexVal.toString('hex');
 			        console.log("decipherPassword ",newEncrypted);
-			        oldpassword=newEncrypted;
+			        oldpassword=req.body.password;
 
 			if(data && data.password==oldpassword) {
 					//console.log(data)
@@ -272,6 +267,7 @@ exports.changePassword = function(req, res) {
 }
 
 
+
 //change password
 exports.saveProfile = function(req, res) {
 
@@ -286,24 +282,19 @@ exports.saveProfile = function(req, res) {
 		else {
 			
 			if(data) {
-				
 				adminLoginObj.update({username:req.body.preusername},{$set:{firstname:req.body.firstname,lastname:req.body.lastname,email:req.body.email}},function(err,response){
 					if(err) {
-							outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+						outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
 							res.jsonp(outputJSON);
-						}else{
+						}
+					else{
 						outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successSendingChangePassword};
 						res.jsonp(outputJSON);
 						}
-					});
-
+					}
+				);
 			}
-			
-
 		}
-
-		
-
 	});
 }
 //Commission Setting
@@ -312,44 +303,39 @@ exports.commissionSetting = function(req, res) {
 	var outputJSON = "";
 	console.log(req.body);
 	
-				adminLoginObj.update({$set:{admin_commission:req.body.admin_commission,stripe_credential:req.body.stripe_credential}},function(err,response){
-					if(err) {
-							outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-							res.jsonp(outputJSON);
-						}else{
-						outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successSendingChangePassword};
-						res.jsonp(outputJSON);
-						}
-					});
-			
-}
-
-
-
+	adminLoginObj.update({$set:{admin_commission:req.body.admin_commission,stripe_credential:req.body.stripe_credential}},function(err,response){
+		if(err) {
+			outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+				res.jsonp(outputJSON);
+			}else{
+			outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successSendingChangePassword};
+			res.jsonp(outputJSON);
+			}
+		});
+	}
 
 //Get Commission Setting
 exports.getCommission= function(req, res) {
 
 	var outputJSON = "";
-	
-				adminLoginObj.find({},function(err,response){
-					if(err) {
-							outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-							res.jsonp(outputJSON);
-						}else{
-							//console.log(response)
-						outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData,data:response[0].admin_commission};
-						res.jsonp(outputJSON);
-						}
-					});
+		adminLoginObj.find({},function(err,response){
+			if(err) {
+				outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+					res.jsonp(outputJSON);
+				}
+			else{
+					//console.log(response)
+				outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData,data:response[0].admin_commission};
+				res.jsonp(outputJSON);
+				}
+			});
 
 			
 }
 //Profile image upload
 exports.uploadProImg= function(req, res){
-					var outputJSON = "";
-					
-					console.log("hererrer");
+	var outputJSON = "";
+		console.log("hererrer");
 				      var photoname = req.body.username+'_'+Date.now() + '.png';
 				      var imagename = __dirname+"/../../../public/assets/upload/adminProfile/"+photoname;
 				      if(req.body.prof_image.indexOf("base64,")!=-1){	

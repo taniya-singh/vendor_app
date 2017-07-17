@@ -47,7 +47,7 @@ exports.send = function(user, subjectVal, view, from) {
     // if(!from){
     // 	var from = 'Ramanpreet ✔ <raman411@gmail.com>';
     // }
-    var from = 'bridgit ✔ <bridgit871@gmail.com>';
+    var from = 'bridgit <bridgit871@gmail.com>';
     var mailOptions = {
         from:  from,// sender address 
         to: user.email, // list of receivers 
