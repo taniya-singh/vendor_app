@@ -708,7 +708,7 @@ exports.list = function(req,res){
                                                     password: req.body.password,
                                                     phone_no: req.body.phone_no
                                                 }
-                                            }, function(err, data) {
+                                            }, function(err, updateddata) {
                                                 if (err) {
                                                     console.log("err", err);
                                                     outputJSON = {
@@ -722,7 +722,7 @@ exports.list = function(req,res){
                                                         'status': 'success',
                                                         'messageId': 200,
                                                         'message': "updated successfully",
-                                                        'data': data
+                                                        'data': updateddata
                                                     };
                                                     res.jsonp(outputJSON);
                                                 }
@@ -732,8 +732,8 @@ exports.list = function(req,res){
                                     outputJSON = {
                                          'status': 'failure',
                                          'messageId': 400,
-                                         'message': "Email already exist in database, please enter another email id",
-                                          'data': data
+                                         'message': "Email already exist in database, please enter another email id"
+                                        
                                       };
                                  res.jsonp(outputJSON);
                                 }
