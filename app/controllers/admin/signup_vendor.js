@@ -4,17 +4,25 @@ var constantObj = require('./../../../constants.js');
 var fs=require('fs');
 var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
+var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
 
 
 
 /* Vendor sign up form  */
 
 exports.signupVendor = function(req, res) {
-	var NodeGeocoder = require('node-geocoder');
+	var stripe_customer_details;
 	var vendorobj = {};
+	var bankdetails={};
+	var userDetails = {};
+	bankdetails.country='US';
+	bankdetails.currency='usd';
+	bankdetails.routing_no='110000000';
+	bankdetails.account_no ='000123456789';
+	bankdetails.account_holder_name =req.body.Account_Holder_Name;
+	bankdetails.account_holder_type =req.body.Account_Holder_Type;
 	
 	vendorobj = req.body;
-	console.log("vendorobj",vendorobj)
 	vendor.findOne({"vendor_email":vendorobj.vendor_email},function(err,ven){
 		if(err){
 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
@@ -37,7 +45,6 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-				console.log("GVSHBVVVVVVVVVVVV");
 					vendor(vendorobj).save(vendorobj, function(err, data) { 
 						if(err) {
 							console.log("data if err",err)
@@ -61,23 +68,21 @@ exports.signupVendor = function(req, res) {
 
 							/* Send Email to Vendor */
 							
-
-							var userDetails = {};
 							userDetails.email = vendorobj.vendor_email;
 							userDetails.username =vendorobj.vendor_email;
 							userDetails.pass = vendorobj.password;
 							userDetails.firstname = vendorobj.vendor_name;
 							userDetails.app_link = "<a href='http://www.google.com'>Link</a>";
-
 							var frm = '<img src="logo.png">';
 							var emailSubject = 'bridgit Registration';
-
 							var emailTemplate = 'user_signup.html';
-
 							emailService.send(userDetails, emailSubject, emailTemplate, frm);
+							// end of send email
+							 /*Register account on stripe*/
+							 //createExtraAccount(req,res,bankdetails);
+							 createStripeAccount(req,res,userDetails,bankdetails);
 
-
-							outputJSON = {'status': 'success', 'messageId':200, 'message':"Vendor successfully added",'data': data};
+							outputJSON = {'status': 'success', 'messageId':200, 'message':"Vendor successful added ","data":data};
 						}
 						res.jsonp(outputJSON);
 					});
@@ -95,6 +100,91 @@ exports.signupVendor = function(req, res) {
 	})
 }
 
+
+var createStripeAccount=function(req,res,userDetails,bankdetails){
+	console.log("user details are::::::::",userDetails);
+	stripe.customers.create({
+      description: userDetails.email,
+     
+    }, function(err, customer) {
+        if(err){
+          console.log("err",err) // item detail != null
+          outputJSON = {'status':'failure', 'messageId':400, 'message':"err"};
+        }else{
+        	stripe_customer_details=customer
+          console.log("customer created on stripe is",customer) // item detail != null
+          outputJSON = {'status':'success', 'messageId':200, 'message':"Customer created successfully",data:customer};
+          //res.json(outputJSON);
+          createExtraAccount(req,res,bankdetails,stripe_customer_details)
+        }  
+    });
+}
+
+var createExtraAccount=function(req,res,bankdetails,stripe_customer_details){
+	console.log("insode create extra account",stripe_customer_details)
+	console.log("bank details are*******",bankdetails)
+	stripe.tokens.create({
+        bank_account: {
+          country: bankdetails.country,
+          currency: bankdetails.currency,
+          account_holder_name: bankdetails.account_holder_name,
+          account_holder_type: bankdetails.account_holder_type,
+          routing_number: bankdetails.routing_no,
+          account_number: bankdetails.account_no
+        }
+      }, function(err, token) {
+       
+                if (err) {
+                	console.log("errrr",err)
+                    //res.jsonp({'status':'faliure', 'messageId':401, 'message':err.message});
+                }
+                else
+                {
+                    //res.json(token);
+                    console.log("******token gendeated is ",token)
+                    console.log("stripe id",stripe_customer_details.id)
+                    if (token.id) {
+                    var btokId = token.id;
+                    stripe.accounts.createExternalAccount(
+                                    stripe_customer_details.id,
+                                    {external_account: btokId},
+                                    function(bankerr, bank_account) {
+                                        if (bankerr) {
+                                            //res.json(bankerr);
+                                            res.jsonp({'status':'faliure', 'messageId':401, 'message':bankerr.message,"apiResponse":bankerr});
+                                        }
+                                        else
+                                        {
+                                            //res.json(bank_account);
+                                            //res.jsonp({'status':'success', 'messageId':200, 'message':bank_account.id,"apiResponse":bank_account});
+                                            
+                                            var details={};
+                                            details.connected_account_status = true;
+                                            details.connected_stripe_id = acctId;
+                                            userObj.editprofile(req.body.host_id,details, function(updateerr, updatedata){
+                                                
+                                                if (err) {
+                                                    outputJSON = {'status':'faliure', 'messageId':401, 'message':'User connected_account_status is not updated, but bank info has done.'};
+                                                    addCustomer(scretKey, acctId);
+                                                    showResponse(res, outputJSON);
+                                                }
+                                                else
+                                                {
+                                                    outputJSON = {'status':'success', 'messageId':200, 'message':"Bank info added successfully.","apiResponse":bank_account};
+                                                    addCustomer(scretKey, acctId);
+                                                    showResponse(res, outputJSON);
+                                                }
+                                                
+                                            });
+                                            
+                                        }
+                                    }
+                            );
+                    }
+                }
+       
+      });
+}
 
 
 
@@ -173,10 +263,10 @@ exports.vendorList = function(req,res){
 		sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
 	}
 	 //console.log("-----------query-------", query);
-	console.log("sortquery", sortquery);
-	console.log("page", page);
-	console.log("count", count);
-	console.log("skipNo",skipNo)
+	//console.log("sortquery", sortquery);
+	//console.log("page", page);
+	//console.log("count", count);
+	//console.log("skipNo",skipNo)
 	var query = {};
 	var searchStr = req.body.search;
 	if (req.body.search) {
@@ -190,9 +280,9 @@ exports.vendorList = function(req,res){
 		}]
 	}
 	query.is_deleted=false;
-    console.log("-----------query-------", query);
+   // console.log("-----------query-------", query);
 	vendor.find(query).exec(function(err, data) {
-		console.log(data)
+		//console.log(data)
                     if(err){
                         res.json("Error: "+err);   
                     }

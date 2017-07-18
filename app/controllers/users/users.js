@@ -590,7 +590,6 @@ exports.list = function(req,res){
         var errorMessage = "";
         var outputJSON = "";
         var userModelObj = {};
-
         console.log(req.body);
         userModelObj = req.body;
         userObj.findOne({email:req.body.email},function(err,user){
@@ -640,50 +639,144 @@ exports.list = function(req,res){
          * Output: User json object with success
          */
         exports.update_user_info = function(req, res) {
-            console.log('update_user')
-            var errorMessage = "";
-            var outputJSON = "";
-            userObj.find({_id:req.body._id},function(err,user_found){
-                if(err){
+            userObj.find({_id: req.body._id},function(err, user_found) {
+                if (err) {
                     console.log(err);
-                    outputJSON = {'status': 'Failure', 'messageId':400, 'message':"Error"};
-                    res.jsonp(outputJSON) 
+                    outputJSON = {'status': 'Failure','messageId': 400,'message': "Error"};
+                    res.jsonp(outputJSON)
                 }else{
-                    if(user_found==""){
-                        outputJSON = {'status': 'success', 'messageId':200, 'message':"Not a valid _id"};
-                        res.jsonp(outputJSON) 
-
+                    if (user_found == ""){
+                        outputJSON = {'status': 'success','messageId': 200,'message': "Not a valid _id"};
+                        res.jsonp(outputJSON)
                     }else{
-                        console.log("user is",user_found);
-                        userObj.find({email:req.body.email},function(err,useremail){
-                            if(err){
-                                console.log(err);
-                                outputJSON = {'status': 'Failure', 'messageId':400, 'message':"Error"};
-                                res.jsonp(outputJSON)   
-                            }else{
-                                console.log("useremail",useremail)
-                                if(useremail==""){
-                                    userObj.update({_id:req.body._id},{$set:{first_name:req.body.first_name,last_name:req.body.last_name,email:req.body.email}},function(err, data) {
-                                        if(err) {
-                                            console.log("err",err);
-                                            outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
-                                            res.jsonp(outputJSON);
-                                        }else {
-                                            outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully",'data':data};
-                                            res.jsonp(outputJSON);
-                                        }
-                                    });
-                                }else{
-                                    outputJSON = {'status': 'success', 'messageId':200, 'message':"Email already exists"};
+                        console.log("userf found",user_found)
+                        var logintype = user_found[0].loginType
+                        console.log("login type", logintype)
+                        if(req.body.email==""){
+                            console.log("email not updated")
+                            userObj.update({
+                                            _id: req.body._id
+                                        }, {
+                                            $set: {
+                                                first_name: req.body.first_name,
+                                                last_name: req.body.last_name,
+                                                phone_no: req.body.phone_no,
+                                                password:req.body.password
+                                            }
+                                        }, function(err, data) {
+                                            if (err) {
+                                                console.log("err", err);
+                                                outputJSON = {
+                                                    'status': 'failure',
+                                                    'messageId': 401,
+                                                    'message': errorMessage
+                                                };
+                                                res.jsonp(outputJSON);
+                                            } else {
+                                                outputJSON = {
+                                                    'status': 'success',
+                                                    'messageId': 200,
+                                                    'message': "updated successfully",
+                                                    'data': data
+                                                };
+                                                res.jsonp(outputJSON);
+                                            }
+                                        });
+                        }
+                        else{
+                            if(logintype==1){
+                                userObj.find({email: req.body.email},function(err, useremail){
+                                if (err) {
+                                    console.log(err);
+                                    outputJSON = {
+                                        'status': 'Failure',
+                                        'messageId': 400,
+                                        'message': "Error"
+                                    };
                                     res.jsonp(outputJSON)
+                                }else {
+                                    console.log("useremail", useremail)
+                                    if (useremail == "")
+                                    {
+                                            console.log("logintype==1 ", logintype)
+                                             userObj.update({_id: req.body._id},
+                                            {
+                                                $set: {
+                                                    first_name: req.body.first_name,
+                                                    last_name: req.body.last_name,
+                                                    email: req.body.email,
+                                                    password: req.body.password,
+                                                    phone_no: req.body.phone_no
+                                                }
+                                            }, function(err, data) {
+                                                if (err) {
+                                                    console.log("err", err);
+                                                    outputJSON = {
+                                                        'status': 'failure',
+                                                        'messageId': 401,
+                                                        'message': errorMessage
+                                                    };
+                                                    res.jsonp(outputJSON);
+                                                } else {
+                                                    outputJSON = {
+                                                        'status': 'success',
+                                                        'messageId': 200,
+                                                        'message': "updated successfully",
+                                                        'data': data
+                                                    };
+                                                    res.jsonp(outputJSON);
+                                                }
+                                            });
+                                    } // end of if email is unique
+                                    else {
+                                    outputJSON = {
+                                         'status': 'failure',
+                                         'messageId': 400,
+                                         'message': "Email already exist in database, please enter another email id",
+                                          'data': data
+                                      };
+                                 res.jsonp(outputJSON);
                                 }
                             }
-                        })            
-                    }
-                }
-            })                    
-        }
-
+                        })
+                        } // end of if loginType==1
+                         if (logintype == 2) {
+                            console.log("logintype==2", logintype)
+                            userObj.update({
+                                 _id: req.body._id
+                            }, {
+                               $set: {
+                                     first_name: req.body.first_name,
+                                    last_name: req.body.last_name,
+                                    email: req.body.email,
+                                    phone_no: req.body.phone_no
+                                }
+                            }, function(err, data) {
+                                if (err) {
+                                     console.log("err", err);
+                                    outputJSON = {
+                                    'status': 'failure',
+                                    'messageId': 401,
+                                    'message': errorMessage
+                                    };
+                                    res.jsonp(outputJSON);
+                                } else {
+                                    outputJSON = {
+                                     'status': 'success',
+                                     'messageId': 200,
+                                     'message': "updated successfully",
+                                     'data': data
+                                    };
+                                    res.jsonp(outputJSON);
+                                }
+                                          
+                             });             
+                            } //if login ==2
+                        } //end of else    
+                      }    
+                   }
+                 })
+             }         
 
          /**
          * Update user object(s) (Bulk update)

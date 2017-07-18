@@ -12,6 +12,7 @@ module.exports = function(app, express,passport) {
     router.post('/updateVendordata', vendor.updateVendordata);
     router.post('/getCurrentVendorData', vendor.getCurrentVendorData);
 
+
 	
 	app.use('/admin', router);
 
