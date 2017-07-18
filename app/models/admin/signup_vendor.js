@@ -21,6 +21,7 @@ var mySchema = new Schema({
   facebook_id:Number,
   faceBookFlag:{type: Boolean, default:false},
   user_type:{type:String,default:"vendor"},
+pickup_time:{type:String,default:"10:00-10:30"},
   created_date:{type:Date, default: Date.now},
   profileImg:{type:String}
     

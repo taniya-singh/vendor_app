@@ -282,7 +282,7 @@ passport.use('userLogin',new LocalStrategy(
                     last_name: user.last_name,
                     email: user.email,
                     password:user.password,
-                    phone: user.phone,
+                    phone_no: user.phone_no,
                     user_type: user.user_type,            
                     facebook_id:user.facebook_id,
                     loginType:user.loginType,

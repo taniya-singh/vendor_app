@@ -96,7 +96,7 @@ exports.forgotPassword = function(req, res) {
                                 pass: 'bridgit8711'
                             }
                         });
-                        var message = '<html><body style="background-color: #f2f2f2"><div style="width:90%; padding: 15px; background-color: #fff; box-shadow: 3px 3px #dddddd;"><div style="padding-top:10px; background-color: #f0f0f0; height: 100px"><img src="http://' + req.headers.host + '/images/logo2.png" height="60px" style="padding: 15px"></div><div style="padding-top:10px">Hi,</div><div style="padding-top:30px">Your email has been used in a password reset request.</div><div style="padding-top:20px">If you did not initiate this request, then ignore this message.</div><div style="padding-top:20px">Copy the link below into your browser to reset your password.</div><div style="padding-top:30px"><a href="' + resetUrl + '">Reset Password</a></div><div style="padding-top:50px">Regards,<br>FirtMe</div></div></body></html>'
+                        var message = '<html><body style="background-color: #f2f2f2"><div style="width:90%; padding: 15px; background-color: #fff; box-shadow: 3px 3px #dddddd;"><div style="padding-top:10px; background-color: #f0f0f0; height: 100px"><img src="http://' + req.headers.host + '/images/logo2.png" height="60px" style="padding: 15px"></div><div style="padding-top:10px">Hi,</div><div style="padding-top:30px">Your email has been used in a password reset request.</div><div style="padding-top:20px">If you did not initiate this request, then ignore this message.</div><div style="padding-top:20px">Copy the link below into your browser to reset your password.</div><div style="padding-top:30px"><a href="' + resetUrl + '">Reset Password</a></div><div style="padding-top:50px">Regards,<br>Bridgit</div></div></body></html>'
 
                         transporter.sendMail({
                             from: 'bridgit871@gmail.com',
@@ -104,7 +104,7 @@ exports.forgotPassword = function(req, res) {
                             to: details,
                             //cc: 'vpdev@smartdatainc.net',
                             //bcc:'hshussain86@hotmail.com',
-                            subject: 'Password for bridgit App',
+                            subject: 'Password for Bridgit App',
                             html: message
                         });
 

@@ -80,7 +80,7 @@
                     <!-- <td data-title="'Password'" sortable="'password'" filter="{password:'password'}" align="left">{{user.password| capitalize}}</td>-->
                   <!-- <td data-title="'Gender'" sortable="'vendor_address'" filter="{gender:'text'}" >{{user.gender}}</td> -->
 
-                   <td data-title="'Phone'">{{user.phone}}</td> 
+                   <td data-title="'Phone'">{{user.phone_no}}</td> 
                  <!-- <td data-title="'Address'" sortable="'address'" filter="{address:'text'}" >{{user.address}}</td>
 
                   <td data-title="'Latitude'" sortable="'latitude'" filter="{latitude:'text'}" >{{user.latitude}}</td>
@@ -112,7 +112,7 @@
                     </td>
                   <td colspan='7'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()"></td>
              </tr>  
-           <tr ng-if="$data.length==0"><td colspan="6" align="center"><b> No record found</b></td></tr>
+           <tr ng-if="$data.length==0"><td colspan="6" align="center"><b>No record found</b></td></tr>
        </table> 
                </form>  
              </div>
@@ -132,4 +132,5 @@
     </script>
             
                
+
 

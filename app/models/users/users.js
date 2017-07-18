@@ -12,7 +12,7 @@ var userSchema = new mongoose.Schema({
   customer_stripe_id:{type:String},
   gender:{type:String,default:"Female"},
   enable: {type: Boolean, default:false},
-  phone:{type:String},
+  phone_no:{type:String},
   is_deleted:{type:Boolean, default:false},
   facebook_id:{type:String},
   google_id:{type:Number},
