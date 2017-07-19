@@ -47,6 +47,7 @@ exports.logout = function(req, res) {
 }
 
 exports.forgotPassword = function(req, res) {
+	console.log("inisdeeeeeeeeeeeeeeee")
 
 	 if(req.body.username){
             var details = req.body.username;

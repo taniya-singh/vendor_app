@@ -277,7 +277,7 @@ exports.vendorList = function(req,res){
 	query.is_deleted=false;
    // console.log("-----------query-------", query);
 	vendor.find(query).exec(function(err, data) {
-		console.log("hahahahhahahhahahaha",data);
+		//console.log("hahahahhahahhahahaha",data);
                     if(err){
                         res.json("Error: "+err);   
                     }

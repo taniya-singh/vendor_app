@@ -384,7 +384,7 @@ $scope.submit = function(){
 
 					$scope.vendor = response.data;
 					
-					$scope.vendor.phone = $scope.vendor.phone.replace("+1", "");
+					$scope.vendor.phone= $scope.vendor.phone.replace("+1", "");
 				
 					$scope.vendor.dob = new Date(response.data.dob);
 					
