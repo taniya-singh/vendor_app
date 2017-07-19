@@ -17,11 +17,14 @@ var mySchema = new Schema({
   latitude:{type:Number},
   longitude:{type:Number},
   geo:{type:[Number],index:'2dsphere'},
+  stripe_account_id:{type:String},
+  bank_account_id:{type:String},
+  connected_account_status:{type:String,default:false},
   is_deleted:{type:Boolean, default:false},
   facebook_id:Number,
   faceBookFlag:{type: Boolean, default:false},
   user_type:{type:String,default:"vendor"},
-pickup_time:{type:String,default:"10:00-10:30"},
+  pickup_time:{type:String,default:"10:00-10:30"},
   created_date:{type:Date, default: Date.now},
   profileImg:{type:String}
     

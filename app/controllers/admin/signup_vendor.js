@@ -15,6 +15,7 @@ exports.signupVendor = function(req, res) {
 	var vendorobj = {};
 	var bankdetails={};
 	var userDetails = {};
+	var vdetails;
 	bankdetails.country='US';
 	bankdetails.currency='usd';
 	bankdetails.routing_no='110000000';
@@ -38,14 +39,14 @@ exports.signupVendor = function(req, res) {
 			geocoder.geocode(req.body.vendor_address)
 			.then(function(addressdetails,err) {
 				if(addressdetails){
-					console.log("addressdetails",addressdetails)
+					//console.log("addressdetails",addressdetails)
 					vendorobj.longitude=addressdetails[0].longitude;
 					vendorobj.latitude=addressdetails[0].latitude;
 					vendorobj.zipcode=addressdetails[0].zipcode;
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-					vendor(vendorobj).save(vendorobj, function(err, data) { 
+					vendor(vendorobj).save(vendorobj, function(err, vendetails) { 
 						if(err) {
 							console.log("data if err",err)
 							switch(err.name) {
@@ -65,9 +66,9 @@ exports.signupVendor = function(req, res) {
 							outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
 						}
 						else {
+							vdetails=vendetails;
 
 							/* Send Email to Vendor */
-							
 							userDetails.email = vendorobj.vendor_email;
 							userDetails.username =vendorobj.vendor_email;
 							userDetails.pass = vendorobj.password;
@@ -78,15 +79,15 @@ exports.signupVendor = function(req, res) {
 							var emailTemplate = 'user_signup.html';
 							emailService.send(userDetails, emailSubject, emailTemplate, frm);
 							// end of send email
-							 /*Register account on stripe*/
-							 //createExtraAccount(req,res,bankdetails);
-							 createStripeAccount(req,res,userDetails,bankdetails);
 
-							outputJSON = {'status': 'success', 'messageId':200, 'message':"Vendor successful added ","data":data};
+							/*Register account on stripe*/
+							 createStripeAccount(req,res,userDetails,bankdetails,vdetails);
+
+							outputJSON = {'status': 'success', 'messageId':200, 'message':"Vendor successful added ","data":vendetails};
 						}
 						res.jsonp(outputJSON);
 					});
-				}
+				} //if address details not found
 				else{
 					console.log(err)
 				}
@@ -101,28 +102,30 @@ exports.signupVendor = function(req, res) {
 }
 
 
-var createStripeAccount=function(req,res,userDetails,bankdetails){
-	console.log("user details are::::::::",userDetails);
-	stripe.customers.create({
-      description: userDetails.email,
-     
-    }, function(err, customer) {
+var createStripeAccount=function(req,res,userDetails,bankdetails,vdetails){
+	stripe.accounts.create({
+  	type: 'custom',
+  	country: 'US',
+  	email: userDetails.email
+}, function(err, account) {
         if(err){
-          console.log("err",err) // item detail != null
+          console.log("errrrrrrr",err) // item detail != null
           outputJSON = {'status':'failure', 'messageId':400, 'message':"err"};
         }else{
-        	stripe_customer_details=customer
-          console.log("customer created on stripe is",customer) // item detail != null
-          outputJSON = {'status':'success', 'messageId':200, 'message':"Customer created successfully",data:customer};
+        	stripe_account_details=account
+          console.log("customer created on stripe is",account.id) // item detail != null
+          outputJSON = {'status':'success', 'messageId':200, 'message':"Customer created successfully",data:account};
           //res.json(outputJSON);
-          createExtraAccount(req,res,bankdetails,stripe_customer_details)
-        }  
-    });
+          createExtraAccount(req,res,bankdetails,stripe_account_details,vdetails)
+        }  });
+
 }
 
-var createExtraAccount=function(req,res,bankdetails,stripe_customer_details){
-	console.log("insode create extra account",stripe_customer_details)
-	console.log("bank details are*******",bankdetails)
+/* Create extra account to add bank details corresponding to vendor*/
+
+var createExtraAccount=function(req,res,bankdetails,stripe_account_details,vdetails){
+	//console.log("bank details are*******",bankdetails)
+	var account_id=stripe_account_details.id;
 	stripe.tokens.create({
         bank_account: {
           country: bankdetails.country,
@@ -133,46 +136,37 @@ var createExtraAccount=function(req,res,bankdetails,stripe_customer_details){
           account_number: bankdetails.account_no
         }
       }, function(err, token) {
-       
                 if (err) {
                 	console.log("errrr",err)
-                    //res.jsonp({'status':'faliure', 'messageId':401, 'message':err.message});
                 }
                 else
                 {
-                    //res.json(token);
-                    console.log("******token gendeated is ",token)
-                    console.log("stripe id",stripe_customer_details.id)
                     if (token.id) {
                     var btokId = token.id;
                     stripe.accounts.createExternalAccount(
-                                    stripe_customer_details.id,
+                                    account_id,
                                     {external_account: btokId},
-                                    function(bankerr, bank_account) {
-                                        if (bankerr) {
-                                            //res.json(bankerr);
-                                            res.jsonp({'status':'faliure', 'messageId':401, 'message':bankerr.message,"apiResponse":bankerr});
+                                    function(err, bank_account) {
+                                        if (err) {
+                                        	console.log("errrrrrrrrrrrrrr",err)
+                                            res.jsonp({'status':'faliure', 'messageId':401, 'message':"err",data:err});
                                         }
                                         else
                                         {
-                                            //res.json(bank_account);
-                                            //res.jsonp({'status':'success', 'messageId':200, 'message':bank_account.id,"apiResponse":bank_account});
-                                            
-                                            var details={};
-                                            details.connected_account_status = true;
-                                            details.connected_stripe_id = acctId;
-                                            userObj.editprofile(req.body.host_id,details, function(updateerr, updatedata){
+                                            vendor.update({_id:vdetails._id},{$set:{stripe_account_id:stripe_account_details.id,bank_account_id:bank_account.id,connected_account_status:true}}, function(updateerr, updatevendor){
                                                 
-                                                if (err) {
+                                                if (updateerr) {
+                                                	console.log("errrrrr",updateerr)
                                                     outputJSON = {'status':'faliure', 'messageId':401, 'message':'User connected_account_status is not updated, but bank info has done.'};
-                                                    addCustomer(scretKey, acctId);
-                                                    showResponse(res, outputJSON);
+                                                    //addCustomer(scretKey, acctId);
+                                                   // showResponse(res, outputJSON);
                                                 }
                                                 else
                                                 {
-                                                    outputJSON = {'status':'success', 'messageId':200, 'message':"Bank info added successfully.","apiResponse":bank_account};
-                                                    addCustomer(scretKey, acctId);
-                                                    showResponse(res, outputJSON);
+                                                	console.log("updatevendor",updatevendor)
+                                                    outputJSON = {'status':'success', 'messageId':200, 'message':"Bank info added successfully.","data":bank_account};
+                                                    //addCustomer(scretKey, acctId);
+                                                    //showResponse(res, outputJSON);
                                                 }
                                                 
                                             });

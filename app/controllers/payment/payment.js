@@ -66,39 +66,34 @@ exports.list_all_customers=function(req,res){
 );
 }
 
-exports.create_customer_on_stripe=function(req,res){
-  userObj.find({_id:req.body._id},function(err,user){
+var create_customer_on_stripe=function(custdetail,cb){
+  userObj.find({_id:custdetail._id},function(err,user){
    if(err){
       console.log("err",err) // item detail != null
-      outputJSON = {'status':'failure', 'messageId':400, 'message':err}, 
-      res.json(outputJSON); 
+       cb(err,{"message":"err"})
    }else{
       if(user==""){    //customer does not exist
-        outputJSON = {'status':'success', 'messageId':200, 'message':"Not a valid customer"}, 
-        res.json(outputJSON);
+         cb(null,{"message":"Not a valid customer"})
       }else{
-        userObj.find({_id:req.body._id,customer_stripe_id: { $exists: true } },function(err,existing_customer){
+        userObj.find({_id:custdetail._id,customer_stripe_id: { $exists: true } },function(err,existing_customer){
             if(err){
               console.log("err",err) // item detail != null
-              outputJSON = {'status':'failure', 'messageId':400, 'message':err}, 
-              res.json(outputJSON); 
+               cb(err,{"message":"Err"}) 
             }else{
               if(existing_customer==""){    //if customer is not created on skype
                 console.log("inside create new customer")
-                  stripe.customers.create({description: 'req.body.email'},function(err, customer){
+                  stripe.customers.create({description: custdetail.email},function(err, customer){
                     if(err){
                       console.log("err",err) // item detail != null
-                      outputJSON = {'status':'failure', 'messageId':400, 'message':"err"}, 
-                      res.json(outputJSON);  
+                       cb(err,{"message":"Err"})  
                     }else{
- /*update user table */userObj.update({_id:req.body._id},{$set:{customer_stripe_id:customer.id}},function(err,updation){
+ /*update user table */userObj.update({_id:custdetail._id},{$set:{customer_stripe_id:customer.id}},function(err,updation){
                         if(err){
-                          res.jsonp("err",err)
+                          cb(err,{'message':"err"})
                         }else{
                           if(updation!=null){
                             console.log("res is ",updation)
-                            outputJSON = {'status':'success', 'messageId':200, 'message':"Customer created successfully",data:customer}, 
-                            res.json(outputJSON);
+                             cb(null,{customer})
                           }
                         }
                       })             
@@ -109,11 +104,9 @@ exports.create_customer_on_stripe=function(req,res){
                 stripe.customers.retrieve(customerid,function(err, customer) {
                   if(err){
                     console.log("err",err) // item detail != null
-                    outputJSON = {'status':'failure', 'messageId':400, 'message':err}, 
-                    res.json(outputJSON);  
+                     cb(err,{'message':"Err"})
                   }else{
-                    outputJSON = {'status':'success', 'messageId':200, 'message':"Information retreived successsfully",data:customer}, 
-                    res.json(outputJSON);
+                     cb(null,customer)
                   }
                 })
               }
@@ -124,6 +117,78 @@ exports.create_customer_on_stripe=function(req,res){
  })
 }
 
+exports.pay = function(req, res) {
+  var custdetail={}
+  custdetail=req.body
+  console.log("inside pay");
+  if (req.body._id) {
+   create_customer_on_stripe(custdetail,function(err,custdetails){
+    if(err){
+
+    }
+    else{
+      //console.log("dhan dhana",custdetails)
+      vendor.find({_id:req.body.vendor_id},function(err,vendetails){
+        if(err){
+               outputJSON = {
+            'status': 'Failure',
+            'messageId': 400,
+            'message': "Error"
+            },
+            res.json(outputJSON);
+       }else{
+          if(vendetails){
+            console.log("customer details",custdetails.id)
+            stripe.charges.create({
+                amount: req.body.amount,
+                currency: "usd",
+                //customer: custdetails.id,
+                source: custdetails.id, // obtained with Stripe.js
+                destination: vendetails.bank_account_id,
+                description: "Charge for Customer food",
+                //application_fee: 500, // amount in cents
+                capture : false
+              },
+               function(err, charge) {
+                    if (err) {
+                      console.log("eeeee",err)
+                        res.json(err);
+                    }
+                    else
+                    {
+                      outputJSON = {
+                        'status': 'success',
+                        'messageId': 200,
+                        'message': "Payed successfully",
+                        'data':charge
+                      },
+                    res.json(charge);
+                    }
+            });
+
+          }else{
+               outputJSON = {
+            'status': 'Failure',
+            'messageId': 400,
+            'message': "Please enter a valid vendor"
+            },
+            res.json(outputJSON);
+          }
+        }
+      })     
+    }
+   });
+    
+  } else {
+    outputJSON = {
+        'status': 'faliure',
+        'messageId': 400,
+        'message': "Make sure you entered correct details",
+        
+      },
+      res.json(outputJSON);
+  }
+}
 
 
 /* stripe.customers.create({

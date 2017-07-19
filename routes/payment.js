@@ -6,7 +6,7 @@ module.exports = function(app, express) {
 	 router.post('/addcustomer', pay.addcustomer);
 	 router.post('/retreive_customer', pay.retreive_customer);
 	 router.post('/list_all_customers', pay.list_all_customers);
-	 router.post('/create_customer_on_stripe', pay.create_customer_on_stripe);
+	 router.post('/pay', pay.pay);
 	 router.post('/retrieve_balance', pay.retrieve_balance);
 
 
