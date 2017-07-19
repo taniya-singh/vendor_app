@@ -132,7 +132,7 @@ input[type=number] {
 .form-group > label{color: #555; font-weight: 600; display: block;}
 .p_left35{padding-left: 35px;}
 
-content-wrapper{position: relative;}
+.content-wrapper{position: relative;}
 .content-wrapper::before {
   content: "";
   position: absolute;

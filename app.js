@@ -40,7 +40,7 @@ app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '100mb'}));
 
  
 
@@ -244,7 +244,13 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
                     pickup_time: adminuser.pickup_time,     
                     user_type: adminuser.user_type,            
                     longitude: adminuser.longitude,
-                    latitude: adminuser.latitude
+                    latitude: adminuser.latitude,
+                    Country: adminuser.Country,
+                    Currency: adminuser.Currency,
+                    Routing_Number: adminuser.Routing_Number,
+                    Account_Number: adminuser.Account_Number,
+                    Account_Holder_Name: adminuser.Account_Holder_Name,
+                    Account_Holder_Type: adminuser.Account_Holder_Type
         });
       });
     }
@@ -334,7 +340,8 @@ require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
 require('./routes/payment')(app, express, passport);
 require('./routes/order')(app, express, passport);
-
+require('./routes/faq')(app, express, passport);
+require('./routes/eManagement')(app, express,passport);
 
 
 require('./routes/adminlogin')(app, express, passport);

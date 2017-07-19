@@ -118,7 +118,6 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 						// 	}
 						// });
 	}
-	
 	//login
 	$scope.login = function() {
 			
@@ -154,6 +153,9 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 			}
 		});
 	};
+
+
+
 
 
 	//logout

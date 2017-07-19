@@ -1,0 +1,64 @@
+<script>
+CKEDITOR.replace( 'editor2' );
+CKEDITOR.editorConfig = function( config ) {
+    config.language = 'es';
+    config.uiColor = '#F7B42C';
+    config.height = 300;
+    config.toolbarCanCollapse = true;
+};
+ </script>
+<aside class="right-side" >
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+                    <h1>
+                Email NewsLetter
+                    </h1>
+        <ol class="breadcrumb">
+            <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Home</a></li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content" ng-init="emailNewsletter()">
+        <div class="row" >
+            <!-- <div class="col-md-12"> -->
+                <!-- Custom Tabs -->
+                <!-- <div class="nav-tabs-custom"> -->
+                    <ul class="nav nav-tabs">
+                       <!--  <li ng-class="{'active': activeTab === 0}" data-ng-click="moveTabContents(0)"><a data-toggle="tab">Edit Profile</a></li> -->
+                    </ul>
+                    <!-- <div class="row"> -->
+                        <!-- <div class="col-xs-12"> -->
+                            <div class="box marginBT0">
+                            <form role="form" name="myform" style="margin-top: 5px;">
+
+                            <div class="col-sm-3">Identifier</div>
+                            <div class="col-sm-9 spaceBT10">
+                                <input type="text" name="identifier" class="form-control" ng-model="information.identifier" ng-disabled="true">
+                            </div>
+                            
+
+                            <div class="col-sm-3">Title</div>
+                            <div class="col-sm-9 spaceBT10">
+                               <select class="form-control">
+                                <option class="form-control" ng-repeat= "x in titles" value="x._id" ng-click="changeDescription(x._id)">{{x.title}}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-sm-3">Description</div>
+                            <div class="col-sm-9 spaceBT10">
+                             <textarea name="editor2"></textarea>
+                             </div>
+                              <div class="col-sm-3">&nbsp;</div>
+                             <div class="col-sm-9 spaceBT10">
+                                <div class="btn-right">
+                             <button ng-disabled="disabled" ng-click="sentNewsLetter()" style="float:right">Sent </button>
+                           </div>
+                           </div>
+                            </div>
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
+        </div>
+    </section>
+</aside>

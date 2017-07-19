@@ -31,6 +31,7 @@ var webservices = {
     "resetpassword":baseUrl+"/users/reset_password",
 
 //vendor
+
 	"addVendor" : baseUrl + "/admin/signupVendor",
 	"vendorList" : baseUrl + "/admin/vendorList",
 	"update" : baseUrl + "/vendor/update",
@@ -67,6 +68,10 @@ var webservices = {
 	"getHelpInformation":baseUrl+"/help/getHelpInformation",
 	"insertHelpInformation":baseUrl+"/help/insertHelpInformation",
 	"deleteHelp":baseUrl+"/help/deleteHelp",
+	// FAQ
+	"insertQuestionAnswer": baseUrl+"/FAQ/insertQuestionAnswer",
+	"allfaq": baseUrl+"/FAQ/allfaq",
+	"deleteAndQues": baseUrl+"/FAQ/deleteAndQues",
 
 	
 
@@ -77,6 +82,8 @@ var nav = [
           // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
           {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
           {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+          //{text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
+
            //{text:'Manage Issues', path:'/#/cmsListing',icon:'fa-list',activeText:'/cmsListing'},
            // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},
             

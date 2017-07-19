@@ -24,6 +24,7 @@ exports.signupVendor = function(req, res) {
 	bankdetails.account_holder_type =req.body.Account_Holder_Type;
 	
 	vendorobj = req.body;
+	console.log("vendorobj",vendorobj);
 	vendor.findOne({"vendor_email":vendorobj.vendor_email},function(err,ven){
 		if(err){
 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
@@ -46,7 +47,7 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-					vendor(vendorobj).save(vendorobj, function(err, vendetails) { 
+					vendor(vendorobj).save(vendorobj, function(err, data) { 
 						if(err) {
 							console.log("data if err",err)
 							switch(err.name) {
@@ -243,7 +244,7 @@ exports.vendorList = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         vendor.find({is_deleted:false},function(err,data){
 
-        	var page = req.body.page || 1,
+        var page = req.body.page || 1,
 		count = req.body.count || 1;
 	var skipNo = (page - 1) * count;
 
@@ -276,7 +277,7 @@ exports.vendorList = function(req,res){
 	query.is_deleted=false;
    // console.log("-----------query-------", query);
 	vendor.find(query).exec(function(err, data) {
-		//console.log(data)
+		console.log("hahahahhahahhahahaha",data);
                     if(err){
                         res.json("Error: "+err);   
                     }

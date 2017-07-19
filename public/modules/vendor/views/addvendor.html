@@ -175,7 +175,11 @@
                     </div> -->
                       
                        <label >ZipCode<span class="requiredClass">*</span></label>
+<<<<<<< HEAD
                         <input type="text" class="form-control" name="zipcode"  placeholder="Enter zip code" ng-pattern="/^[0-9]{1,7}$/" ng-model="vendor.zipCode" ng-minlength="4" ng-maxlength="7" maxlength="8" ng-disabled="true" required>
+=======
+                        <input type="text" class="form-control" name="zipcode"  placeholder="Enter zip code" ng-pattern="/^[0-9]{1,7}$/" ng-model="vendor.zipcode" ng-minlength="4" ng-maxlength="7" maxlength="8" ng-disabled="true" required>
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
 
                         <div class="validationError" ng-messages="vendorForm.zipcode.$error" ng-show="
                              vendorForm.zipcode.$error.required && vendorForm.zipcode.$touched && vendorForm.zipcode.$invalid " role="alert">
@@ -186,28 +190,92 @@
                           <div class="validationError" ng-messages="vendorForm.zipcode.$error" ng-show=" vendorForm.zipcode.$error.pattern && (!vendorForm.zipcode.$pristine || vendorForm.$submitted)" role="alert">
                             <span style="color:red" ng-message="pattern">Enter valid character </span>
                             </div>
+<<<<<<< HEAD
 
                          <div class="validationError"  ng-show="vendorForm.zipcode.$error.maxlength && vendorForm.zipcode.$dirty""> 
                           <span style="color:red">zip code maximum length exceeds</span>
                         </div>
 
 
+=======
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
+
+                         <div class="validationError"  ng-show="vendorForm.zipcode.$error.maxlength && vendorForm.zipcode.$dirty""> 
+                          <span style="color:red">zip code maximum length exceeds</span>
+                        </div>
 
 
-
+<<<<<<< HEAD
                         <form action="" method="POST" id="bank-account-form">
     <div class="form-row">
         <label for="country">Country</label>
         <select class="country" ng-model="vendor.country">
+=======
+<!-- <div class="form-row">
+        <label for="currency">Currency</label>
+        <select class="currency">
+            <option value="USD">US Dollar</option>
+            <option value="CAD">Canadian Dollar</option>
+            <option value="GBP">Pound</option>
+            <option value="EUR">Euro</option>
+        </select>
+ -->
+
+
+
+
+
+
+
+ <!-- <select id='bookcategory' class="form-control" required="">
+                    <option value="" disabled="disabled">Category</option>
+                    <option value="1">LITERATURE & FICTION</option>
+                    <option value="2">NON FICTION</option>
+                    <option value="3">ACADEMIC</option>
+            <option value="4">CHILDREN & TEENS</option>
+
+                </select> -->
+
+<!-- <form name="form1" method="post" action="" onsubmit="return validate(this);">
+<select name="quali" id="quali" ">
+        <option value="-1" selected="selected">select</option>
+        <option value="1">Graduate</option>
+        <option value="2">Post Graduate</option>
+      </select> 
+</form> -->
+
+             <div class="form-row">
+
+
+           <label ng-if="!updateButton">Country:<span class="requiredClass">*</span></label>
+        <select class="country" ng-model="vendor.Country"  name="country" ng-if="!updateButton" required>
+            <option value="" disabled="disabled">Select Country</option>
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
             <option value="US">United States</option>
             <option value="CA">Canada</option>
             <option value="GB">United Kingdom</option>
             <option value="FR">France</option>
         </select>
+
+      <div class="validationError" ng-messages="vendorForm.vendor.Country.$error" ng-if="!updateButton" ng-show="
+        vendorForm.vendor.Country.$invalid " role="alert">
+        <span style="color:red" ng-if="!updateButton" ng-message="required">Country is required</span>
+      </div>
     </div>
+<<<<<<< HEAD
     <div class="form-row">
         <label for="currency">Currency</label>
         <select class="currency" ng-model="vendor.currency">
+=======
+
+
+
+
+    
+           <label ng-if="!updateButton">Currency<span class="requiredClass">*</span></label>
+        <select class="currency" ng-model="vendor.Currency" ng-if="!updateButton" name="currency"  required>
+        <option value="" disabled="disabled">Select Currency</option>
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
             <option value="USD">US Dollar</option>
             <option value="CAD">Canadian Dollar</option>
             <option value="GBP">Pound</option>
@@ -215,6 +283,7 @@
         </select>
     </div>
 
+<<<<<<< HEAD
     <div class="form-row">
         <label for="routing-number">Routing Number</label>
         <input type="Number" class="routing-number" value="110000000" ng-model="vendor.Routing_Number" />
@@ -234,6 +303,77 @@
             <option value="company">Company</option>
 
       
+=======
+   
+    
+                      <div class="form-row">
+
+                      <label ng-if="!updateButton">Routing Number:<span class="requiredClass">*</span></label>
+                     
+                       <input  type="text" ng-if="!updateButton" class="routing-number" ng-model="vendor.Routing_Number" mask="999-999-999" name="Routing_Number" mask-clean='true' placeholder="xxx-xxx-xxx" mask-restrict='reject' ng-minlength="9" ng-maxlength="14" maxlength="14" required/>
+                     
+
+                     <p class="help-block">
+                      <span style="color:red" ng-if="!updateButton"  ng-show="vendorForm.Routing_Number.$touched && vendorForm.Routing_Number.$invalid && vendorForm.Routing_Number.$error.required">Routing Number is required.</span>
+
+                       <span style="color:red" ng-if="!updateButton"  ng-show="vendorForm.Routing_Number.$error.minlength">Routing Number have 9-digits minimum.</span>
+                         </p>
+                       </div>
+
+
+
+  
+
+                       <div class="form-row">
+
+                      <label ng-if="!updateButton">Account Number:<span class="requiredClass">*</span></label>
+                     
+                       <input  type="text" ng-if="!updateButton" class="account-number" ng-model="vendor.Account_Number"  name="Account_Number" mask-clean='true' placeholder="xxxx-xxxx-xxxx-xxxxx" mask-restrict='reject' ng-minlength="6" ng-maxlength="17" maxlength="17" required/>
+                     
+
+                     <p class="help-block">
+                      <span style="color:red" ng-if="!updateButton" ng-show="vendorForm.Account_Number.$touched && vendorForm.Account_Number.$invalid && vendorForm.Account_Number.$error.required">Account Number is required.</span>
+
+                       <span style="color:red" ng-if="!updateButton"  ng-show="vendorForm.Account_Number.$error.minlength">Account Number have 6-digits minimum.</span>
+                         </p>
+                       </div>
+
+
+
+
+                   <div class="form-row">
+                      <label ng-if="!updateButton">Account Holder Name:<span class="requiredClass">*</span></label>
+                      <input type="text" ng-if="!updateButton" class="form-control" ng-model="vendor.Account_Holder_Name" placeholder="Account Holder Name" ng-minlength="3" ng-maxlength="20" maxlength="21" name="Account_Holder_Name" ng-pattern="/^[a-z ,.'-]+$/i" required capitalize-first>
+
+                    <div class="validationError" ng-if="!updateButton" ng-messages="vendorForm.vendor_name.$error" ng-show="
+                      vendorForm.Account_Holder_Name.$error.required && vendorForm.Account_Holder_Name.$touched &&
+                         vendorForm.Account_Holder_Name.$invalid " role="alert">
+                      <span style="color:red" ng-message="required">Name is required</span>
+                    </div>
+                                                      
+                  <div class="validationError" ng-if="!updateButton" ng-messages="vendorForm.Account_Holder_Name.$error" ng-show="vendorForm.Account_Holder_Name.$error.pattern && (!vendorForm.Account_Holder_Name.$pristine || vendorForm.$submitted)" role="alert">
+                  <span style="color:red" ng-message="pattern">Enter valid character </span>
+                  </div>
+
+                  <div class="validationError"  ng-if="!updateButton" ng-show="vendorForm.Account_Holder_Name.$error.maxlength && vendorForm.Account_Holder_Name.$dirty"">
+                  <span style="color:red">Name maximum length 20</span>
+                  </div>
+  </div>
+
+
+
+
+    
+    <div class="form-row">
+        <label for="account-holder-type"  ng-if="!updateButton" ng-if="!updateButton">Account Holder Type</label>
+        <select class="account-holder-type" ng-if="!updateButton" ng-model="vendor.Account_Holder_Type" name="account-holder-type"  required>
+         <option value="" disabled="disabled">Select Type</option>
+            <option value="individual">Individual</option>
+            <option value="company">Company</option>
+
+       </div>
+                
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
                        
 
 
@@ -246,6 +386,7 @@
 
 
 
+<<<<<<< HEAD
                        <!-- <label>Date Of birth</label>
   <input type="text" class="form-control" uib-timepickerpicker-popup="{{format}}" ng-model="user.dob" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
                           <span class="input-group-btn">
@@ -260,6 +401,11 @@
                           </div> -->
                       </div>
                   </div>
+=======
+                      
+
+
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
                      <div class="col-md-4">
                         <label>ProfileImage</label>
                            <div class="form-group">
@@ -302,6 +448,7 @@
                
 
     <div class="box-footer clearfix no-border">
+<<<<<<< HEAD
      <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" >
      <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update"  ng-click="update()" value="Update ">
      </div>
@@ -313,4 +460,16 @@
 </div>
   </section><!-- /.content -->
            
+=======
+     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" ng-disabled="vendorForm.$invalid">
+     <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update" ng-disabled="vendorForm.$invalid" ng-click="update()" value="Update " >
+     </div>
+>>>>>>> 8ac8672c913dc1be2836a8d9c1486f46efb95708
 
+   </div><!-- /.tab-content -->
+    </div>
+   </div>
+  </div>
+</div>
+  </section><!-- /.content -->
+           
