@@ -47,7 +47,7 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-					vendor(vendorobj).save(vendorobj, function(err, data) { 
+					vendor(vendorobj).save(vendorobj, function(err, vendetails) { 
 						if(err) {
 							console.log("data if err",err)
 							switch(err.name) {
