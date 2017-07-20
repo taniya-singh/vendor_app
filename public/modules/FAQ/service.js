@@ -1,25 +1,11 @@
 'use strict'
 
-angular.module('eManagement')
+angular.module('FAQ')
 
-.factory('emailService', ['communicationService', '$rootScope', 
-	function(communicationService, $rootScope) {
+.factory('faqService', ['$http', 'communicationService', function($http, communicationService) {
+
 	var service = {};
-	
 
-	service.getEmail = function(callback) { 
-			communicationService.resultViaGet(webservices.getEmail, appConstants.authorizationKey, headerConstants.json, function(response) {
-			callback(response.data);
-		});	
-	};
-
-	service.sentEmailNewsLetter = function(inputJsonString, callback) { 
-			communicationService.resultViaPost(webservices.sentEmailNewsLetter, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
-			callback(response.data);
-		});	
-	};
-
-	
 	service.insertQuestionAnswer = function(inputJsonString, callback) { 
 			communicationService.resultViaPost(webservices.insertQuestionAnswer, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
@@ -37,6 +23,7 @@ angular.module('eManagement')
 			callback(response.data);
 		});	
 	};
+	return service;
 
-     return service;
-}])
+
+}]);

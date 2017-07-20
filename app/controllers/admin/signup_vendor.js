@@ -161,7 +161,7 @@ exports.vendorList = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         vendor.find({is_deleted:false},function(err,data){
 
-        	var page = req.body.page || 1,
+        var page = req.body.page || 1,
 		count = req.body.count || 1;
 	var skipNo = (page - 1) * count;
 
@@ -194,7 +194,7 @@ exports.vendorList = function(req,res){
 	query.is_deleted=false;
     console.log("-----------query-------", query);
 	vendor.find(query).exec(function(err, data) {
-		console.log(data)
+		console.log("hahahahhahahhahahaha",data);
                     if(err){
                         res.json("Error: "+err);   
                     }

@@ -3,7 +3,7 @@
 
 angular.module("FAQ");
 
-munchapp.controller("faqController", ['$scope', '$rootScope', '$location', '$localStorage', '$stateParams','$state' ,'emailService',function($scope, $rootScope, $location, $localStorage, $stateParams,$state,emailService) {
+munchapp.controller("faqController", ['$scope', '$rootScope', '$location', '$localStorage', '$stateParams','$state' ,'faqService',function($scope, $rootScope, $location, $localStorage, $stateParams,$state,faqService) {
 console.log("ghjgjgjg")
 
 	if ($localStorage.userLoggedIn) {
@@ -28,14 +28,17 @@ console.log("ghjgjgjg")
 
 	$scope.addQuestion = function(){
 		console.log($scope.modalData);
-		emailService.insertQuestionAnswer($scope.modalData,function(response){
+
+		faqService.insertQuestionAnswer($scope.modalData,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
 	}
 
 	$scope.allQuestion =function(){
-		emailService.allfaq(function(response){
+
+		faqService.allfaq(function(response){
 			console.log(response.data);
 			if (response.data.length == 0) {
 				$scope.showStatus = true;
@@ -49,7 +52,9 @@ console.log("ghjgjgjg")
 
 	$scope.deleteItem = function(){
 		var inputJson = {_id:$rootScope.idToDelete,"status":"delete"};
-		emailService.deleteAndQues(inputJson,function(response){
+
+		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -69,7 +74,10 @@ console.log("ghjgjgjg")
 
 	$scope.deactivate = function(id){
 		var inputJson = {_id:id,"status":"deactivate"};
-		emailService.deleteAndQues(inputJson,function(response){
+
+
+		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -77,7 +85,9 @@ console.log("ghjgjgjg")
 
 	$scope.activate = function(id){
 		var inputJson = {_id:id,"status":"activate"};
-		emailService.deleteAndQues(inputJson,function(response){
+
+		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -89,7 +99,9 @@ console.log("ghjgjgjg")
 		console.log("why not running");
 		$scope.modalData.status = "update";
 		console.log("run running");
-		emailService.deleteAndQues($scope.modalData,function(response){
+
+		faqService.deleteAndQues($scope.modalData,function(response){
+
 			console.log(response);
 			$scope.modalData = {}
 			$scope.allQuestion();

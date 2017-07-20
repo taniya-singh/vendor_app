@@ -135,19 +135,19 @@ exports.forgotPassword = function(req, res) {
 
 exports.resetPassword = function(req, res) {
 
-	console.log("reset ",req.body);
-	var key = 'MySecretKey12345';
-	var iv = '1234567890123456';
-	var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-	var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-	var encrypted = cipher.update(req.body.newpwd, 'utf8', 'binary');
-	encrypted += cipher.final('binary');
-	hexVal = new Buffer(encrypted, 'binary');
-	newEncrypted = hexVal.toString('hex');
-	console.log("decipherPassword ",newEncrypted);
-	console.log(commonjs.decrypt(req.body.email))
+	 console.log("reset ",req.body);
+	// var key = 'MySecretKey12345';
+	// var iv = '1234567890123456';
+	// var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
+	// var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+	// var encrypted = cipher.update(req.body.newpwd, 'utf8', 'binary');
+	// encrypted += cipher.final('binary');
+	// hexVal = new Buffer(encrypted, 'binary');
+	// newEncrypted = hexVal.toString('hex');
+	// console.log("decipherPassword ",newEncrypted);
+	// console.log(commonjs.decrypt(req.body.email))
 		
-	adminLoginObj.update({ email:commonjs.decrypt(req.body.email) },{$set:{password:newEncrypted,verifyStr:""}}, function(err, data) {
+	adminLoginObj.update({ email:commonjs.decrypt(req.body.email) },{$set:{password:req.body.newpwd,verifyStr:""}}, function(err, data) {
 
 		if(err) {
 
@@ -219,30 +219,6 @@ exports.changePassword = function(req, res) {
 			res.jsonp(outputJSON);
 		}
 		else {
-				//console.log(data)
-					var key = 'MySecretKey12345';
-			        var iv = '1234567890123456';
-			        var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-			        var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-			       	var encrypted = cipher.update(req.body.oldpassword, 'utf8', 'binary');
-			        encrypted += cipher.final('binary');
-			        hexVal = new Buffer(encrypted, 'binary');
-			        newEncrypted = hexVal.toString('hex');
-			        console.log("decipherPassword ",newEncrypted);
-			        oldpassword=req.body.password;
-
-			if(data && data.password==oldpassword) {
-					//console.log(data)
-					var key = 'MySecretKey12345';
-			        var iv = '1234567890123456';
-			        var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-			        var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-			       	var encrypted = cipher.update(req.body.password, 'utf8', 'binary');
-			        encrypted += cipher.final('binary');
-			        hexVal = new Buffer(encrypted, 'binary');
-			        newEncrypted = hexVal.toString('hex');
-			        console.log("decipherPassword ",newEncrypted);
-			        password=newEncrypted;
 				adminLoginObj.update({username:req.body.username},{$set:{password:password}},function(err,response){
 					if(err) {
 							outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
@@ -252,19 +228,12 @@ exports.changePassword = function(req, res) {
 						res.jsonp(outputJSON);
 						}
 					});
-
-			}else{
-				outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-							res.jsonp(outputJSON);
-			}
-			
-
-		}
+              }
+		});
 
 		
 
-	});
-}
+	}
 
 
 

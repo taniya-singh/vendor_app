@@ -88,11 +88,11 @@
                     </div>
 
                 </section><!-- /.content -->
-           
 
-
+                
 <!-- Modal -->
- <div class="modal fade" id="myModal" role="dialog">
+ <div class="modal fade" id="myModal" role="dialog" >
+
     <div class="modal-dialog modal-lg">
     
       <!-- Modal content-->
@@ -153,9 +153,11 @@
         </form>
         <div class="modal-footer">
         
-          <button type="button" ng-if="updateq=='false'" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="addQuestion()">Submit</button>
 
-          <button type="button" ng-if="updateq=='true'" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="update()">Update</button>
+          <button type="button" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="addQuestion()">Submit</button>
+
+          <button type="button"  ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="update()">Update</button>
+
 
         </div>
       </div>

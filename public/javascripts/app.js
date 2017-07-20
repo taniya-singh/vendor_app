@@ -311,8 +311,7 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 					if ($localStorage.userLoggedIn != true) {
 						$state.go('/login');
 					}
-					
-						
+		
 				}
 			},
 		url: "/vendor/edit/:id",
