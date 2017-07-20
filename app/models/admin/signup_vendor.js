@@ -13,7 +13,7 @@ var mySchema = new Schema({
   vendor_address:{type:String},
   city:{type:String},
   country:{type:String},
-  zipcode:{type:String},
+  zipCode:{type:String},
   latitude:{type:Number},
   longitude:{type:Number},
   geo:{type:[Number],index:'2dsphere'},
