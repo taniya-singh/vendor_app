@@ -86,17 +86,31 @@ var create_customer_on_stripe=function(custdetail,cb){
                     if(err){
                       console.log("err",err) // item detail != null
                        cb(err,{"message":"Err"})  
-                    }else{
- /*update user table */userObj.update({_id:custdetail._id},{$set:{customer_stripe_id:customer.id}},function(err,updation){
-                        if(err){
-                          cb(err,{'message':"err"})
-                        }else{
-                          if(updation!=null){
-                            console.log("res is ",updation)
-                             cb(null,{customer})
-                          }
-                        }
-                      })             
+                      }else{
+                          stripe.tokens.create({
+                            card: {
+                              "number": '4242424242424242',
+                              "exp_month": 12,
+                              "exp_year": 2017,
+                              "cvc": '123'
+                            }
+                          }, function(err, token) {
+                            if (err) {
+                              cb(err,{'message':"err"})  }
+                            else
+                            {
+        /*update user table */userObj.update({_id:custdetail._id},{$set:{customer_stripe_id:customer.id}},function(err,updation){
+                               if(err){
+                                  cb(err,{'message':"err"})
+                                }else{
+                                    if(updation!=null){
+                                    console.log("res is ",updation)
+                                    cb(null,{customer},{token})
+                                    }
+                                }
+                              })             
+                            }
+                          });
                     }   //end of if
                   });
               }else{   //if stripe id already exists
@@ -127,7 +141,7 @@ exports.pay = function(req, res) {
 
     }
     else{
-      //console.log("dhan dhana",custdetails)
+      console.log("dhan dhana",custdetails)
       vendor.find({_id:req.body.vendor_id},function(err,vendetails){
         if(err){
                outputJSON = {
