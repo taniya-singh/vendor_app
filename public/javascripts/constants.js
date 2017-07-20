@@ -25,7 +25,7 @@ var webservices = {
 	"exportUserList":baseUrl + "/users/exportFile",
 	"deleteUser":baseUrl + "/users/deleteUser",
 	"totalUser": baseUrl + "/users/totalUser",
-	"latestUser" : baseUrl + "/users/latestUser",
+	
 	"deleteUser" : baseUrl + "/users/deleteUser",
     "bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
     "resetpassword":baseUrl+"/users/reset_password",
@@ -77,26 +77,11 @@ var webservices = {
 
 }
 var nav = [
-			{text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'home'},
-		  //{text:'Esscrow Setting', path:'/#/setting',icon:'fa-cog',activeText:'setting'},
-          // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
-          {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
-          {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+		       {text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'home'},
+		       {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
+               {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+               {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
 
-         // {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
-
-          //{text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
-
-
-           //{text:'Manage Issues', path:'/#/cmsListing',icon:'fa-list',activeText:'/cmsListing'},
-           // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},
-            
-      //  {text:'CMS Management', path:'/#/cmslisting',icon:'fa-users',activeText:'cmslisting'},
-         
-          //  {text:'Manage Jobs', path:'/#/jobs',icon:'fa-briefcase',activeText:'job'},
-          //  {text:'Payment History', path:'/#/paymentHistory',icon:'fa-money',activeText:'payment'},
-          //   {text:'Feedbacks', path:'/#/feedbacks',icon:'fa-comments',activeText:'feedback'},
-            
                          ];
 
 var facebookConstants = {

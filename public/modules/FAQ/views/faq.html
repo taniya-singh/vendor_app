@@ -1,4 +1,6 @@
-   <style type="text/css">
+
+
+                <style type="text/css">
    
    .modal {
   text-align: center;
@@ -21,7 +23,8 @@
 
  </style>
 
-                <!-- Content Header (Page header) -->
+
+  <!-- Content Header (Page header) -->
                 <section class="content-header" ng-init="allQuestion()"> 
                     <h1>
                        FAQ                       
@@ -154,7 +157,7 @@
         <div class="modal-footer">
         
 
-          <button type="button" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="addQuestion()">Submit</button>
+          <button type="button" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="addQuestion()" ng-if="!updateButton">Submit</button>
 
           <button type="button"  ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="update()">Update</button>
 
