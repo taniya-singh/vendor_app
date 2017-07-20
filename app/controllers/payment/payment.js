@@ -276,6 +276,7 @@ exports.pay = function(req, res) {
   }
 }
 
+
 exports.retrieve_balance=function(err,res){
 console.log("inside balance");
 stripe.balance.retrieve({
