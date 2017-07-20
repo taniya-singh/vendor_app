@@ -10,6 +10,7 @@ var userSchema = new mongoose.Schema({
   user_name: {type: String},
   password: { type: String},
   customer_stripe_id:{type:String},
+  card_details:{type:Boolean,default:false},
   gender:{type:String,default:"Female"},
   enable: {type: Boolean, default:false},
   phone_no:{type:String},
