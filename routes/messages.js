@@ -12,4 +12,7 @@ module.exports = function(app, express, passport) {
 	router.post('/bulkUpdate', [passport.authenticate('bearer', {session:true})],  messageObj.bulkUpdate);
 	app.use('/messages', router);
 
+
+
+
 }

@@ -6,6 +6,7 @@ angular.module('eManagement')
 	function(communicationService, $rootScope) {
 	var service = {};
 	
+
 	service.getEmail = function(callback) { 
 			communicationService.resultViaGet(webservices.getEmail, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
@@ -17,6 +18,7 @@ angular.module('eManagement')
 			callback(response.data);
 		});	
 	};
+
 	
 	service.insertQuestionAnswer = function(inputJsonString, callback) { 
 			communicationService.resultViaPost(webservices.insertQuestionAnswer, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {

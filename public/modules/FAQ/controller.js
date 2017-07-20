@@ -28,13 +28,16 @@ console.log("ghjgjgjg")
 
 	$scope.addQuestion = function(){
 		console.log($scope.modalData);
+
 		faqService.insertQuestionAnswer($scope.modalData,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
 	}
 
 	$scope.allQuestion =function(){
+
 		faqService.allfaq(function(response){
 			console.log(response.data);
 			if (response.data.length == 0) {
@@ -49,7 +52,9 @@ console.log("ghjgjgjg")
 
 	$scope.deleteItem = function(){
 		var inputJson = {_id:$rootScope.idToDelete,"status":"delete"};
+
 		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -69,7 +74,10 @@ console.log("ghjgjgjg")
 
 	$scope.deactivate = function(id){
 		var inputJson = {_id:id,"status":"deactivate"};
+
+
 		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -77,7 +85,9 @@ console.log("ghjgjgjg")
 
 	$scope.activate = function(id){
 		var inputJson = {_id:id,"status":"activate"};
+
 		faqService.deleteAndQues(inputJson,function(response){
+
 			console.log(response);
 			$scope.allQuestion();
 		})
@@ -89,7 +99,9 @@ console.log("ghjgjgjg")
 		console.log("why not running");
 		$scope.modalData.status = "update";
 		console.log("run running");
+
 		faqService.deleteAndQues($scope.modalData,function(response){
+
 			console.log(response);
 			$scope.modalData = {}
 			$scope.allQuestion();
