@@ -2,6 +2,8 @@ module.exports = function(app, express, passport) {
 
 	var router = express.Router();
 
+
+
 	var adminLoginObj = require('./../app/controllers/adminlogins/adminlogins.js');
 	router.post('/authenticate', passport.authenticate('adminLogin', {session:false}), adminLoginObj.authenticate);
 	router.post('/logout', adminLoginObj.logout);
