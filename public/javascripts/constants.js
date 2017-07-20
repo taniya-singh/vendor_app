@@ -76,6 +76,8 @@ var nav = [
           // {text:'Manage Skills', path:'/#/skills',icon:'fa-list',activeText:'skill'},
           {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
           {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+          {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
+
            //{text:'Manage Issues', path:'/#/cmsListing',icon:'fa-list',activeText:'/cmsListing'},
            // {text:'Packages', path:'/#/packages',icon:'fa-users',activeText:'packages'},
             

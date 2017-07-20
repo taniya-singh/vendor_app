@@ -1,0 +1,183 @@
+   <style type="text/css">
+   
+   .modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+ </style>
+
+                <!-- Content Header (Page header) -->
+                <section class="content-header" ng-init="allQuestion()"> 
+                    <h1>
+                       FAQ                       
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                        <li>FAQ</li>                       
+                    </ol>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                                  <!--   <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>   --> 
+                            
+                            <div class="box">
+                                
+                                <!-- <div class="box-header">
+                                    <h3 class="box-title">Data Table With Full Features</h3>
+                                </div> -->
+                                 <div class="box-body table-responsive">
+                                    <div class="clearfix" style="padding-bottom:15px;">
+                                            <div class="box-body table-responsive">
+                                            <div class="clearfix">
+                                             <div class="pull-right m_btm15"><a align='right' ng-click="blackScope()" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Questions</a></div>
+                                             <div class="clearfix"></div>
+                              </div>                         
+
+                           <form role="form">
+                              <uib-accordion close-others="oneAtATime">
+                                    <div uib-accordion-group class="panel-default custom-accordian" ng-repeat="group in showQuestionAnswer">
+                                      <uib-accordion-heading ng-click="isopen=!isopen">
+                                      {{group.question}}
+                                        <div class="right-btn">
+                                        <button class="pull-right btn-danger buttonAbove" title="delete" ng-click="delete(group._id);" data-toggle="modal" data-target="#myModal2">
+                                        <span class="glyphicon glyphicon glyphicon-trash"></span>
+                                        </button>
+
+                                        <button class="pull-right btn-primary buttonAbove" title="edit" data-toggle="modal" data-target="#myModal" ng-click="edit(group);">
+
+                                        <span class="glyphicon glyphicon glyphicon-edit"></span>
+                                        </button>
+
+                                        <button ng-if="group.isDisabled == false" title="deactivate" class="pull-right btn-warning buttonAbove" ng-click="deactivate(group._id);$event.stopPropagation();">
+                                        <span class="glyphicon glyphicon glyphicon-remove"></span>
+                                        </button>
+
+                                        <button ng-if="group.isDisabled == true" title="activate" class="pull-right btn-warning buttonAbove" ng-click="activate(group._id);$event.stopPropagation();">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        </div>
+                                      </uib-accordion-heading>
+                                        {{group.answer}}
+                                  </div>
+                                </uib-accordion>
+                                <div ng-if="showStatus">
+                                   <center> No Faq added yet.</center>
+                                   </div>
+                                 </form>
+                               </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+           
+
+
+<!-- Modal -->
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Question</h4>
+        </div>
+        <div class="modal-body">
+        <form name="myform">
+        <div class="row">
+          <div class="col-md-3">
+            <label> Question</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" name="ques" ng-pattern ="/^[a-z0-9?! ,.'-]+$/i" ng-model="modalData.question" class="form-control" required="" capitalize-first>
+
+             <div class="validationError" ng-messages="myform.ques.$error" ng-show="
+              myform.ques.$error.required && myform.ques.$touched &&
+              myform.ques.$invalid 
+             " role="alert">
+                  <span style="color:red" ng-message="required">Question is required</span>
+           </div>
+            <div class="validationError" ng-messages="myform.ques.$error" ng-show="
+                 myform.ques.$error.pattern && (!myform.ques.$pristine || myform.$submitted)" role="alert">
+                      <span style="color:red" ng-message="pattern">Enter valid character </span>
+             </div>
+          </div>
+          </div>
+          <br>
+        <div class="row">
+          <div class="col-md-3">
+            <label> Answer</label>
+          </div>
+          <div class="col-md-8">
+            <!-- <input type="text" ng-pattern ="/^[a-z0-9?! ,.'-]+$/i" name="ans" ng-model="modalData.answer" class="form-control" required="" capitalize-first> -->
+
+            <textarea rows="4" cols="50" ng-pattern ="/^[a-z0-9?! ,.'-]+$/i" name="ans" ng-model="modalData.answer" class="form-control" required="" capitalize-first>
+            
+            </textarea>
+
+
+             <div class="validationError" ng-messages="myform.ans.$error" ng-show="
+              myform.ans.$error.required && myform.ans.$touched &&
+              myform.ans.$invalid 
+             " role="alert">
+                  <span style="color:red" ng-message="required">Answer is required</span>
+           </div>
+            <div class="validationError" ng-messages="myform.ans.$error" ng-show="
+                 myform.ans.$error.pattern && (!myform.ans.$pristine || myform.$submitted)" role="alert">
+                      <span style="color:red" ng-message="pattern">Enter valid character </span>
+             </div>
+
+
+          </div>
+        </div>
+        </div>
+        </form>
+        <div class="modal-footer">
+        
+          <button type="button" ng-if="updateq=='false'" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="addQuestion()">Submit</button>
+
+          <button type="button" ng-if="updateq=='true'" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-click="update()">Update</button>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+    <div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+       <!--  <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div> -->
+        <div class="modal-body">
+          <p>Are you sure you want to delete !</p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteItem()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>            

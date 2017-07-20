@@ -22,7 +22,13 @@ var mySchema = new Schema({
   faceBookFlag:{type: Boolean, default:false},
   user_type:{type:String,default:"vendor"},
   created_date:{type:Date, default: Date.now}  ,
-  pickup_time:{type:String,default:"10:00-10:30am"},
+ 
+  Country:{type:String},
+  Currency:{type:String},
+  Routing_Number:{type:String},
+  Account_Number:{type:String},
+  Account_Holder_Name:{type:String},
+  Account_Holder_Type:{type:String},
   profileImg:{type:String}
     
 });

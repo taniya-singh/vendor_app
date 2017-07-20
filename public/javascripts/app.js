@@ -6,6 +6,8 @@ angular.module("communicationModule", []);
 angular.module("helpBlock",['oitozero.ngSweetAlert']);
 angular.module("Users", ['oitozero.ngSweetAlert']);
 angular.module("Vendor", ['oitozero.ngSweetAlert']);
+angular.module("FAQ",[]);
+angular.module("emailManagement",[]);
 
 //angular.module("Packages",['oitozero.ngSweetAlert']);
 
@@ -29,6 +31,8 @@ var munchapp = angular.module('munchapp', [
 	'Users',
 	'Vendor',
 	'gm',
+	'FAQ',
+	'emailManagement',
 	'ui.bootstrap',
 	'satellizer',
 	'ngFileUpload',
@@ -265,6 +269,21 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		url: "/vendor",
 		controller : "vendorController",
 		templateUrl : "/modules/vendor/views/listvendor.html"
+	})
+
+	.state('/FAQ', {
+		// resolve: {
+		// 		mess: function($location, $localStorage) {
+		// 			// console.log ($localStorage);
+		// 			if (! $localStorage.userLoggedIn) {
+		// 				 $state.go('/login');
+		// 			} 
+					
+		// 		}
+		// 	},
+		url: "/FAQ",
+		controller : "faqController",	
+		templateUrl : "/modules/FAQ/views/faq.html"
 	})
 
 	.state('/admin/signupVendor', {

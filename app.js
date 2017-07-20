@@ -40,7 +40,7 @@ app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '100mb'}));
 
  
 
@@ -336,8 +336,8 @@ require('./routes/items')(app, express, passport);
 require('./routes/admin')(app, express, passport);
 require('./routes/vendor')(app, express, passport);
 require('./routes/payment')(app, express, passport);
-
-
+require('./routes/faq')(app, express, passport);
+require('./routes/eManagement')(app, express,passport);
 
 
 require('./routes/adminlogin')(app, express, passport);

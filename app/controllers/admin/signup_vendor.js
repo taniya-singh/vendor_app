@@ -14,7 +14,7 @@ exports.signupVendor = function(req, res) {
 	var vendorobj = {};
 	
 	vendorobj = req.body;
-	console.log("vendorobj",vendorobj)
+	console.log("vendorobj",vendorobj);
 	vendor.findOne({"vendor_email":vendorobj.vendor_email},function(err,ven){
 		if(err){
 			outputJSON = {'status': 'failure', 'messageId':401, 'message':"Error occured,try again later"};
@@ -37,7 +37,9 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
+
 				console.log("GVSHBVVVVVVVVVVVV");
+				console.log("efdregfdegfere",vendorobj);
 					vendor(vendorobj).save(vendorobj, function(err, data) { 
 						if(err) {
 							console.log("data if err",err)
