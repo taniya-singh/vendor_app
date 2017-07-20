@@ -7,6 +7,7 @@ var orderSchema = new mongoose.Schema({
   item_id:{type:Schema.Types.ObjectId},
   customer_id:{type:Schema.Types.ObjectId},
   vendor_id:{type:Schema.Types.ObjectId}, 
+  item_count:{type:Number},
   status: {type:String,default:"pending"},
   created_date:{type:Date, default: Date.now}
  });

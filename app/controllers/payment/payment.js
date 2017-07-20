@@ -1,6 +1,7 @@
 var itemsObj = require('./../../models/items/items.js');
 var vendor = require('./../../models/admin/signup_vendor.js');
 var userObj = require('./../../models/users/users.js');
+var order = require('./../../models/order/order.js');
 var paymentObj = require('./../../models/payment/payment.js');
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
@@ -66,73 +67,117 @@ exports.list_all_customers=function(req,res){
 );
 }
 
-var create_customer_on_stripe=function(custdetail,cb){
-  userObj.find({_id:custdetail._id},function(err,user){
-   if(err){
-      console.log("err",err) // item detail != null
-       cb(err,{"message":"err"})
-   }else{
-      if(user==""){    //customer does not exist
-         cb(null,{"message":"Not a valid customer"})
-      }else{
-        userObj.find({_id:custdetail._id,customer_stripe_id: { $exists: true } },function(err,existing_customer){
-            if(err){
-              console.log("err",err) // item detail != null
-               cb(err,{"message":"Err"}) 
-            }else{
-              if(existing_customer==""){    //if customer is not created on skype
-                console.log("inside create new customer")
-                  stripe.customers.create({description: custdetail.email},function(err, customer){
-                    if(err){
-                      console.log("err",err) // item detail != null
-                       cb(err,{"message":"Err"})  
-                      }else{
-                          stripe.tokens.create({
-                            card: {
-                              "number": '4242424242424242',
-                              "exp_month": 12,
-                              "exp_year": 2017,
-                              "cvc": '123'
-                            }
-                          }, function(err, token) {
-                            if (err) {
-                              cb(err,{'message':"err"})  }
-                            else
-                            {
-        /*update user table */userObj.update({_id:custdetail._id},{$set:{customer_stripe_id:customer.id}},function(err,updation){
-                               if(err){
-                                  cb(err,{'message':"err"})
-                                }else{
-                                    if(updation!=null){
-                                    console.log("res is ",updation)
-                                    cb(null,{customer},{token})
-                                    }
+var create_customer_on_stripe = function(custdetail, cb) {
+    userObj.find({_id: custdetail._id},function(err, user){
+      if(err) {
+        console.log("err", err) // item detail != null
+        cb(err, {"message": "err"})
+      } else {
+          if (user == "") { //customer does not exist
+            cb(null, {"message": "Not a valid customer"})
+          } else {
+              userObj.find({_id: custdetail._id,customer_stripe_id: {$exists: true}},function(err, existing_customer){
+                if (err) {
+                  console.log("err", err) // item detail != null
+                  cb(err, { "message": "Err"})
+                } else{
+                  if (existing_customer == ""){ //if customer is not created on skype
+                    console.log("inside create new customer")
+                    stripe.customers.create({
+                        email: custdetail.email
+                      })
+                      .then(function(customer) {
+                        return stripe.customers.createSource(customer.id, {
+                          source: {
+                            object: 'card',
+                            exp_month: 10,
+                            exp_year: 2018,
+                            number: '4242 4242 4242 4242',
+                            cvc: 100
+                          }
+                        });
+                      })
+                      .then(function(card) {
+                        if (err) {
+                          cb(err, {
+                            'message': "err"
+                          })
+                        } else {
+                          console.log("card_details", card)
+                          console.log("card cust", card.customer)
+                            /*update user table */
+                            userObj.update({
+                              _id: custdetail._id
+                            }, {
+                              $set: {
+                                customer_stripe_id: card.customer,
+                                card_details: true
+                              }
+                            }, function(err, updation) {
+                              if (err) {
+                                cb(err, {
+                                  'message': "err"
+                                })
+                              } else {
+                                if (updation != null) {
+                                  console.log("res is ", updation)
+                                  cb(null, {card})
                                 }
-                              })             
-                            }
-                          });
-                    }   //end of if
-                  });
-              }else{   //if stripe id already exists
-                var customerid=existing_customer[0].customer_stripe_id
-                stripe.customers.retrieve(customerid,function(err, customer) {
-                  if(err){
-                    console.log("err",err) // item detail != null
-                     cb(err,{'message':"Err"})
-                  }else{
-                     cb(null,customer)
-                  }
-                })
-              }
+                              }
+                            })
+                        }
+                      })
+                  } //end of if
+                  else{
+                    console.log("inide old customer") //if stripe id already exists
+                    var customerid = existing_customer[0].customer_stripe_id
+                    stripe.customers.retrieve(customerid, function(err, customer) {
+                      if (err) {
+                        console.log("err", err) // item detail != null
+                        cb(err, {'message': "Err" })
+                      } else {
+                        stripe.customers.createSource(customerid, {
+                          source: {
+                            object: 'card',
+                            exp_month: 10,
+                            exp_year: 2018,
+                            number: '4242 4242 4242 4242',
+                            cvc: 100
+                          }
+                        },function(err, card) {
+                          if (err) {
+                           cb(err, {'message': "Err" })
+                          } else {
+                              /*update user table */
+                              userObj.update({_id: existing_customer[0]._id}, {
+                                $set: {
+                                  card_details: true
+                                }
+                              }, function(err, updation) {
+                                if (err) {
+                                   cb(err, {'message': "Err" })
+                                } else {
+                                  console.log("ddddd", updation)
+                                  cb(null,{card})
+                                }
+                              })
+                          }
+                        }) // end of stripe create source
+                      }
+                    }) //end of stripe customer retreive
+                  } // end of else old customer  
+                }
+              })
             }
-        })   
-      }
-   }
- })
+          }
+        })
 }
 
+
 exports.pay = function(req, res) {
-  var custdetail={}
+  var custdetail={};
+  var ordersave={};
+  var accntid;
   custdetail=req.body
   console.log("inside pay");
   if (req.body._id) {
@@ -141,8 +186,11 @@ exports.pay = function(req, res) {
 
     }
     else{
-      console.log("dhan dhana",custdetails)
-      vendor.find({_id:req.body.vendor_id},function(err,vendetails){
+      itemsObj.find({_id:req.body.item_id},function(err,items){
+        if(err){
+        }else{
+          if(items){
+           vendor.find({_id:items[0].vendor_id},function(err,vendetails){
         if(err){
                outputJSON = {
             'status': 'Failure',
@@ -152,13 +200,15 @@ exports.pay = function(req, res) {
             res.json(outputJSON);
        }else{
           if(vendetails){
-            console.log("customer details",custdetails.id)
-            stripe.charges.create({
-                amount: req.body.amount,
+            accntid=vendetails[0].stripe_account_id
+           stripe.charges.create({
+                amount: "200",
                 currency: "usd",
-                //customer: custdetails.id,
-                source: custdetails.id, // obtained with Stripe.js
-                destination: vendetails.bank_account_id,
+                customer: custdetails.card.customer,
+                source: custdetails.card.id, // obtained with Stripe.js
+                destination: {
+                    account:accntid
+                  },
                 description: "Charge for Customer food",
                 //application_fee: 500, // amount in cents
                 capture : false
@@ -169,14 +219,28 @@ exports.pay = function(req, res) {
                         res.json(err);
                     }
                     else
+
                     {
-                      outputJSON = {
+                      ordersave.item_id=items[0]._id;
+                      ordersave.vendor_id=items[0].vendor_id;
+                      ordersave.customer_id=custdetail._id;
+                      ordersave.item_count=req.body.item_count;
+                      order(ordersave).save(ordersave,function(err,saveorder){
+                        if(err){
+
+                        }else{
+                          console.log("save order",saveorder)
+                          outputJSON = {
                         'status': 'success',
                         'messageId': 200,
                         'message': "Payed successfully",
                         'data':charge
                       },
                     res.json(charge);
+
+                        }
+                      })
+                      
                     }
             });
 
@@ -189,7 +253,15 @@ exports.pay = function(req, res) {
             res.json(outputJSON);
           }
         }
-      })     
+      })
+
+          }
+        }
+
+
+      })
+
+           
     }
    });
     
@@ -203,54 +275,6 @@ exports.pay = function(req, res) {
       res.json(outputJSON);
   }
 }
-
-
-/* stripe.customers.create({
-    email: 'req.body.customer_email'
-
-  }).then(function(customer){
-    return stripe.customers.createSource(customer.id, {
-      source: {
-         object: 'card',
-         exp_month: 10,
-         exp_year: 2018,
-         number: '4242 4242 4242 4242',
-         cvc: 100
-      }
-  });
-}).then(function(source) {
-    return stripe.charges.create({
-      amount: 16000,
-      currency: 'usd',
-      customer: source.customer
-    });
-}).then(function(charge) {
-  var reqdata={};
-  reqdata.stripe_id=charge.id;
-  reqdata.status=charge.status;
-  reqdata.customer_stripe_id=charge.source.customer;
-  reqdata.paid_status=charge.paid;
-  reqdata.card_id=charge.source.id;
-    console.log("charge",reqdata);
-    paymentObj(reqdata).save(reqdata,function(err,paymentdetails){
-      console.log("inside payment schema")
-      if(err){
-        console.log("err",err)
-      }else{
-        console.log("paymentdetails",paymentdetails)
-      }
-
-    })
-    outputJSON = {'status':'success', 'messageId':200, 'message':"data retreived successfully",data:charge}, 
-    res.json(outputJSON);
-}).catch(function(err) {
-    console.log("err",err)
-    outputJSON = {'status':'failure', 'messageId':400, 'message':"Error"}, 
-    res.json(outputJSON);
- });
-stripe.setTimeout(20000)
-
-}*/
 
 exports.retrieve_balance=function(err,res){
 console.log("inside balance");
