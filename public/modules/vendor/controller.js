@@ -86,10 +86,10 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 
 			if(postal_code){
 					$scope.addressValid = false;
-					$scope.vendor.zipCode = postal_code;
+					$scope.vendor.zipcode = postal_code;
 			}else{
 					$scope.addressValid = true;
-					$scope.vendor.zipCode = "";      	
+					$scope.vendor.zipcode = "";      	
 				}
 				      $scope.$apply();
   		});

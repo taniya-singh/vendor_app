@@ -272,11 +272,19 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	})
 
 	.state('/FAQ', {
-		
+		// resolve: {
+		// 		mess: function($location, $localStorage) {
+		// 			// console.log ($localStorage);
+		// 			if (! $localStorage.userLoggedIn) {
+		// 				 $state.go('/login');
+		// 			} 
+					
+		// 		}
+		// 	},
 		url: "/FAQ",
 		controller : "faqController",	
 		templateUrl : "/modules/FAQ/views/faq.html"
-	})	
+	})
 
 	.state('/admin/signupVendor', {
 
