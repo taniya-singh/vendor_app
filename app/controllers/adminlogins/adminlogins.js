@@ -17,7 +17,12 @@ var userTokenObj = require('./../../models/users/userTokens.js');
 var commonjs = require('./../commonFunction/common.js');
 var md5 = require('md5'); 
 
+   
 
+
+
+
+   
 
 //authenticate
 exports.authenticate = function(req, res) {
