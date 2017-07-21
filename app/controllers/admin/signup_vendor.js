@@ -4,7 +4,7 @@ var constantObj = require('./../../../constants.js');
 var fs=require('fs');
 var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
-
+var md5 = require('md5'); 
 
 
 /* Vendor sign up form  */
@@ -36,7 +36,10 @@ exports.signupVendor = function(req, res) {
 					vendorobj.zipcode=addressdetails[0].zipcode;
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
-					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
+					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude];
+					
+					var pswdd = JSON.parse(JSON.stringify(req.body.password));
+                    vendorobj.password = md5(pswdd);
 
 				console.log("GVSHBVVVVVVVVVVVV");
 				console.log("efdregfdegfere",vendorobj);
@@ -199,8 +202,33 @@ exports.vendorList = function(req,res){
                         res.json("Error: "+err);   
                     }
                     else{
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-                    	res.json(outputJSON);
+                        //outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                    	//res.json(outputJSON);
+
+                    	var length = data.length;
+						vendor.find(
+							 query
+						).skip(skipNo).limit(count).sort(sortquery)
+						.exec(function(err, data1) {
+							//console.log(data)
+							if (err) {
+								console.log("tttte",err)
+								outputJSON = {
+									'status': 'failure',
+									'messageId': 203,
+									'message': 'data not retrieved '
+								};
+							} else {
+								outputJSON = {
+									'status': 'success',
+									'messageId': 200,
+									'message': 'data retrieve from products',
+									'data': data1,
+									'count': length
+								}
+							}
+							res.status(200).jsonp(outputJSON);
+						})
                     }
                 });
 

@@ -15,7 +15,7 @@ var path = require('path');
 var emailService = require('./../email/emailService.js');
 var userTokenObj = require('./../../models/users/userTokens.js');
 var commonjs = require('./../commonFunction/common.js');
-
+var md5 = require('md5'); 
 
 
 
@@ -66,26 +66,8 @@ exports.forgotPassword = function(req, res) {
             res.status(401).json(response);
         } else {
 
-            var email_encrypt = commonjs.encrypt(data.email);
-            var generatedText = commonjs.makeid();
-
-
-            if (email_encrypt && generatedText) {
-                detailsdata.email = data.email;
-                detailsdata.password = generatedText;
-                console.log(detailsdata)
-                adminLoginObj.update(detailsdata.email, detailsdata, function(errr, datar) {
-
-                    if (errr) {
-                        response = {
-                            "status": 'success',
-                            "messageId": 200,
-                            "message": "Error while updating.",
-                            "error": errr
-                        };
-                        res.status(200).json(response);
-                    } else {
-                    	console.log("datar",datar)
+                        var email_encrypt = commonjs.encrypt(data.email);
+                        var generatedText = commonjs.makeid();
                         var resetUrl = "http://" + req.headers.host + "/#/" + "admin/" + email_encrypt + "/" + generatedText;
                         console.log(resetUrl)
 
@@ -116,12 +98,12 @@ exports.forgotPassword = function(req, res) {
 							"message": "Mail sent successfully."
                         });
                     }
-                });
-            }
-        }
-    })
-    }
-    else{
+    
+
+
+
+   })
+    }else{
       response = {
                             "status": 'failure',
                             "messageId": 401,
@@ -146,8 +128,11 @@ exports.resetPassword = function(req, res) {
 	// newEncrypted = hexVal.toString('hex');
 	// console.log("decipherPassword ",newEncrypted);
 	// console.log(commonjs.decrypt(req.body.email))
+		var pswdd = JSON.parse(JSON.stringify(req.body.newpwd));
+        password = md5(pswdd);
+
 		
-	adminLoginObj.update({ email:commonjs.decrypt(req.body.email) },{$set:{password:req.body.newpwd,verifyStr:""}}, function(err, data) {
+	adminLoginObj.update({ email:commonjs.decrypt(req.body.email) },{$set:{password:password,verifyStr:""}}, function(err, data) {
 
 		if(err) {
 
@@ -208,18 +193,24 @@ exports.resetPassword = function(req, res) {
 	 	res.jsonp(outputJSON);
 	 };
 //change password
-exports.changePassword = function(req, res) {
+exports.changePassword = function(req, res) { 
 
+	console.log(req.body)
+	var oldpassword=md5(req.body.oldpassword);
+   
+   var password = md5(req.body.password);
 	var outputJSON = "";
 
-	adminLoginObj.findOne({username:req.body.username}, function(err, data) {
+	adminLoginObj.findOne({password:oldpassword}, function(err, data) {
 
 		if(err) {
 			outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
 			res.jsonp(outputJSON);
 		}
 		else {
-				adminLoginObj.update({username:req.body.username},{$set:{password:password}},function(err,response){
+
+                if(data){
+                	adminLoginObj.update({username:req.body.username},{$set:{password:password}},function(err,response){
 					if(err) {
 							outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
 							res.jsonp(outputJSON);
@@ -228,6 +219,13 @@ exports.changePassword = function(req, res) {
 						res.jsonp(outputJSON);
 						}
 					});
+
+                }else{
+                	outputJSON = {'status':'failure', 'messageId':203, 'message': "oldpassword is not correct"};
+					res.jsonp(outputJSON);
+
+                }
+				
               }
 		});
 

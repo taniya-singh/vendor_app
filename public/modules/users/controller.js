@@ -280,14 +280,12 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 
 
             $scope.getAllUsers = function() {
-            	console.log("insoide get all vendor ******)")
 				var passingDate = {};
 				// usSpinnerService.spin('spinner-1');
 				passingDate.search = $scope.search;
-				//console.log(passingDate.search)
 				$scope.tableParams = new ngTableParams({
 					page: 1,
-					count: 2,
+					count: 10,
 					sorting: {
 						created: "desc"
 					}
@@ -315,31 +313,27 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 							params.total(response.count);
 							// console.log(response.count)
 							$scope.data = response.data;
-							
-							$scope.simpleList = response.data;
-				$scope.simpleList2 = response.data;
 							$defer.resolve($scope.data);
-			    $scope.checkboxes = {
-					checked: false,
-					items:{}
-				};
 						})
 					}
 				})
+			}
+
+			$scope.edit = function (id) {
+				$state.go('editUser',{_id: id});
 			}
 
 		    if($stateParams.id){
 				$scope.updateButton = true;
 				$scope.submitButton = false;
 				var inputJSon = {_id:$stateParams.id}
-			UserService.getCurrentUserData(inputJSon,function (response) {
+				UserService.getCurrentUserData(inputJSon,function (response) {
 
-					
 					$scope.user = response.data;
 					
 					$scope.user.phone = $scope.user.phone.replace("+1", "");
 				
-					$scope.user.email = new Date(response.data.email);
+					$scope.user.dob = new Date(response.data.dob);
 					
 					if(response.data.userImages!=""){
 						$scope.user.profile_image = response.data.userImages[0].name;
@@ -352,7 +346,6 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 					}
 				})
 			}
-			
 
 
 

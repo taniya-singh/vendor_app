@@ -184,7 +184,10 @@ var LocalStrategy = require('passport-local').Strategy;
 
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
-      
+
+      password = JSON.parse(JSON.stringify(password));
+      password = md5(password);
+      console.log("username",username,"password",password)
       adminLoginObj.findOne({username: username}, function(err, adminuser) {
        
         if(err) {
@@ -224,6 +227,9 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
 //vendor login
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
+      // password = JSON.parse(JSON.stringify(password));
+          password = md5(password);
+          //console.log("username",username,"password",password)
 
       vendor.findOne({vendor_email: username}, function(err, adminuser) {
         if(err) {

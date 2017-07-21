@@ -8,7 +8,7 @@ angular.module("Users", ['oitozero.ngSweetAlert']);
 angular.module("Vendor", ['oitozero.ngSweetAlert']);
 angular.module("FAQ",[]);
 angular.module("emailManagement",[]);
-
+angular.module("myApp", ["ngTable"]);
 //angular.module("Packages",['oitozero.ngSweetAlert']);
 
 

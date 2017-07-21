@@ -10,7 +10,8 @@ var nodemailer=require('nodemailer');
 var constantObj = require('./../../../constants.js');                                                                                                                  
 var accountSid = 'ACf8246b33d4d1342704dee12500c7aba2'; // Your Account SID from www.twilio.com/console
 var authToken = '53800350222c1f6974ce1617563aaaa5';   // Your Auth Token from www.twilio.com/console
-var client = new twilio(accountSid, authToken);   
+var client = new twilio(accountSid, authToken); 
+ 
         /**
          * Find role by id
          * Input: roleId
@@ -278,6 +279,8 @@ exports.register = function(req, res) {
                     var userModelObj = {};
                     questionnaireModelObj = req.body;
 
+
+
                     console.log(questionnaireModelObj)
                     userObj(questionnaireModelObj).save(req.body, function(err, data) { 
                         if(err) {
@@ -403,11 +406,8 @@ exports.register = function(req, res) {
 
 
 
-exports.list = function(req,res){
-      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-        userObj.find({is_deleted:false},function(err,data){
-
-            var page = req.body.page || 1,
+exports.list = function(req, res) {
+    var page = req.body.page || 1,
         count = req.body.count || 1;
     var skipNo = (page - 1) * count;
 
@@ -429,29 +429,43 @@ exports.list = function(req,res){
     var searchStr = req.body.search;
     if (req.body.search) {
         query.$or = [{
-            first_name:new RegExp(searchStr, 'i')
+            email:new RegExp(searchStr, 'i')
             
         }, {
-            email: new RegExp(searchStr, 'i')
-        },{
-            phone: new RegExp(searchStr, 'i')
+            username: new RegExp(searchStr, 'i')
         }]
     }
-    query.is_deleted=false;
-    console.log("-----------query-------", query);
+console.log("-----------query-------", query);
     userObj.find(query).exec(function(err, data) {
-        console.log(data)
-                    if(err){
-                        res.json("Error: "+err);   
+        if (err) {
+            console.log(err)
+        } else {
+            var length = data.length;
+            userObj.find(
+                 query
+            ).skip(skipNo).limit(count).sort(sortquery)
+            .exec(function(err, data1) {
+                //console.log(data)
+                if (err) {
+                    console.log("tttte",err)
+                    outputJSON = {
+                        'status': 'failure',
+                        'messageId': 203,
+                        'message': 'data not retrieved '
+                    };
+                } else {
+                    outputJSON = {
+                        'status': 'success',
+                        'messageId': 200,
+                        'message': 'data retrieve from products',
+                        'data': data1,
+                        'count': length
                     }
-                    else{
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-                        res.json(outputJSON);
-                    }
-                });
-
-    });
-
+                }
+                res.status(200).jsonp(outputJSON);
+            })
+        }
+    })
 }
 
 

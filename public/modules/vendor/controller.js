@@ -15,7 +15,6 @@ munchapp.controller("vendorController", ['$http','$stateParams', '$state','$scop
 		else {
 			$rootScope.userLoggedIn = false;
 		}
-  	
         $rootScope.sideBar="vendor";
         var currentDate = new Date();
 	    var currentdate = new Date()
@@ -333,7 +332,9 @@ $scope.submit = function(){
 				// usSpinnerService.spin('spinner-1');
 				passingDate.search = $scope.search;
 				//console.log(passingDate.search)
+				console.log("-----hgjhyghjghjgvhg->>>>>>>>>>>",$scope.ngTableParams);
 				$scope.tableParams = new ngTableParams({
+
 					page: 1,
 					count: 2,
 					sorting: {
@@ -346,7 +347,7 @@ $scope.submit = function(){
 						// console.log("usSpinnerService",usSpinnerService);
 						console.log("params url", params.url());
 						console.log("params sorting", params.sorting());
-						console.log("paramspage", params.page());
+						console.log("params page", params.page());
 						passingDate.page = params.page();
 						passingDate.count = params.count();
 						passingDate.sort = params.sorting();
@@ -384,7 +385,7 @@ $scope.submit = function(){
 
 					$scope.vendor = response.data;
 					
-					$scope.vendor.phone = $scope.vendor.phone.replace("+1", "");
+					$scope.vendor.phone_no = $scope.vendor.phone_no.replace("+1", "");
 				
 					$scope.vendor.dob = new Date(response.data.dob);
 					
