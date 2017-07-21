@@ -16,7 +16,9 @@ var userObj = require('./../app/controllers/users/users.js');
      router.post('/faceBookLogin',userObj.faceBookLogin);
      router.post('/forgetpassword',userObj.forgetpassword);
      router.post('/reset_password',userObj.reset_password);
-	  router.get('/totalUser', userObj.totalUser);
+	 router.get('/totalUser', userObj.totalUser);
+	 router.post('/customer_orderlist', userObj.customer_orderlist);
+
 
   
 	 app.use('/users', router);
