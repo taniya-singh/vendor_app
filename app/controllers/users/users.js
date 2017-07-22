@@ -969,8 +969,20 @@ exports.customer_orderlist=function(req,res){
                       as: "item"
                     }
                },
+                {
+                  $lookup:
+                    {
+                      from: "vendor_details",
+                      localField: "vendor_id",
+                      foreignField: "_id",
+                      as: "vendordetails"
+                    }
+               },
                {
                    $unwind:"$item"
+                   },
+                   {
+                    $unwind:"$vendordetails"
                    }
             ],function(err,orderlist){
                 if(err){
