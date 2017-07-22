@@ -308,10 +308,6 @@ exports.faceBookLogin = function(req, res) {
          * List all user object
          * Input: 
          * Output: User json object*/
- 
-
-
-
 exports.list = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         userObj.find({is_deleted:false},function(err,data){
@@ -818,12 +814,9 @@ exports.reset_password=function(req,res){
             }
             else{
                 outputJSON = {'status': 'failure', 'messageId':400, 'message':"session expired"}; 
-                res.jsonp(outputJSON)
-                
+                res.jsonp(outputJSON)               
             }
         }
-
-
 
          exports.forgetpassword=function(req,res){
          if(req.body.phone_no)
@@ -902,35 +895,7 @@ exports.reset_password=function(req,res){
             })
         }
 }
-
-
-
-
-
-    /*if(req.body){
-        userObj.findOne({_id:req.body._id},function(err,data){
-            if(err){
-                outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
-                res.jsonp(outputJSON)
-            }
-            else{
-                console.log("req.body",req.body)
-                userObj.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"email":req.body.email,"password":req.body.password}},function(err,updatedresponse){
-                    if(err){
-                        outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
-                        res.jsonp(outputJSON)
-                    }
-                    else{
-                        console.log("inside responmse",updatedresponse);
-                        outputJSON = {'status': 'success', 'messageId':200, 'message':"updated successfully","data":updatedresponse}; 
-                        res.jsonp(outputJSON)
-                     }
-                })
-            }
-        })
-    }*/
-
-    exports.deleteUser = function(req,res){
+  exports.deleteUser = function(req,res){
 console.log("asdasdas",req.body._id)
     if(req.body._id){
         userObj.update({
@@ -951,20 +916,12 @@ console.log("asdasdas",req.body._id)
                     'message': "Customer has been deleted successfully"
                      };
                 res.jsonp(outputJSON);
-
-
                 }
-
-            })
-    }
-    
+           })
+    }   
 }
 
-
-
-
     exports.totalUser = function(req, res) {
-
     var outputJSON = "";
     userObj.count({
         is_deleted: false
@@ -986,4 +943,77 @@ console.log("asdasdas",req.body._id)
         res.jsonp(outputJSON);
     });
 }
+exports.customer_orderlist=function(req,res){
+    console.log("customer order lis");
+    order.find({customer_id:req.body._id},function(err,orders){
+        if(err){
+            outputJSON = {
+                        'status': 'failure',
+                        'messageId': 400,
+                        'message':"err"
+                        
+                            }
+                        res.jsonp(outputJSON);
+        }else{
+            if(orders.length>0){
+                order.aggregate([
+                {
+                    $match:{customer_id:mongoose.Types.ObjectId(req.body._id)}
+                },
+                {
+                  $lookup:
+                    {
+                      from: "items",
+                      localField: "item_id",
+                      foreignField: "_id",
+                      as: "item"
+                    }
+               },
+               {
+                   $unwind:"$item"
+                   }
+            ],function(err,orderlist){
+                if(err){
+                    outputJSON = {
+                        'status': 'failure',
+                        'messageId': 400,
+                        'message':"err"
+                        
+                            }
+                        res.jsonp(outputJSON);
 
+                }else{
+                    //console.log("orderlist",orderlist)
+                    if(orderlist.length>0){
+                        console.log("orderlist",orderlist)
+                    outputJSON = {
+                        'status': 'success',
+                        'messageId': 200,
+                        'message': "Order list retreived successsfully",
+                        'data': orderlist
+                            }
+                        res.jsonp(outputJSON);
+                    
+                    }else{
+                        outputJSON = {
+                        'status': 'failure',
+                        'messageId': 200,
+                        'message':"No information found"
+                        
+                            }
+                        res.jsonp(outputJSON);
+                    }
+                }
+            })
+            }else{
+                outputJSON = {
+                        'status': 'failure',
+                        'messageId': 200,
+                        'message':"Not a valid customer id"
+                        
+                            }
+                        res.jsonp(outputJSON);
+            }        
+        }
+    })
+}

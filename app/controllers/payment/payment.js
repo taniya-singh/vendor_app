@@ -68,6 +68,7 @@ exports.list_all_customers=function(req,res){
 }
 
 var create_customer_on_stripe = function(custdetail, cb) {
+  console.log("UUUUU",custdetail)
     userObj.find({_id: custdetail._id},function(err, user){
       if(err) {
         console.log("err", err) // item detail != null
@@ -90,9 +91,9 @@ var create_customer_on_stripe = function(custdetail, cb) {
                         return stripe.customers.createSource(customer.id, {
                           source: {
                             object: 'card',
-                            exp_month: 10,
-                            exp_year: 2018,
-                            number: '4242 4242 4242 4242',
+                            exp_month: custdetail.exp_month,
+                            exp_year: custdetail.exp_year,
+                            number: custdetail.account_no,
                             cvc: 100
                           }
                         });
@@ -136,20 +137,22 @@ var create_customer_on_stripe = function(custdetail, cb) {
                         console.log("err", err) // item detail != null
                         cb(err, {'message': "Err" })
                       } else {
-                        stripe.customers.createSource(customerid, {
+                        if(customer.default_source==null){
+                          console.log("AAAAAAAA")
+                          stripe.customers.createSource(customer.id, {
                           source: {
                             object: 'card',
-                            exp_month: 10,
-                            exp_year: 2018,
-                            number: '4242 4242 4242 4242',
+                            exp_month: custdetail.exp_month,
+                            exp_year: custdetail.exp_year,
+                            number: custdetail.account_no,
                             cvc: 100
                           }
-                        },function(err, card) {
-                          if (err) {
-                           cb(err, {'message': "Err" })
-                          } else {
-                              /*update user table */
-                              userObj.update({_id: existing_customer[0]._id}, {
+                        },function(err,card){
+                          if(err){
+
+                          }else{
+                            console.log("card",card)
+                            userObj.update({_id: existing_customer[0]._id}, {
                                 $set: {
                                   card_details: true
                                 }
@@ -162,7 +165,35 @@ var create_customer_on_stripe = function(custdetail, cb) {
                                 }
                               })
                           }
-                        }) // end of stripe create source
+                        });
+                        }
+                        else{
+                          console.log("BBBBBBB")
+                          stripe.customers.retrieveCard(
+                          customer.id,
+                          customer.default_source
+                          ,function(err, card) {
+                          if (err) {
+                           cb(err, {'message': "Err" })
+                          } else {
+                             /* userObj.update({_id: existing_customer[0]._id}, {
+                                $set: {
+                                  card_details: true
+                                }
+                              }, function(err, updation) {
+                                if (err) {
+                                   cb(err, {'message': "Err" })
+                                } else {
+                                  console.log("ddddd", updation)
+                                  cb(null,{card})
+                                }
+                              })*/
+                            cb(null,{card})
+                          }
+                        })
+                            
+                        }
+                      // end of stripe create source
                       }
                     }) //end of stripe customer retreive
                   } // end of else old customer  
@@ -179,6 +210,7 @@ exports.pay = function(req, res) {
   var ordersave={};
   var accntid;
   custdetail=req.body
+  var amount_to_pay;
   console.log("inside pay");
   if (req.body._id) {
    create_customer_on_stripe(custdetail,function(err,custdetails){
@@ -188,8 +220,20 @@ exports.pay = function(req, res) {
     else{
       itemsObj.find({_id:req.body.item_id},function(err,items){
         if(err){
+          outputJSON = {
+            'status': 'Failure',
+            'messageId': 400,
+            'message': "Error"
+            },
+            res.json(outputJSON);
         }else{
-          if(items){
+          console.log("no of items available",items[0].p_count)
+          if((items[0].p_count)>=(req.body.item_count)){
+            console.log("item price",items[0].p_price);
+            console.log("count",req.body.item_count);
+            var amount=(items[0].p_price)*(req.body.item_count);
+            var amount_to_pay=amount*100;
+            console.log("total price is",amount_to_pay);
            vendor.find({_id:items[0].vendor_id},function(err,vendetails){
         if(err){
                outputJSON = {
@@ -199,10 +243,12 @@ exports.pay = function(req, res) {
             },
             res.json(outputJSON);
        }else{
-          if(vendetails){
+        //console.log("vendor details",vendetails)
+          if(vendetails.length>0){
             accntid=vendetails[0].stripe_account_id
+            console.log("**************",amount_to_pay)
            stripe.charges.create({
-                amount: "200",
+                amount: amount_to_pay,
                 currency: "usd",
                 customer: custdetails.card.customer,
                 source: custdetails.card.id, // obtained with Stripe.js
@@ -227,16 +273,44 @@ exports.pay = function(req, res) {
                       ordersave.item_count=req.body.item_count;
                       order(ordersave).save(ordersave,function(err,saveorder){
                         if(err){
+                          outputJSON = {
+                        'status': 'failure',
+                        'messageId': 400,
+                        'message': "Err"
+               
+                        },
+                        res.json(outputJSON);
 
                         }else{
-                          console.log("save order",saveorder)
+                          var latest_count=(items[0].p_count)-(req.body.item_count);
+                          console.log("latest count is",latest_count);
+                          itemsObj.update({_id:req.body.item_id},{$set:{p_count:latest_count}},function(err,updatecount){
+                           if(err){
+
+                           } else{
+                            if(updatecount){
+                              console.log("save order",updatecount)
                           outputJSON = {
                         'status': 'success',
                         'messageId': 200,
                         'message': "Payed successfully",
                         'data':charge
-                      },
-                    res.json(charge);
+                         },
+                          res.json(outputJSON);
+                            }else{
+                              outputJSON = {
+                        'status': 'failure',
+                        'messageId': 400,
+                        'message': "something worng happened"
+                        
+                         },
+                          res.json(outputJSON);
+
+                            }
+
+                           }
+                          })
+
 
                         }
                       })
@@ -248,12 +322,20 @@ exports.pay = function(req, res) {
                outputJSON = {
             'status': 'Failure',
             'messageId': 400,
-            'message': "Please enter a valid vendor"
+            'message': "vendor details does not exists"
             },
             res.json(outputJSON);
           }
         }
       })
+
+          }else{
+            outputJSON = {
+            'status': 'Failure',
+            'messageId': 400,
+            'message': "Item out of stock"
+            },
+            res.json(outputJSON);
 
           }
         }

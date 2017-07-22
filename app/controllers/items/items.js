@@ -340,7 +340,7 @@ exports.item_listing_for_user = function(req, res) {
 				includeLocs: "dist.location",
 				spherical: true
 			}
-		}, {
+		},{
 			$lookup: {
 				from: "items",
 				localField: "_id",

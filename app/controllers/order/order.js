@@ -4,8 +4,6 @@ var order = require('./../../models/order/order.js');
 var itemsObj = require('./../../models/items/items.js');
 var addtocart = require('./../../models/order/addtocart.js');
 
-
-
 exports.place_order = function(req, res) {
 	console.log("order")
 	if (req.body) {
