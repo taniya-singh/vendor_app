@@ -1153,7 +1153,7 @@ exports.customer_orderlist = function(req, res) {
                                 var strTime = hh + ':' + min + ' ' + ampm;
 
                                 //console.log("dats is",orderlist[i].created_date)
-                                orderlist[i].created_date = dd + "/" + mm + "/" + yy + "," + strTime;
+                                orderlist[i].created_date = dd + "/" + mm + "/" + yy + ", " +strTime;
                                 console.log("new date is", orderlist[i].created_date)
                             }
                             //console.log("date array is",date)                
