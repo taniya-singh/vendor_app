@@ -33,6 +33,7 @@
     "jsonwebtoken": "^7.1.9",
     "jwt-simple": "^0.5.1",
     "lodash": "^4.17.4",
+    "math": "0.0.3",
     "md5": "^2.2.1",
     "mongoose": "^4.11.1",
     "mongoose-unique-validator": "^0.4.1",
