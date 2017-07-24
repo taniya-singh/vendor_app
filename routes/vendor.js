@@ -5,6 +5,8 @@ var vendor = require('./../app/controllers/vendor/vendor.js');
 
 	router.post('/vendorList', vendor.vendorList);
 	router.post('/items_added_by_vendor', vendor.items_added_by_vendor);
+	router.post('/orderlist_vendor',vendor.orderlist_vendor);
+
 
 app.use('/vendor', router);
 }

@@ -1,6 +1,6 @@
 var vendor = require('./../../models/admin/signup_vendor.js');
 var itemsObj = require('./../../models/items/items.js');
-
+var order = require('./../../models/order/order.js');
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs=require('fs');
@@ -57,33 +57,40 @@ exports.items_added_by_vendor = function(req,res){
 
     exports.orderlist_vendor = function(req,res){
     
-    console.log("aaaaaa",req.body.vendor_id)
+    console.log("vendor_id",req.body.vendor_id)
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-
-        itemsObj.find({vendor_id:req.body._id},function(err,data){
-                    if(err){
-                        console.log("err",err)
-                        res.json("Error: "+err);
-                        
-                    }
-                    else{
-              
-                        if(data.length==0)
-                        {
-                        console.log("inside null",data)
-                        outputJSON = {'status':'success', 'messageId':200, 'message':"You have not added any item" };
-                        res.json(outputJSON);
-
+        order.aggregate([
+                    {
+                        $match:{vendor_id:mongoose.Types.ObjectId(req.body.vendor_id)}
+                    },
+                    {
+                        $lookup: {
+                            from: "items",
+                            localField: "vendor_id",
+                            foreignField: "vendor_id",
+                            as: "item_detail"
                         }
-                        else
-                        {
-                        console.log("data",data)
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-                    res.json(outputJSON);   
-                        }
-                        
+                    },
+                    {
+                        $unwind:"$item_detail"
                     }
-                });
-    }
+                    ],function(err,orderdetails){
+                        //console.log("orderdetails",orderdetails)
+                        if(err){
+                            outputJSON = {'status':'failure', 'messageId':400, 'message': "err"}, 
+                            res.json(outputJSON);   
+                        }else{
+                            if(orderdetails.length>0){
+                                outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":orderdetails }, 
+                                res.json(outputJSON);  
+                            }else{
+                                outputJSON = {'status':'failure', 'messageId':400, 'message': "vendor does not exists"}, 
+                                res.json(outputJSON); 
+                            }   
+                        }
+                    })
+
+            }  
+    
 
 

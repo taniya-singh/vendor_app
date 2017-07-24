@@ -1,11 +1,11 @@
-let userObj = require('./../models/User.js');
+//let userObj = require('./../models/User.js');
 let FCM = require('fcm-node');
 let apn = require("apn");
 let path = require('path');
 let serverKey = 'AIzaSyAxYVocgXGryOjwZ-7WIW4KB1fQtZ5tXFY'; 
 let fcm = new FCM(serverKey);
 let moment = require('moment');
-let constantObj = require('./../constants.js');
+//let constantObj = require('./../constants.js');
 let crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = 'd6F3Efeq';
@@ -22,7 +22,8 @@ options = {
 
 
 exports.notify = function(id,notificationKey){
-    userObj.findOne({_id:id},function(err,result){
+    console.log("notifyyyyyyyyyyyy")
+    /*userObj.findOne({_id:id},function(err,result){
         if(result){
             if(result.device_type=='ios'){
                 pushSendToIOS(result.token,notificationKey)
@@ -31,10 +32,10 @@ exports.notify = function(id,notificationKey){
                 pushToAndroid(result.token,notificationKey)
             }
         }
-    })
+    })*/
 }
 
-let pushToAndroid = function  (token,key) {
+/*let pushToAndroid = function  (token,key) {
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
         to:  "dL-88Ju0VaA:APA91bGsdzHKJIcfsVSPNGQbno243M4NQqg0xwBkO0UkJPpixVWVzYPfFEiFuH1htU7I5MXBx2X7YMQqvsmr-ZjuW_rROlb6eA5oyLDdE5U3m5tQ-GofRas7eyPEyR6OmyuSoDSKDiJa", 
         // collapse_key: 'your_collapse_key', 
@@ -134,4 +135,4 @@ client.messages.create({
     from: '+14157410903' // From a valid Twilio number
 })
 .then((message) => console.log(message.sid));
-}
+}*/

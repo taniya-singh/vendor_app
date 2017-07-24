@@ -345,7 +345,7 @@ require('./routes/payment')(app, express, passport);
 require('./routes/order')(app, express, passport);
 require('./routes/faq')(app, express, passport);
 require('./routes/eManagement')(app, express,passport);
-//require('./routes/common')(app, express,passport);
+require('./routes/common')(app, express,passport);
 
 
 

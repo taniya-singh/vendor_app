@@ -213,9 +213,14 @@ exports.pay = function(req, res) {
   var amount_to_pay;
   console.log("inside pay");
   if (req.body._id) {
-   create_customer_on_stripe(custdetail,function(err,custdetails){
+  create_customer_on_stripe(custdetail,function(err,custdetails){
     if(err){
-
+          outputJSON = {
+            'status': 'Failure',
+            'messageId': 400,
+            'message': "Error"
+            },
+            res.json(outputJSON);
     }
     else{
       itemsObj.find({_id:req.body.item_id},function(err,items){
@@ -227,99 +232,88 @@ exports.pay = function(req, res) {
             },
             res.json(outputJSON);
         }else{
-          console.log("no of items available",items[0].p_count)
-          if((items[0].p_count)>=(req.body.item_count)){
-            console.log("item price",items[0].p_price);
-            console.log("count",req.body.item_count);
-            var amount=(items[0].p_price)*(req.body.item_count);
-            var amount_to_pay=amount*100;
-            console.log("total price is",amount_to_pay);
-           vendor.find({_id:items[0].vendor_id},function(err,vendetails){
-        if(err){
-               outputJSON = {
-            'status': 'Failure',
-            'messageId': 400,
-            'message': "Error"
-            },
-            res.json(outputJSON);
-       }else{
-        //console.log("vendor details",vendetails)
-          if(vendetails.length>0){
-            accntid=vendetails[0].stripe_account_id
-            console.log("**************",amount_to_pay)
-           stripe.charges.create({
-                amount: amount_to_pay,
-                currency: "usd",
-                customer: custdetails.card.customer,
-                source: custdetails.card.id, // obtained with Stripe.js
-                destination: {
-                    account:accntid
+           if((items[0].p_count)>=(req.body.item_count)){
+            //console.log("item price",items[0].p_price);
+            //console.log("count",req.body.item_count);
+              var amount=(items[0].p_price)*(req.body.item_count);
+              var amount_to_pay=amount*100;
+              //console.log("total price is",amount_to_pay);
+              vendor.find({_id:items[0].vendor_id},function(err,vendetails){
+                if(err){
+                   outputJSON = {
+                    'status': 'Failure',
+                    'messageId': 400,
+                    'message': "Error"
                   },
-                description: "Charge for Customer food",
-                //application_fee: 500, // amount in cents
-                capture : false
-              },
-               function(err, charge) {
-                    if (err) {
+                  res.json(outputJSON);
+                }else{
+                  if(vendetails.length>0){
+                    accntid=vendetails[0].stripe_account_id
+                    console.log("**************",amount_to_pay)
+                    stripe.charges.create({
+                        amount: amount_to_pay,
+                        currency: "usd",
+                        customer: custdetails.card.customer,
+                        source: custdetails.card.id, // obtained with Stripe.js
+                        destination: {
+                            account:accntid
+                          },
+                        description: "Charge for Customer food",
+                        //application_fee: 500, // amount in cents
+                        capture : false
+                    },
+                    function(err, charge) {
+                      if (err) {
                       console.log("eeeee",err)
-                        res.json(err);
-                    }
-                    else
+                      res.json(err);
+                      }
+                      else
+                      {
+                        ordersave.item_id=items[0]._id;
+                        ordersave.vendor_id=items[0].vendor_id;
+                        ordersave.customer_id=custdetail._id;
+                        ordersave.item_count=req.body.item_count;
+                        order(ordersave).save(ordersave,function(err,saveorder){
+                          if(err){
+                            outputJSON = {
+                          'status': 'failure',
+                          'messageId': 400,
+                          'message': "Err"
+                 
+                          },
+                          res.json(outputJSON);
+                          }else{
+                            var latest_count=(items[0].p_count)-(req.body.item_count);
+                            console.log("latest count is",latest_count);
+                            itemsObj.update({_id:req.body.item_id},{$set:{p_count:latest_count}},function(err,updatecount){
+                            if(err){
 
-                    {
-                      ordersave.item_id=items[0]._id;
-                      ordersave.vendor_id=items[0].vendor_id;
-                      ordersave.customer_id=custdetail._id;
-                      ordersave.item_count=req.body.item_count;
-                      order(ordersave).save(ordersave,function(err,saveorder){
-                        if(err){
-                          outputJSON = {
-                        'status': 'failure',
-                        'messageId': 400,
-                        'message': "Err"
-               
-                        },
-                        res.json(outputJSON);
-
-                        }else{
-                          var latest_count=(items[0].p_count)-(req.body.item_count);
-                          console.log("latest count is",latest_count);
-                          itemsObj.update({_id:req.body.item_id},{$set:{p_count:latest_count}},function(err,updatecount){
-                           if(err){
-
-                           } else{
+                           }else{
                             if(updatecount){
                               console.log("save order",updatecount)
-                          outputJSON = {
-                        'status': 'success',
-                        'messageId': 200,
-                        'message': "Payed successfully",
-                        'data':charge
-                         },
-                          res.json(outputJSON);
-                            }else{
+                                outputJSON = {
+                                'status': 'success',
+                                'messageId': 200,
+                                'message': "Payed successfully",
+                                'data':charge
+                                },
+                                res.json(outputJSON);
+                              }else{
                               outputJSON = {
-                        'status': 'failure',
-                        'messageId': 400,
-                        'message': "something worng happened"
-                        
-                         },
-                          res.json(outputJSON);
-
-                            }
-
+                              'status': 'failure',
+                              'messageId': 400,
+                              'message': "something worng happened"                           
+                              },
+                              res.json(outputJSON);
+                              }
                            }
                           })
-
-
                         }
-                      })
-                      
+                      })                      
                     }
             });
-
           }else{
-               outputJSON = {
+            outputJSON = {
             'status': 'Failure',
             'messageId': 400,
             'message': "vendor details does not exists"
@@ -327,25 +321,19 @@ exports.pay = function(req, res) {
             res.json(outputJSON);
           }
         }
-      })
-
-          }else{
-            outputJSON = {
-            'status': 'Failure',
-            'messageId': 400,
-            'message': "Item out of stock"
-            },
-            res.json(outputJSON);
-
-          }
-        }
-
-
-      })
-
-           
-    }
-   });
+     })
+    }else{
+      outputJSON = {
+      'status': 'Failure',
+      'messageId': 400,
+      'message': "Item out of stock"
+     },
+    res.json(outputJSON);
+   }
+   }
+   })        
+  }
+  });
     
   } else {
     outputJSON = {

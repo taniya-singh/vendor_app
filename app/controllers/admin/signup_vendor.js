@@ -5,6 +5,8 @@ var fs=require('fs');
 var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
 var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
+var nodemailer=require('nodemailer');
+
 
 
 
@@ -539,4 +541,50 @@ uploadProImg = function(data, callback) {
 	} else {
 		callback("Image  not selected");
 	}
+}
+
+
+exports.forget_password=function(req,res){
+	console.log("inside email")
+	if(req.body.vendor_email)
+            vendor.findOne({vendor_email : req.body.vendor_email},function(err,data){
+                if(err){
+                    outputJSON = {'status': 'failure', 'messageId':400, 'message':"Error Occured"};
+                    res.jsonp(outputJSON);
+                }else{
+                    if(data==null){
+                        outputJSON={'status': 'failure', 'messageId':400,'message':"Please enter a valid Email ID"};
+                        res.jsonp(outputJSON)    
+                    }else
+                    {
+                    var mailDetail="smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+                    var resetUrl = "http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
+                    console.log("reset url",resetUrl)
+                    var transporter = nodemailer.createTransport(mailDetail);
+                        
+                        var mailOptions = {
+                            from: "abc",
+                            to: req.body.vendor_email,
+                            subject: 'Reset password',
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
+                        };
+                    transporter.sendMail(mailOptions, function(error, response) {
+                        if (error) {
+
+                            console.log("err",error)
+                             outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
+                            res.jsonp(outputJSON)    
+                        }else{
+                            var response = {
+                            "status": 'success',
+                            "messageId": 200,
+                            "message": "Reset password link has been send to your Mail. Kindly reset.",
+                            "Sent on":Date(),
+                            "From":"Taniya Singh"}  
+                            res.jsonp(response)
+                        }
+                    })  
+                    }        
+                 }
+            })
 }

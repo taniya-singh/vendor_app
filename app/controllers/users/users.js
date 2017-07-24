@@ -995,9 +995,7 @@ exports.customer_orderlist=function(req,res){
                         res.jsonp(outputJSON);
 
                 }else{
-                    //console.log("orderlist",orderlist)
-                    if(orderlist.length>0){
-                        console.log("orderlist",orderlist)
+                    if(orderlist.length>0){                        
                     outputJSON = {
                         'status': 'success',
                         'messageId': 200,
