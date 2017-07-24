@@ -229,3 +229,28 @@ exports.view_cart_details=function(req,res){
 		console.log("error is",e)
 	}
 }
+exports.update_pickup_status=function(req,res){
+	console.log("insode");
+	if(req.body.order_id){
+		order.update({_id:req.body.order_id},{$set:{status:"Pick Up"}},function(err,update){
+			if(err){
+				outputJSON = {
+							'status': 'success',
+							'messageId': 200,
+							'message': "Err",
+						
+							};
+				res.jsonp(outputJSON);
+
+			}else{
+				outputJSON = {
+							'status': 'success',
+							'messageId': 200,
+							'message': "Updated successfully",
+							data: update
+							};
+				res.jsonp(outputJSON);
+			}
+		})
+	}
+}
