@@ -2,7 +2,7 @@
 
 angular.module("Home");
 
-munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$rootScope', '$localStorage','UserService', function($stateParams, $state,$scope, $rootScope, $localStorage,UserService) {
+munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$rootScope', '$localStorage','UserService','VendorService', function($stateParams, $state,$scope, $rootScope, $localStorage,UserService,VendorService) {
 		
 	if($localStorage.userLoggedIn) {
 		$rootScope.userLoggedIn = true;
@@ -15,6 +15,7 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 
 	$rootScope.sideBar="home";
 	$scope.totalUser=0;
+		$scope.totalVendor=0;
 		$scope.totalJob=0;
 		$scope.loader=true;
 			
@@ -26,6 +27,17 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 							  
 								$scope.totalUser=response.data;
 								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalUser)
+
+							}
+						});
+
+						VendorService.totalVendor(function(response) {
+
+							$scope.loader=false;
+							if(response.messageId == 200) {
+							  
+								$scope.totalVendor=response.data;
+								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalVendor)
 
 							}
 						});

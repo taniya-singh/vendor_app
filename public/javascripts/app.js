@@ -5,10 +5,10 @@ angular.module("Home", []);
 angular.module("communicationModule", []);
 angular.module("helpBlock",['oitozero.ngSweetAlert']);
 angular.module("Users", ['oitozero.ngSweetAlert']);
-angular.module("Vendor", ['oitozero.ngSweetAlert']);
+angular.module("Vendor", ['oitozero.ngSweetAlert', 'moment-picker']);
 angular.module("FAQ",[]);
 angular.module("emailManagement",[]);
-
+angular.module("myApp", ["ngTable"]);
 //angular.module("Packages",['oitozero.ngSweetAlert']);
 
 

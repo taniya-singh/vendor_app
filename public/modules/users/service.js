@@ -13,12 +13,7 @@ angular.module('Users')
 
 	}
 
-	// service.getUserList = function(callback) { 
-	// 		communicationService.resultViaGet(webservices.userList, appConstants.authorizationKey, headerConstants.json, function(response) {
-	// 		callback(response.data);
-	// 	});
-
-	// }
+	
 	service.latestUser = function(callback) { 
 			communicationService.resultViaGet(webservices.latestUser, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
@@ -75,11 +70,13 @@ angular.module('Users')
 	}
 
 
+	
+
 	service.getUserList = function(inputJsonString,callback) {
-		communicationService.resultViaGet(webservices.userList, appConstants.authorizationKey, "", function(response) {
+			communicationService.resultViaPost(webservices.userList, appConstants.authorizationKey, headerConstants.json,inputJsonString, function(response) {
 			callback(response.data);
-		});
 		
+		});
 
 	}
 
@@ -124,26 +121,7 @@ angular.module('Users')
 				});
 	}
 
-	// service.registration = function(inputJsonString, callback) {
-	// 		$http.post("/user/registration", inputJsonString, {
-	// 			//	transformRequest: angular.identity,
-	// 				headers: {'Content-Type': undefined}
-	// 			})
-	// 			.success(function(response){
-	// 					if(response){
-	// 						callback(response);
-	// 						//return { response:$q.defer().resolve(response)};
-	// 					}
-	// 					else{
-	// 						$q.reject(response);
-	// 						callback({ response:$q.defer().promise});
-	// 						//return { response:$q.defer().promise};
-	// 					}
-	// 				})
-	// 			.error(function(err){ 
-	// 				alert('There was some error uploading your files. Please try Uploading them again.');
-	// 			});
-	// }
+	
 	
     service.exportUserList = function(callback) {
 		communicationService.resultViaGet(webservices.exportUserList, appConstants.authorizationKey, headerConstants.json, function(response) {
@@ -163,19 +141,19 @@ angular.module('Users')
 		console.log("inputJsonString",inputJsonString);
 
 	$http.post("/user/updateUserInformation", inputJsonString, {
-					//transformRequest: angular.identity,
+					
 					headers: {'Content-Type': undefined}
 				})
 				.success(function(response){
 						if(response){
 							console.log("m here in resposnne")
 							callback(response);
-							//return { response:$q.defer().resolve(response)};
+							
 						}
 						else{
 							$q.reject(response);
 							callback({ response:$q.defer().promise});
-							//return { response:$q.defer().promise};
+							
 						}
 					})
 				.error(function(err){ 

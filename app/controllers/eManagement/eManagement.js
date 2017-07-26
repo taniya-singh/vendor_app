@@ -41,17 +41,7 @@ exports.sentEmailNewsLetter = function(req,res){
 
            callNodeMailerFunction(data,data.length,req.body.description,req.body.title,req.headers.host,res);
           
-            // for(var i=0;i<data.length;i++){
-            //     nodeMail.pushRequest(data[i].email,req.body.description,req.body,title,function(err,data){
-            //         if(err){
-            //             console.log(err)
-            //         }
-            //         else{
-            //             console.log(data);
-            //         }
-            //     })
-            //     i++
-            // }
+            
         }
     })
 }
@@ -62,7 +52,7 @@ var callNodeMailerFunction = function(mydata,n,description,title,req,res){
     console.log("mydata",mydata);
     console.log("n is",n)
     console.log("mydata[n].email",mydata[n-1]);
-    // var emailItems = ['hshussain86@gmail.com','hussain.mohammed@smartdatainc.net','hshussain86@hotmail.com'];
+    //
             if(n >0){
                 var desc = description;
                 // var idEncrypt = commonjs.encrypt(mydata[n-1]._id);

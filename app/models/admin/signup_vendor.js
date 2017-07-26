@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 
 var mySchema = new Schema({
   vendor_name:{type:String,required: 'Please enter the password.' },
+  vendorImage: { type: String },
   vendor_email: { type: String ,required: 'Please enter the email.'},
   password: { type: String, required: 'Please enter the password.' },
   facebook: String,
@@ -14,6 +15,8 @@ var mySchema = new Schema({
   city:{type:String},
   country:{type:String},
   zipcode:{type:String},
+  pickup_time1:{type:String},
+  pickup_time2:{type:String},
   latitude:{type:Number},
   longitude:{type:Number},
   geo:{type:[Number],index:'2dsphere'},

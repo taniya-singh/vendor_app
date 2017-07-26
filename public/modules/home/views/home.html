@@ -10,8 +10,8 @@
         <small>Control panel</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
+        <li class="active"><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+      <!--   <li class="active">Dashboard</li> -->
       </ol>
     </section>
 <div ng-if="loader==true" >
@@ -40,7 +40,7 @@
         <!-- ./col -->
         <div class="col-lg-6 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-yellow">
+          <div class="small-box bg-green">
             <div class="inner">
               <h3>{{totalUser}}</h3>
 
@@ -73,14 +73,14 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>65</h3>
+              <h3>{{totalVendor}}</h3>
 
-              <p>Unique Visitors</p>
+              <p>Total Vendors</p>
             </div>
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#/vendor" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -221,33 +221,33 @@
         </div> -->
         <div class="col-md-4">
           <!-- USERS LIST -->
-              <div class="box box-danger">
+              <!-- <div class="box box-danger">
                 <div class="box-header with-border">
                   <h3 class="box-title">Latest Members</h3>
 
                   <div class="box-tools pull-right">
-                    <!-- <span class="label label-danger">8 New Members</span> -->
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    <span class="label label-danger">8 New Members</span> -->
+                    <!-- <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                     <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
                     </button>
                   </div>
-                </div>
+                </div>  -->
                 <!-- /.box-header -->
 
-                <div class="box-body no-padding"> 
+                <!-- <div class="box-body no-padding"> 
                   <ul class="users-list clearfix">
                  
                     <li ng-repeat="user in latestUser">
 
                       <img ng-show="!user.profile_image" src="images/user_default.jpg" >
-                      <img ng-if="!user.facebook_id && user.profile_image" src="assets/upload/profileImg/{{user.profile_image}}" >
+                      <img ng-if="!user.facebook_id && user.profile_image" src="assets/upload/profileImg/{{user.profile_image}}" >-->
 
+ 
 
-
-                      <img ng-if="user.facebook_id && user.profile_image" src="{{user.profile_image}}" >
+                      <!-- <img ng-if="user.facebook_id && user.profile_image" src="{{user.profile_image}}" >
                       
-                         <span ng-if="user.first_name=='' && user.last_name==''"></span>
+                         <span ng-if="user.first_name=='' && user.last_name==''"></span> -->
 
                       {{user.first_name   | capitalize }} 
                       <!-- {{user.last_name   | capitalize}} -->
@@ -263,9 +263,9 @@
                   <!-- /.users-list -->
                 </div>
                 <!-- /.box-body -->
-                <div class="box-footer text-center">
+                <!-- <div class="box-footer text-center">
                   <a href="/#/users" class="uppercase">View All Users</a>
-                </div>
+                </div> -->
                 <!-- /.box-footer -->
               </div>
               <!--/.box -->

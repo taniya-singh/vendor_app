@@ -3,21 +3,15 @@
       div.startingHour select{margin: 8px  7px  10px  8px;}
      div.startingHour select{margin: 15px  7px  10px  8px;}
 </style>
-        <!-- <div ng-if="loader==true" >
-        <div class="loader-image">
-            <i class="fa fa-spinner fa-pulse fa-spin"></i>
-        </div>
-        <div class="loader-container"></div>
-        </div> -->
-                <!-- Content Header (Page header) -->
+       
                 <section class="content-header">
                     <h1>
                         Vendor
                     </h1>
                     
                     <ol class="breadcrumb">
-                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="/#/users">Vendor</a></li> 
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                        <li><a href="/#/vendor">Vendor List</a></li> 
                          <li>Add</li>                      
                     </ol>
                 </section>
@@ -72,8 +66,8 @@
                   <span style="color:red">Name maximum length 20</span>
                   </div>
 
-                  <label ng-if="!updateButton">Email<span class="requiredClass">*</span></label>
-                    <input ng-if="!updateButton" autocomplete="off" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
+                  <label>Email<span class="requiredClass">*</span></label>
+                    <input  autocomplete="off" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
 
                     <div class="validationError" ng-messages="vendorForm.vendor_email.$error" ng-show="
                       vendorForm.vendor_email.$touched &&vendorForm.vendor_email.$invalid && (!vendorForm.vendor_email.$pristine || vendorForm.$submitted)" role="alert">
@@ -152,27 +146,6 @@
                   </div>
 
 
-                       
-
-                        <!-- <div class="validationError" ng-messages="userForm.location.$error" ng-show="userForm.location.$error.pattern && (!userForm.location.$pristine || userForm.$submitted)" role="alert">
-                        <span style="color:red" ng-message="pattern">Enter valid character </span>
-                         </div>
-                         
-                       <div class="validationError"  ng-show="userForm.location.$error.maxlength && userForm.location.$dirty"">
-                       <span style="color:red">Address maximum length exceeds</span>
-                        </div> -->
-
-                      <!-- <label ng-if="!updateButton">Confirm Password<span class="requiredClass">*</span></label>
-                         <input type="password" ng-if="!updateButton" class="form-control" name="password2" placeholder="Enter confirm password" ng-model="user.password2" required ng-pattern="user.password">
-                        
-                        <div class="validationError" ng-if="!updateButton" ng-messages="userForm.password2.$error" ng-show="
-                         userForm.password2.$error.pattern && (!userForm.password2.$pristine || userForm.$submitted)" role="alert">
-                          <span style="color:red" ng-if="!updateButton" ng-message="pattern">Password do not match</span>
-                          </div>
-
-                    <div ng-if="!updateButton" class="validationError" ng-messages="userForm.password2.$error" ng-show=" userForm.password2.$error.required && userForm.password2.$touched && userForm.password2.$invalid" role="alert">
-                   <span ng-if="!updateButton" style="color:red" ng-message="required" class="error-message">Confirm password is required</span>
-                    </div> -->
                       
                        <label >ZipCode<span class="requiredClass">*</span></label>
                         <input type="text" class="form-control" name="zipcode"  placeholder="Enter zip code" ng-pattern="/^[0-9]{1,7}$/" ng-model="vendor.zipcode" ng-minlength="4" ng-maxlength="7" maxlength="8" ng-disabled="true" required>
@@ -193,8 +166,41 @@
 
 
 
-             <div class="form-row">
-           <label >Country:<span class="requiredClass">*</span></label>
+<label>Start Time<span class="requiredClass">*</span></label>
+                    
+                  <div class="input-group"
+     moment-picker="vendor.pickup_time1"
+     format="HH:mm:ss">
+    <span class="input-group-addon">
+        <i class="octicon octicon-clock"></i>
+    </span>
+    <input class="form-control"
+           placeholder="Select start time"
+           ng-model="vendor.pickup_time1"
+           ng-model-options="{ updateOn: 'blur' }"  required  name="pickup_time1" >
+</div>
+<label>End Time<span class="requiredClass">*</span></label>
+                    
+<div class="input-group"
+     moment-picker="vendor.pickup_time2"
+     format="HH:mm:ss">
+    <span class="input-group-addon">
+        <i class="octicon octicon-clock"></i>
+    </span>
+    <input class="form-control"
+           placeholder="Select end time"
+           ng-model="vendor.pickup_time2"
+           ng-model-options="{ updateOn: 'blur' }"  required name="pickup_time2"  >
+</div>
+<span ng-if="vendor.pickup_time1>vendor.pickup_time2" style="color:red" >End time should be greater than Start time
+
+
+</span>
+
+   <div class="form-row">
+
+
+           <label>Country:<span class="requiredClass">*</span></label>
         <select class="country" ng-model="vendor.Country"  name="country"  required>
             <option value="" disabled="disabled">Select Country</option>
             <option value="US">United States</option>
@@ -203,47 +209,39 @@
             <option value="FR">France</option>
         </select>
 
-      <div class="validationError" ng-messages="vendorForm.vendor.Country.$error"  ng-show="
+      <div class="validationError" ng-messages="vendorForm.vendor.Country.$error" ng-show="
         vendorForm.vendor.Country.$invalid " role="alert">
-        <span style="color:red"  ng-message="required">Country is required</span>
-
+        <span style="color:red" ng-message="required">Country is required</span>
       </div>
     </div>
 
 
 
 
-           <div class="form-row">
-           <label >Currency<span class="requiredClass">*</span></label>
-        <select class="currency" ng-model="vendor.Currency"  name="currency"  required>
+    
+           <label>Currency<span class="requiredClass">*</span></label>
+        <select class="currency" ng-model="vendor.Currency" name="currency"  required>
         <option value="" disabled="disabled">Select Currency</option>
             <option value="USD">US Dollar</option>
             <option value="CAD">Canadian Dollar</option>
             <option value="GBP">Pound</option>
             <option value="EUR">Euro</option>
         </select>
-        <div class="validationError" ng-messages="vendorForm.vendor.Country.$error"  ng-show="
-        vendorForm.vendor.Country.$invalid " role="alert">
-        <span style="color:red"  ng-message="required">Country is required</span>
-
-      </div>
     </div>
 
-
    
-        <div class="form-row">
+    
+                      <div class="form-row">
 
-
-               <label >Routing Number:<span class="requiredClass">*</span></label>
+                      <label>Routing Number:<span class="requiredClass">*</span></label>
                      
-                       <input  type="text"  class="routing-number" ng-model="vendor.Routing_Number" mask="999-999-999" name="Routing_Number" mask-clean='true' placeholder="xxx-xxx-xxx" mask-restrict='reject' ng-minlength="9" ng-maxlength="14" maxlength="14" required/>
+                       <input  type="text" class="routing-number" ng-model="vendor.Routing_Number" mask="999-999-999" name="Routing_Number" mask-clean='true' placeholder="xxx-xxx-xxx" mask-restrict='reject' ng-minlength="11" ng-maxlength="14" maxlength="14" required/>
                      
 
                      <p class="help-block">
-                      <span style="color:red"   ng-show="vendorForm.Routing_Number.$touched && vendorForm.Routing_Number.$invalid && vendorForm.Routing_Number.$error.required">Routing Number is required.</span>
+                      <span style="color:red"  ng-show="vendorForm.Routing_Number.$touched && vendorForm.Routing_Number.$invalid && vendorForm.Routing_Number.$error.required">Routing Number is required.</span>
 
-                       <span style="color:red"   ng-show="vendorForm.Routing_Number.$error.minlength">Routing Number have 9-digits minimum.</span>
-
+                       <span style="color:red"  ng-show="vendorForm.Routing_Number.$error.minlength">Routing Number have 9-digits minimum.</span>
                          </p>
                        </div>
 
@@ -253,37 +251,36 @@
 
                        <div class="form-row">
 
-
-                      <label >Account Number:<span class="requiredClass">*</span></label>
+                      <label>Account Number:<span class="requiredClass">*</span></label>
                      
-                       <input  type="text"  class="account-number" ng-model="vendor.Account_Number"  name="Account_Number" mask-clean='true' placeholder="xxxx-xxxx-xxxx-xxxxx" mask-restrict='reject' ng-minlength="6" ng-maxlength="17" maxlength="17" required/>
+                       <input  type="text" class="account-number" ng-model="vendor.Account_Number"  name="Account_Number" mask-clean='true' placeholder="xxxx-xxxx-xxxx-xxxxx" mask-restrict='reject' ng-minlength="6" ng-maxlength="17" maxlength="17" required/>
                      
 
                      <p class="help-block">
                       <span style="color:red"  ng-show="vendorForm.Account_Number.$touched && vendorForm.Account_Number.$invalid && vendorForm.Account_Number.$error.required">Account Number is required.</span>
 
-                       <span style="color:red"   ng-show="vendorForm.Account_Number.$error.minlength">Account Number have 6-digits minimum.</span>
-
+                       <span style="color:red"  ng-show="vendorForm.Account_Number.$error.minlength">Account Number have 6-digits minimum.</span>
                          </p>
                        </div>
 
 
 
-    <div class="form-row">
-                 
-                      <label >Account Holder Name:<span class="requiredClass">*</span></label>
-                      <input type="text"  class="form-control" ng-model="vendor.Account_Holder_Name" placeholder="Account Holder Name" ng-minlength="3" ng-maxlength="20" maxlength="21" name="Account_Holder_Name" ng-pattern="/^[a-z ,.'-]+$/i" required capitalize-first>
 
-                   
-                  
+                   <div class="form-row">
+                      <label>Account Holder Name:<span class="requiredClass">*</span></label>
+                      <input type="text" class="form-control" ng-model="vendor.Account_Holder_Name" placeholder="Account Holder Name" ng-minlength="3" ng-maxlength="20" maxlength="21" name="Account_Holder_Name" ng-pattern="/^[a-z ,.'-]+$/i" required capitalize-first>
 
-                  
+                    <div class="validationError" ng-messages="vendorForm.vendor_name.$error" ng-show="
+                      vendorForm.Account_Holder_Name.$error.required && vendorForm.Account_Holder_Name.$touched &&
+                         vendorForm.Account_Holder_Name.$invalid " role="alert">
+                      <span style="color:red" ng-message="required">Name is required</span>
+                    </div>
+                                                      
                   <div class="validationError" ng-messages="vendorForm.Account_Holder_Name.$error" ng-show="vendorForm.Account_Holder_Name.$error.pattern && (!vendorForm.Account_Holder_Name.$pristine || vendorForm.$submitted)" role="alert">
                   <span style="color:red" ng-message="pattern">Enter valid character </span>
                   </div>
 
-                  <div class="validationError"   ng-show="vendorForm.Account_Holder_Name.$error.maxlength && vendorForm.Account_Holder_Name.$dirty"">
-
+                  <div class="validationError"  ng-show="vendorForm.Account_Holder_Name.$error.maxlength && vendorForm.Account_Holder_Name.$dirty"">
                   <span style="color:red">Name maximum length 20</span>
                   </div>
   </div>
@@ -293,44 +290,18 @@
 
     
     <div class="form-row">
-
-        <label for="account-holder-type"   >Account Holder Type</label>
-        <select class="account-holder-type"  ng-model="vendor.Account_Holder_Type" name="account-holder-type"  required>
-
+        <label for="account-holder-type">Account Holder Type</label>
+        <select class="account-holder-type" ng-model="vendor.Account_Holder_Type" name="account-holder-type"  required>
          <option value="" disabled="disabled">Select Type</option>
             <option value="individual">Individual</option>
             <option value="company">Company</option>
 
        </div>
                 
-                       
+        
 
-
-
-
-
-
-
-
-
-
-
-                      
-
-
-                     <div class="col-md-4">
-                        <label>ProfileImage</label>
-                           <div class="form-group">
-                                <div class="btn btn-default btn-file">
-                                    <i class="fa fa-paperclip"></i> Attachment
-                                       <input type='file' ng-model='vendor.profile_image' base-sixty-four-input accept="image/*"ng-change="onSelectIconImg()" type="file" id="fileInput2" ngf-max-size="2B">
-                                 </div>
-
-                     <div class="errormsg" ng-show="imageIconError">
-                         <span>{{imageIconError}}</span>
-                     </div>
-                                   
-                     <!-- <p class="help-block">Max. 2MB</p> -->
+ <div class="form-row">
+                    
                         <span class="image-span" ng-if=" imageIconError==''"> 
                          <i class="fa fa-remove fa-2x  pull-right cursur removeImage" ng-click="removeIconImg()" ng-if="picIconData || vendor.icon" title="Remove"></i>
                          <img class="img-responsive cursur img-border-skill-icon" alt="Image"  src="assets/upload/profileImg/{{vendor.profile_image}}" ng-if="vendor.profile_image && !myCroppedIconImage && !vendor.facebook_id"
@@ -343,7 +314,7 @@
                          </div>
 
                               
-                      <label></label>
+            
 
                         <div class="cropArea margin-top" ng-show="myIconImage  && imageIconError==''">
                           <img-crop image="myIconImage" area-type="rectangle" aspect-ratio="1" result-image="myCroppedIconImage" result-image-size='{w: 50,h: 50}' init-max-area="true"></img-crop>
@@ -359,10 +330,14 @@
      </div>
                
 
-    <div class="box-footer clearfix no-border">
-     <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" ng-disabled="vendorForm.$invalid">
-     <input class="btn btn-primary" type="submit" ng-if="updateButton" name="update" ng-disabled="vendorForm.$invalid" ng-click="update()" value="Update " >
+    <div class="box-footer clearfix no-border"><br>
+  
+       <br><input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" ng-disabled="vendorForm.$invalid 
+      || vendor.pickup_time1>vendor.pickup_time2">
+
+    <br><span><input class="btn btn-primary" type="submit" ng-if="updateButton" name="update" ng-disabled="vendorForm.$invalid || vendor.pickup_time1>vendor.pickup_time2" ng-click="update()" value="Update " ></span>
      </div>
+
 
    </div><!-- /.tab-content -->
     </div>
