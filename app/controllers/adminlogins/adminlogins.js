@@ -19,6 +19,10 @@ var md5 = require('md5');
 
 
 
+
+
+   
+
 //authenticate
 exports.authenticate = function(req, res) {
 	//console.log(res.req.user);
@@ -117,6 +121,7 @@ exports.forgotPassword = function(req, res) {
 exports.resetPassword = function(req, res) {
 
 	 console.log("reset ",req.body);
+
 		var pswdd = JSON.parse(JSON.stringify(req.body.newpwd));
         password = md5(pswdd);
 
