@@ -664,17 +664,23 @@ exports.totalSales=function(req,res){
            _id : null,
            total_Count: { $sum: "$item_count" }
             }
-        }],function(err,poonam){
+        }],function(err,totalsales){
+        	console.log("total sales",totalsales)
         	if(err){
-        		console.log("err",err)
-
+        		outputJSON = {
+                'status': 'failure',
+                'messageId': 400,
+                'message': "err"
+                
+            };
+        		res.jsonp(outputJSON)
         	}
         	else{
         		outputJSON = {
                 'status': 'success',
                 'messageId': 200,
                 'message': "Total sales retreived successfully",
-                'data':poonam
+                'data':totalsales
             };
         		res.jsonp(outputJSON)
         	}
@@ -706,7 +712,8 @@ exports.totalSales=function(req,res){
 }
 
 exports.totalRevenue=function(req,res){
-	var total;
+	var total=0;
+	var total_revenew=0;
 	console.log("insiode tottal")
 	order.aggregate([  
 	  {
@@ -720,16 +727,31 @@ exports.totalRevenue=function(req,res){
 	  },{$unwind:"$items"
 	}],function(err,orderdetails){
 	  	if(err){
-	  		console.log("err")
+	  		outputJSON = {
+                'status': 'Failure',
+                'messageId': 400,
+                'message': "Error"
+                
+            }
+            res.jsonp(outputJSON);
 
 	  	}else{
-	  		console.log(orderdetails)
+	  		//console.log(orderdetails)
 	  		for(var i=0;i<orderdetails.length;i++){
 	  			var calculated_price=orderdetails[i].item_count*orderdetails[i].items.p_price
-	  			total=total+calculated_price
+	  			total=parseFloat(total)+parseFloat(calculated_price);
+	  			
 	  		}
-	  		console.log("total revenew is",total)
-	  		res.jsonp({orderdetails})
+	  		console.log("total revenew is",total.toFixed(2))
+	  		total_revenew=total.toFixed(2)
+
+	  		outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': "total revenew retreive successfully",
+                'data': total_revenew
+            }
+            res.jsonp(outputJSON);
 
 	  	}
 	  })

@@ -42,14 +42,11 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 							}
 						});
 
-
-
-
 						VendorService.totalSales(function(response) {
 
 							$scope.loader=false;
 							if(response.messageId == 200) {
-							  	//console.log("response is yyyyyy",response.data.total_Count)
+							  	console.log("response is yyyyyy",response.data)
 								$scope.totalSales=response.data[0].total_Count;
 								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalSales)
 
@@ -57,10 +54,11 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 						});
 
 						VendorService.totalRevenue(function(response) {
+							console.log("DDDDDDDDDDDD")
 
 							$scope.loader=false;
 							if(response.messageId == 200) {
-							  
+							  console.log("response is for reveneweeeeeee",response.data)
 								$scope.totalRevenue=response.data;
 								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalRevenue)
 
