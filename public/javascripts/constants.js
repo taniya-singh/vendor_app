@@ -44,10 +44,10 @@ var webservices = {
 	"latestVendor" : baseUrl + "/vendor/latestVendor",
 	"deleteVendor" : baseUrl + "/admin/deleteVendor",
     "bulkUpdateVendor" : baseUrl + "/admin/bulkUpdate",
-
     "updateVendordata" : baseUrl + "/admin/updateVendordata",
     "getCurrentVendorData" : baseUrl + "/admin/getCurrentVendorData",
       "totalSales" : baseUrl + "/admin/totalSales",
+      "totalRevenue" : baseUrl + "/admin/totalRevenue",
 
 
 

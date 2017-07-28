@@ -22,7 +22,7 @@ module.exports = function(app, express,passport) {
 
      
     router.get('/totalVendor', vendor.totalVendor);
-    router.post('/totalRevenue', vendor.totalRevenue);
+    router.get('/totalRevenue', vendor.totalRevenue);
 
 	app.use('/admin', router);
 
