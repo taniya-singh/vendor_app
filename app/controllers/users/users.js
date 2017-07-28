@@ -1326,7 +1326,6 @@ exports.customer_orderlist = function(req, res) {
                     'status': 'failure',
                     'messageId': 200,
                     'message': "No order placed yet"
-
                 }
                 res.jsonp(outputJSON);
             }
