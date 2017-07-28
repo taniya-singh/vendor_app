@@ -1,5 +1,5 @@
 <style type="text/css">
-  .users-list>li img{
+  <.users-list>li img{
     height: 80px ; 
   }
 
@@ -19,27 +19,12 @@
             <i class="fa fa-spinner fa-pulse fa-spin"></i>
         </div>
         <div class="loader-container"></div></div>
+   
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">
-        <!-- <div class="col-lg-3 col-xs-6">
-          
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>120</h3>
-
-              <p>Total Jobs</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div> -->
-        <!-- ./col -->
-
-        <!-- -->
+        
           <div class="col-xs-12 col-sm-6">
             <div class="small-box custom-small-bg bg-green">
               <div class="inner">
@@ -66,229 +51,24 @@
             <div class="small-box custom-small-bg bg-yellow">
               <div class="inner">
                 <h3>{{totalVendor}}</h3>
-                <p>Total Sales</p>
+                <p>Total Revenue</p>
               </div>
               <div class="icon"> <i class="fa fa-dollar"></i></div>
-              <a href="#/home" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              <a  class="small-box-footer">Total gain form Items</a>
             </div>
 
             <div class="small-box custom-small-bg bg-aqua">
               <div class="inner">
                 <h3>{{totalVendor}}</h3>
-                <p>Total Revenue</p>
+                <p>Total Sales</p>
               </div>
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
-                <a href="#/home" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a class="small-box-footer">Total Sales of Items </a>
             </div>
           </div>
         <!-- -->
-
-
-        
-        <!-- ./col -->
-        <!-- ./col -->
-       <!--  <div class="col-lg-3 col-xs-6">
-        
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-              <p>Bounce Rate</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div> -->
-        
-        <!-- ./col -->
-      </div>
-      <!-- /.row -->
-     
-        <!-- /.Left col -->
-        <!-- right col (We are only adding the ID to make the widgets sortable)-->
-        <!-- <section class="col-lg-5 connectedSortable">
- -->
-          <!-- Map box -->
-          <!-- <div class="box box-solid bg-light-blue-gradient">
-            <div class="box-header">
-              
-              <div class="pull-right box-tools">
-                
-                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
-                  <i class="fa fa-minus"></i></button>
-              </div>
-              
-              <i class="fa fa-map-marker"></i>
-
-              <h3 class="box-title">
-                Visitors
-              </h3>
-            </div>
-            <div class="box-body" >
-              <div id="world-map" style="height: 310px; width: 100%;">
-              <div map-lazy-load="https://maps.google.com/maps/api/js">
-            <ng-map default-style="true" center="41,-87" zoom="7">
-      <marker id='{{shop.id}}' position="{{shop.position}}"
-        ng-repeat="shop in shops"
-        on-click="showDetail(shop)">
-      </marker>
-
-      <info-window id="foo-iw">
-        <div ng-non-bindable="">
-          id: {{shop.id}}<br/>
-          name: {{shop.name}}<br/>
-          Position 1: {{shop.position}}<br/>
-          Position 2: {{anchor.getPosition()}}<br/>
-          Position 3: {{map.markers[shop.id].getPosition()}}<br/>          
-          <a href="#" ng-click="clicked()">Click Here</a>
-        </div>
-      </info-window>
-    </ng-map>
-          </div>
-
-              </div>
-            </div> -->
-           
-            <!-- /.box-body-->
-           
-          
-          <!-- /.box -->
-
-         
-         
-
-        <!-- </section> -->
-        <!-- right col -->
-        
-        
-      </div>
-      <!-- /.row (main row) -->
-
-      <div class="row">
-    <!--     <div class="col-xs-12">
-          <div class="box box-primary">
-              <div class="box-header with-border">
-                
-              <div class="box-body">
-                <div class="chart">
-                  <canvas id="areaChart" style="height:250px"></canvas>
-                  <div id="container">Placeholder for chart</div>
-                </div>
-              </div>
-              
-            </div>
-        </div>
-      </div> -->
-
-
-      <div class="row">
-        <!-- Left col -->
-        <!-- div class="col-md-8">
-          <div class="box box-info">
-            <div class="box-header with-border" >
-              <h3 class="box-title">Latest Jobs</h3>
-
-              <div class="box-tools pull-right" >
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-           
-            <div class="box-body">
-              <div class="table-responsive">
-                <table class="table no-margin">
-                  <thead>
-                  <tr >
-                    <th>Title</th>
-                    <th>Owner</th>
-                    <th>Budget</th>
-                    <th>Status</th>
-                    <th>Posted Date</th>
-                  </tr>
-                  </thead>
-                  <tbody>                    
-                   <tr ng-repeat="job in latestJob">
-                    <td>{{job.title  | capitalize }}</td>
-                    <td>{{job.creator[0].first_name  | capitalize }} {{job.creator[0].last_name  | capitalize }}</td>
-                    <td ng-if="job.job_status==1">{{job.budget | currency}}</td>
-                    <td ng-if="job.job_status!=1">{{job.winner_offer[0].budget | currency}}
-                    <td>
-                    <span ng-show="job.job_status==1 && !(job.due_date | dateCompare)" class="label label-info">Open</span>
-                     <span ng-show="job.job_status==1 && (job.due_date | dateCompare)" class="label label-danger">Overdue</span>
-                     <span ng-show="job.job_status==2" class="label label-warning">Assigned</span>
-                    <span  ng-show="job.job_status==3" class="label label-primary">Completed</span>
-                    </td>                    
-                      <td>{{job.created_date  | date:'medium' }}</td>
-                   
-                  </tr>
-                 
-                  </tbody>
-                </table>
-              </div>
-              
-            </div>
-            
-            <div class="box-footer clearfix">
-              
-              <a href="/#/jobs" class="btn btn-sm btn-default btn-flat pull-right">View All Jobs</a>
-            </div>
-           
-          </div>
-
-        </div> -->
-        <div class="col-md-4">
-          <!-- USERS LIST -->
-              <!-- <div class="box box-danger">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Latest Members</h3>
-
-                  <div class="box-tools pull-right">
-                    <span class="label label-danger">8 New Members</span> -->
-                    <!-- <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
-                    </button>
-                  </div>
-                </div>  -->
-                <!-- /.box-header -->
-
-                <!-- <div class="box-body no-padding"> 
-                  <ul class="users-list clearfix">
-                 
-                    <li ng-repeat="user in latestUser">
-
-                      <img ng-show="!user.profile_image" src="images/user_default.jpg" >
-                      <img ng-if="!user.facebook_id && user.profile_image" src="assets/upload/profileImg/{{user.profile_image}}" >-->
-
-                      <!-- <img ng-if="user.facebook_id && user.profile_image" src="{{user.profile_image}}" >
-                      
-                         <span ng-if="user.first_name=='' && user.last_name==''"></span> -->
-
-                      {{user.first_name   | capitalize }} 
-                      <!-- {{user.last_name   | capitalize}} -->
-                   
-                      
-                       <span class="users-list-date" ng-if="(user.created_date | date) ==(date | date)">Today</span>
-                      <span class="users-list-date" ng-if="(user.created_date | date)==(yesterday | date)">Yesterday</span>
-                      <span class="users-list-date" ng-if="(user.created_date | date) !=(date | date)  && (user.created_date | date)!=(yesterday | date)">{{user.created_date   | date:'dd MMM' }}</span>
-
-                    </li>
-                    
-                  </ul>
-                  <!-- /.users-list -->
-                </div>
-                <!-- /.box-body -->
-                <!-- <div class="box-footer text-center">
-                  <a href="/#/users" class="uppercase">View All Users</a>
-                </div> -->
-                <!-- /.box-footer -->
-              </div>
-              <!--/.box -->
-        </div>
-        </div>
-    </section>
-    <!-- /.content -->
+</div>
+</section>
   
+     
+      

@@ -15,6 +15,7 @@ var path = require('path');
 var emailService = require('./../email/emailService.js');
 var userTokenObj = require('./../../models/users/userTokens.js');
 var commonjs = require('./../commonFunction/common.js');
+var session = require('express-session');
 var md5 = require('md5'); 
 
 
