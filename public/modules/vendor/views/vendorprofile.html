@@ -20,12 +20,10 @@
           <div class="box box-widget widget-vendor">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div ng-if="vendor.cover_image" style="background: url('assets/upload/profileImg/cover/{{vendor.cover_image}}') no-repeat center;background-color: #fff !important;background-size:100% 100%" class="widget-vendor-header bg-black">
-              <!-- <h3 class="widget-vendor-vendorname">{{vendor.first_name}} {{vendor.last_name}}</h3> -->
-              <!-- <h5 class="widget-vendor-desc">Web Designer</h5> -->
+              
             </div>
             <div ng-if="!vendor.cover_image" class="widget-vendor-header bg-aqua-active">
-              <!-- <h3 class="widget-vendor-vendorname">{{vendor.first_name}} {{vendor.last_name}}</h3> -->
-              <!-- <h5 class="widget-vendor-desc">Founder &amp; CEO</h5> -->
+             
             </div>
             <div class="widget-vendor-image">
               <img ng-if="(vendor._id && (vendor.prof_image=='' && !vendor.prof_image)&& vendor.provider_image) || (vendor._id && vendor.prof_image)" alt="Vendor Avatar" src="assets/upload/profileImg/{{vendor.prof_image}}" class="img-circle">
@@ -35,17 +33,14 @@
               <div class="row">
                 <div class="col-sm-12">
             <h3 class="profile-vendorname text-center">{{vendor.first_name | capitalize}} {{vendor.last_name | capitalize}}</h3>
-              <!-- <p class="text-muted text-center">Software Engineer</p> -->
+              
               
                 <h3 class="profile-vendorname text-center" style="color: #3C8DBC;" >
                 <i class="fa fa-star margin-r-5" ng-repeat="i in profile_rating_plus track by $index"></i>
                  <i class="fa fa-star-half-o margin-r-5" ng-repeat="i in profile_rating_half track by $index"></i>
                  <i class="fa fa-star-o margin-r-5" ng-repeat="i in profile_rating_loss track by $index"></i>
 
-                <!-- <i class="fa fa-star margin-r-5"></i>
-                <i class="fa fa-star-half-o margin-r-5"></i>
-                <i class="fa fa-star-o margin-r-5"></i>
-                <i class="fa fa-star-o margin-r-5"></i> -->
+                
               </h3>
 
               </div>
@@ -107,20 +102,7 @@
               <p ng-init="a = ['label-danger','label-success','label-info','label-warning','label-primary']">
                
                  <span  data-ng-repeat="skill in vendor.skill" class="label label-primary"  style="margin:2px 5px 0 0;float: left;">{{skill.skill | capitalize}}</span> 
-                 <!-- <span class="label label-danger" >UI Design</span>
-                <span class="label label-success">Coding</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-warning">PHP</span>
-                <span class="label label-primary">Node.js</span> 
-                <span class="label label-primary">Node.js</span> 
-                <span class="label label-primary">Node.js</span> 
-                <span class="label label-danger" >UI Design</span>
-                <span class="label label-success">Coding</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-warning">PHP</span>
-                <span class="label label-primary">Node.js</span> 
-                <span class="label label-primary">Node.js</span> 
-                <span class="label label-primary">Node.js</span>  -->
+                 
                 
               </p>
               <hr>
@@ -152,8 +134,7 @@
                 <!-- Post -->
                 <div class="post" data-ng-repeat="review in vendorPostedInfo.review_list">
                   <div class="vendor-block">
-                    <!-- <img class="img-circle img-bordered-sm" src="../../dist/img/vendor1-128x128.jpg" alt="vendor image">
- -->
+                   
                     <img ng-if="review.job_author_id.prof_image" alt="vendor image" src="assets/upload/profileImg/{{review.job_author_id.prof_image}}" class="img-circle img-bordered-sm">
                    <img ng-if="!review.job_author_id.prof_image" alt="vendor image" src="images/vendor_default.jpg" class="img-circle img-bordered-sm">
                         <span class="vendorname">
@@ -200,12 +181,11 @@
                   <tr ng-repeat = "job in $data">
                     <td data-title="'Title'" sortable="'title'" filter="{title:'text'}" align="left">{{job.title | capitalize}}
                     </td>
-                    <!-- <td data-title="'Job Type'" sortable="'jobtype[0].name'" align="left">{{job.jobtype[0].name | capitalize}}</td>
-                     <td data-title="'Skill'" sortable="'skill[0].skill'"  align="left">{{job.skill[0].skill | capitalize}}</td>-->
+                    
                      <td data-title="'Owner'" align="left">{{job.creator[0].first_name | capitalize }} {{job.creator[0].last_name | capitalize}}</td>  
                      <td data-title="'Budget'" sortable="'budget'" filter="{budget:'text'}" align="left">{{job.winner_offer[0].budget | currency}}</td>
                    <td data-title="'Assign Date'" sortable="'due_date'" filter="{due_date:'text'}" align="left">{{job.admin_payment[0].txn_date | date}}</td>
-                   <!-- <td data-title="'Completed Date'" sortable="'created_date'" filter="{created_date:'text'}" align="left">{{job.worker_payment[0].txn_date | date}}</td> -->
+                   
                    <td data-title="'Status'" sortable="'status'" filter="{job_status:'text'}" align="left">
                    <span ng-show="job.work_status==1" class="label label-info">Todo</span>
                     <span ng-show="job.work_status==2" class="label label-warning">In progress</span>
@@ -221,26 +201,22 @@
     <div class="tab-pane" ng-class="{'active': activeTab === 2}" id="posted">
       <table id="example2" class="table table-bordered table-hover" ng-table="tableParams1" show-filter="isFiltersVisible"> 
          <colgroup>
-            <!-- <col width="10%"/> -->
+            
             <col width="15%"/>
-           <!--  <col width="10%"/>
-            <col width="10%"/> -->
+           
             <col width="10%"/>
             <col width="10%"/>
             <col width="15%"/> 
             <col width="10%"/>         
-           <!--  <col width="5%"/> 
-            <col width="5%"/>
-            <col width="5%"/>-->
+           
            
           </colgroup>
       <tr ng-repeat = "job in $data">
-      <!-- <td header="'headerCheckbox.html'"><input type='checkbox' ng-model="checkboxes.items[job._id]" ng-change="toggleSelection(job._id)" class="list{{tableParams.page()}}" /></td> -->
+     
       <td data-title="'Title'" sortable="'title'" filter="{title:'text'}" align="left">{{job.title | capitalize}}
        <a href='/#/offers/{{job._id}}'>  <span ng-if="job.offers.length" class="badge bg-light-blue cursur" title="" data-toggle="tooltip" data-original-title="{{job.offers.length}}  Offers">{{job.offers.length}}</span></a>
      </td>
-    <!-- <td data-title="'Job Type'" sortable="'jobtype[0].name'" align="left">{{job.jobtype[0].name| capitalize}}</td>
-    <td data-title="'Skill'" sortable="'skill[0].skill'"  align="left">{{job.skill[0].skill| capitalize}}</td> -->
+   
      <td data-title="'Budget'" sortable="'budget'" filter="{budget:'text'}" align="left">{{job.budget | currency}}</td>
       <td data-title="'Due Date'" sortable="'due_date'" filter="{due_date:'text'}" align="left">{{job.due_date | date}}</td>
    <td data-title="'Posted Date'" sortable="'created_date'" filter="{created_date:'text'}" align="left"> {{job.created_date | date}}</td>
@@ -250,20 +226,7 @@
            <span  ng-show="job.job_status==3" class="label label-primary">Completed</span>
   </td>
  </tr>
-    <!-- <tr ng-if="$data.length!=0">
-       <td >
-         <div class="form-group">
-            <select class="form-control" name='selectedAction' id='selectedAction' >
-               <option value="0">Select</option>
-               <option value="1">Enable</option>
-               <option value="2">Disable</option>
-               <option value="3">Delete</option>
-              </select> 
-             </div>
-           </td>
-        <td colspan='8'><input type='button' name='go' value='Go' class='btn btn-primary' ng-click="performAction()" ></td>
-       </form>
-   </tr> -->
+    
     <tr ng-if="$data.length==0"><td colspan="9" align="center"><b>No record found</b></td></tr>  
  </table>
            </div>

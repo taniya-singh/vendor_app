@@ -10,7 +10,8 @@ var nodemailer=require('nodemailer');
 var constantObj = require('./../../../constants.js');                                                                                                                  
 var accountSid = 'ACf8246b33d4d1342704dee12500c7aba2'; // Your Account SID from www.twilio.com/console
 var authToken = '53800350222c1f6974ce1617563aaaa5';   // Your Auth Token from www.twilio.com/console
-var client = new twilio(accountSid, authToken);   
+var client = new twilio(accountSid, authToken); 
+ 
         /**
          * Find role by id
          * Input: roleId
@@ -278,6 +279,8 @@ exports.register = function(req, res) {
                     var userModelObj = {};
                     questionnaireModelObj = req.body;
 
+
+
                     console.log(questionnaireModelObj)
                     userObj(questionnaireModelObj).save(req.body, function(err, data) { 
                         if(err) {
@@ -403,11 +406,74 @@ exports.register = function(req, res) {
 
 
 
+// exports.list = function(req, res) {
+//     var page = req.body.page || 1,
+//         count = req.body.count || 1;
+//     var skipNo = (page - 1) * count;
+
+//     var sortdata = {};
+//     var sortkey = null;
+//     for (key in req.body.sort) {
+//         sortkey = key;
+//     }
+//     if (sortkey) {
+//         var sortquery = {};
+//         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+//     }
+//      //console.log("-----------query-------", query);
+//     console.log("sortquery", sortquery);
+//     console.log("page", page);
+//     console.log("count", count);
+//     console.log("skipNo",skipNo)
+//     var query = {};
+//     var searchStr = req.body.search;
+//     if (req.body.search) {
+//         query.$or = [{
+//             email:new RegExp(searchStr, 'i')
+            
+//         }, {
+//             username: new RegExp(searchStr, 'i')
+//         }]
+//     }
+// console.log("-----------query-------", query);
+//     userObj.find(query).exec(function(err, data) {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             var length = data.length;
+//             userObj.find(
+//                  query
+//             ).skip(skipNo).limit(count).sort(sortquery)
+//             .exec(function(err, data1) {
+//                 //console.log(data)
+//                 if (err) {
+//                     console.log("tttte",err)
+//                     outputJSON = {
+//                         'status': 'failure',
+//                         'messageId': 203,
+//                         'message': 'data not retrieved '
+//                     };
+//                 } else {
+//                     outputJSON = {
+//                         'status': 'success',
+//                         'messageId': 200,
+//                         'message': 'data retrieve from products',
+//                         'data': data1,
+//                         'count': length
+//                     }
+//                 }
+//                 res.status(200).jsonp(outputJSON);
+//             })
+//         }
+//     })
+// }
+
+
 exports.list = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         userObj.find({is_deleted:false},function(err,data){
 
-            var page = req.body.page || 1,
+        var page = req.body.page || 1,
         count = req.body.count || 1;
     var skipNo = (page - 1) * count;
 
@@ -429,34 +495,55 @@ exports.list = function(req,res){
     var searchStr = req.body.search;
     if (req.body.search) {
         query.$or = [{
-            first_name:new RegExp(searchStr, 'i')
+           first_name:new RegExp(searchStr, 'i')
             
         }, {
             email: new RegExp(searchStr, 'i')
         },{
-            phone: new RegExp(searchStr, 'i')
+            phone_no: new RegExp(searchStr, 'i')
         }]
     }
     query.is_deleted=false;
     console.log("-----------query-------", query);
     userObj.find(query).exec(function(err, data) {
-        console.log(data)
+        console.log("hahahahhahahhahahaha",data);
                     if(err){
                         res.json("Error: "+err);   
                     }
                     else{
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-                        res.json(outputJSON);
+                        //outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                        //res.json(outputJSON);
+
+                        var length = data.length;
+                        userObj.find(
+                             query
+                        ).skip(skipNo).limit(count).sort(sortquery)
+                        .exec(function(err, data1) {
+                            //console.log(data)
+                            if (err) {
+                                console.log("tttte",err)
+                                outputJSON = {
+                                    'status': 'failure',
+                                    'messageId': 203,
+                                    'message': 'data not retrieved '
+                                };
+                            } else {
+                                outputJSON = {
+                                    'status': 'success',
+                                    'messageId': 200,
+                                    'message': 'data retrieve from products',
+                                    'data': data1,
+                                    'count': length
+                                }
+                            }
+                            res.status(200).jsonp(outputJSON);
+                        })
                     }
                 });
 
     });
 
 }
-
-
-
-
 
 
  
@@ -862,15 +949,15 @@ exports.reset_password=function(req,res){
                         res.jsonp(outputJSON)    
                     }else
                     {
-                    var mailDetail="smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+                    var mailDetail="smtps://hi@youbridgit.com:mohali2378@smtp.gmail.com";
                     var resetUrl = "http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
                     var transporter = nodemailer.createTransport(mailDetail);
                         
                         var mailOptions = {
-                            from: "abc",
+                            from: "hi@youbridgit.com",
                             to: req.body.email,
                             subject: 'Reset password',
-                            html: 'Welcome to MunchApp!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
                         };
                     transporter.sendMail(mailOptions, function(error, response) {
                         if (error) {
@@ -883,7 +970,7 @@ exports.reset_password=function(req,res){
                             "messageId": 200,
                             "message": "Reset password link has been send to your Mail. Kindly reset.",
                             "Sent on":Date(),
-                            "From":"Taniya Singh"}  
+                            "From":"hi@youbridgit.com"}  
                             res.jsonp(response)
                         }
                     })  
@@ -961,6 +1048,12 @@ exports.place_order=function(req,res){
     }*/
 
     exports.deleteUser = function(req,res){
+
+
+        
+
+
+
 console.log("asdasdas",req.body._id)
     if(req.body._id){
         userObj.update({

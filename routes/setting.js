@@ -4,7 +4,6 @@ module.exports = function(app, express, passport) {
 
 	var settingObj = require('./../app/controllers/setting/setting.js');
 	router.post('/findSetting',settingObj.findSetting);
-	// router.post('/saveSetting',settingObj.saveSetting);
     router.post('/updateSetting',  settingObj.updateSetting);
     router.get('/allEucationLevel',  settingObj.allEucationLevel);
 	app.use('/setting', router);
