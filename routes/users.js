@@ -6,7 +6,7 @@ var userObj = require('./../app/controllers/users/users.js');
 
 	var router = express.Router();
 	 var userObj = require('./../app/controllers/users/users.js');
-	 router.get('/list',passport.authenticate('bearer', {session:true}), userObj.list);
+	 router.get('/list', userObj.list);
 	 router.post('/add', userObj.add);
 	 router.post('/bulkUpdate', userObj.bulkUpdate);
 	 router.post('/userlogin', passport.authenticate('userLogin'),userObj.userlogin);

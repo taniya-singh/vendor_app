@@ -703,6 +703,27 @@ $scope.onClearTimePicker = function () {
     console.log('Time range current operation cancelled.');
 }
 
+
+
+/*	$scope.resetpassword=function(){	
+		console.log("insissssssssssssde resetpassword",$stateParams.id)
+		console.log("4st",$stateParams.id)
+		var json={"_id":$stateParams.id,"password":$scope.vendor}
+		console.log("CCCCCCCCCCC",json)
+		VendorService.resetpassword(json,function(res){
+			$scope.register="";
+			if(res){
+				if(res.messageId==200){
+					$scope.successmsg=res.message;
+				}
+				else{
+					$scope.errormsg=res.message;
+				}
+			}
+		})
+		
+	};*/
+
 munchapp.filter('typeof', function() {
   return function(obj) {
     return typeof obj

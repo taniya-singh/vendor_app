@@ -1,6 +1,6 @@
-var baseUrl = "http://52.39.212.226:4075";
+//var baseUrl = "http://52.39.212.226:4075";
 //var baseUrl = "http://172.24.5.36:4075";
-//var baseUrl = "http://172.24.2.167:4075";
+var baseUrl = "http://172.24.2.167:4075";
 
 var webservices = {	
 
@@ -19,13 +19,12 @@ var webservices = {
 	"userList" : baseUrl + "/users/list",
 	"update" : baseUrl + "/users/update",
 	"getCurrentUserData":baseUrl + "/users/getCurrentUserData",
-	"resetPassword":baseUrl+"/users/resetPassword",
+	//"resetPassword":baseUrl+"/users/resetassword",
 	"unSubscribe":baseUrl+"/users/unSubscribe",
 	"allUsersCount":baseUrl+"/users/allUsersCount",
 	"exportUserList":baseUrl + "/users/exportFile",
 	"deleteUser":baseUrl + "/users/deleteUser",
-	"totalUser": baseUrl + "/users/totalUser",
-	
+	"totalUser": baseUrl + "/users/totalUser",	
 	"deleteUser" : baseUrl + "/users/deleteUser",
     "bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
     "resetpassword":baseUrl+"/users/reset_password",
@@ -36,7 +35,7 @@ var webservices = {
 	"vendorList" : baseUrl + "/admin/vendorList",
 	"update" : baseUrl + "/vendor/update",
 	"getCurrentVendorData":baseUrl + "/vendor/getCurrentVendorData",
-	"resetPassword":baseUrl+"/vendor/resetPassword",
+	//"resetpassword":baseUrl+"/admin/reset_password",
 	"unSubscribe":baseUrl+"/vendor/unSubscribe",
 	"allVendorCount":baseUrl+"/vendor/allVendorCount",
 	"exportVendorList":baseUrl + "/vendor/exportFile",

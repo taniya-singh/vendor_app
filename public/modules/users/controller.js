@@ -304,7 +304,7 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 						passingDate.sort = params.sorting();
 						// usSpinnerService.stop('spinner-1');
 						UserService.getUserList(passingDate, function(response) {
-							// console.log(response.data);
+							console.log("****************",response);
 							
 							if(response.count==0){
 								$scope.showStatus = true;

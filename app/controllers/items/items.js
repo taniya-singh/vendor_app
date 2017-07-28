@@ -311,24 +311,8 @@ exports.customerListItem = function(req, res) {
 exports.item_listing_for_user = function(req, res) {
 	console.log("body", req.body)
 	if (req.body != null) {
-		console.log("inside",req.body)
 		var lat=req.body.latitude;
 		var long=req.body.longitude;
-		console.log("lat and long",lat,long)
-			/*var  details =[req.body.latitute,req.body.longitude]
-	console.log("details",details)
-	 	
-	 	vendor.find({'geo': {$near: details,$maxDistance: .6411}},function(err,places){
-	 		if(err){
-	 			console.log("err",err)
-	 		}
-	 		else{
-	 			console.log("places",places)
-	 		}
-	 	})
-
-	 	}
-*/
 		vendor.aggregate([{
 			$geoNear: {
 				near: {
@@ -336,7 +320,7 @@ exports.item_listing_for_user = function(req, res) {
 						coordinates: [lat,long]
 					},
 				distanceField: "dist.calculated",
-				maxDistance: 25000,
+				maxDistance: 25000000000000000000000,
 				includeLocs: "dist.location",
 				spherical: true
 			}
@@ -357,8 +341,7 @@ exports.item_listing_for_user = function(req, res) {
 					},
 					res.json(outputJSON);
 			} else {
-				console.log("item_detail", items)
-				//console.log("count",);
+				
 				outputJSON = {
 						'status': 'success',
 						'messageId': 200,

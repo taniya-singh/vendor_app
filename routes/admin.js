@@ -12,6 +12,11 @@ module.exports = function(app, express,passport) {
     router.post('/updateVendordata', vendor.updateVendordata);
     router.post('/getCurrentVendorData', vendor.getCurrentVendorData);
     router.post('/forget_password', vendor.forget_password);
+    router.post('/reset_password', vendor.reset_password);
+    router.post('/total_sales', vendor.total_sales);
+     
+
+
 
 
 	

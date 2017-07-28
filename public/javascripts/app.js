@@ -168,8 +168,8 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		controller:'loginController',
 		templateUrl:'/modules/authentication/views/reset-password.html'
 	})*/
-	.state('/resetpassword/:id', {
-		url:"/resetpassword/:id",
+	.state('/resetpassword/:id/resetpassword_type/:type', {
+		url:"/resetpassword/:id/resetpassword_type/:type",
 			controller:'loginController',
 		templateUrl:'/modules/authentication/views/resetpassword.html'
 		// resolve: {

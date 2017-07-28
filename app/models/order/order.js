@@ -15,8 +15,5 @@ var orderSchema = new mongoose.Schema({
 
 
 
-
-
-
 var order = mongoose.model('orders', orderSchema);
 module.exports = order;

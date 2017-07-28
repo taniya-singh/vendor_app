@@ -2,6 +2,12 @@ var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
+var cardSubschema = new mongoose.Schema({
+  card_id:{type:String},
+  default_status:{type:Boolean,default:false}
+}) 
+
+
 var userSchema = new mongoose.Schema({
   vendor_id: {type: mongoose.Schema.Types.ObjectId, ref: 'vendor'},
   first_name: {type:String},
@@ -19,7 +25,8 @@ var userSchema = new mongoose.Schema({
   google_id:{type:Number},
   loginType:{type: Number, default:1},// 1 simple,2 facebook, 3 google
   user_type:{type:String,default:"customer"},
-  created_date:{type:Date, default: Date.now}
+  created_date:{type:Date, default: Date.now},
+  stripe_card_ids:{type:[cardSubschema]}
  });
 
 userSchema.statics.load = function(id, cb) {

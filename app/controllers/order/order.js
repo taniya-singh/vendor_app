@@ -254,3 +254,8 @@ exports.update_pickup_status=function(req,res){
 		})
 	}
 }
+
+
+exports.total_sales=function(req,res){
+	console.log("AAAAA")
+}

@@ -1,5 +1,6 @@
 var userObj = require('./../../models/users/users.js');
-var vendor = require('./../../models/vendordetails/vendordetails.js');
+//var vendor = require('./../../models/vendordetails/vendordetails.js');
+var Vendor = require('./../../models/admin/signup_vendor.js');
 var order = require('./../../models/order/order.js');
 var itemsObj = require('./../../models/items/items.js');
 var device = require('./../../models/devices/devices.js')
@@ -20,7 +21,6 @@ var client = new twilio(accountSid, authToken);
 
 exports.userlogin = function(req, res) {
     var data = res.req.user;
-    console.log("dataaaaa", data)
     if (req.body.loginType == 1) {
         if (data.message == 'Invalid username') {
             var outputJSON = {
@@ -90,7 +90,6 @@ exports.update_vendor_info = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        console.log("inside responmse", updatedresponse);
                         outputJSON = {
                             'status': 'success',
                             'messageId': 200,
@@ -108,7 +107,6 @@ exports.update_vendor_info = function(req, res) {
 exports.faceBookLogin = function(req, res) {
 
         if (req.body.loginType == 2) {
-            console.log("inside faceBookLogin")
             if (!req.body.facebook_id) {
                 res.jsonp({
                     'status': 'failure',
@@ -127,10 +125,13 @@ exports.faceBookLogin = function(req, res) {
                     details.phone_no = req.body.phone_no;
                 }
                 if (req.body.email) {
-                    details.email = req.body.username;
+                    details.email = req.body.email;
                 }
                 if (req.body.password) {
                     details.password = req.body.password;
+                }
+                if(req.body.username){
+                    details.user_name=req.body.username;
                 }
                 details.facebook_id = req.body.facebook_id;
                 details.loginType = 2;
@@ -145,7 +146,6 @@ exports.faceBookLogin = function(req, res) {
                             "message": "Sorry, Problem to login with facebook."
                         });
                     } else {
-                        console.log("user find is", user)
                         if (user == null) {
                             userObj(details).save(req.body, function(err, adduser) {
                                 if (err) {
@@ -180,27 +180,36 @@ exports.faceBookLogin = function(req, res) {
                                 }
                             })
                         } else {
+                            userObj.update({user,facebook_id:req.body.facebook_id},{$set:{details}},function(err,updatedata){
+                                if(err){
 
-                            var dev = {};
-                            dev.user_id = user._id;
-                            dev.device_id = req.body.device_id;
-                            dev.device_type = req.body.device_type;
-                            device(dev).save(dev, function(err, data) {
-                                if (err) {
-                                    res.jsonp({
-                                        'status': 'faliure',
-                                        'messageId': 401,
-                                        'message': 'Either device_id or device_type is not available!'
-                                    });
-                                } else {
-                                    res.jsonp({
-                                        'status': 'success',
-                                        'messageId': 200,
-                                        'message': 'Facebook credentials already exists',
-                                        "data": user
-                                    });
+                                }else{
+                                    if(updatedata){
+                                      var dev = {};
+                                        dev.user_id = user._id;
+                                        dev.device_id = req.body.device_id;
+                                        dev.device_type = req.body.device_type;
+                                        device(dev).save(dev, function(err, data) {
+                                            if (err) {
+                                                res.jsonp({
+                                                    'status': 'faliure',
+                                                    'messageId': 401,
+                                                    'message': 'Either device_id or device_type is not available!'
+                                                });
+                                            } else {
+                                                res.jsonp({
+                                                    'status': 'success',
+                                                    'messageId': 200,
+                                                    'message': 'Facebook credentials already exists',
+                                                    "data": user
+                                                });
+                                            }
+                                        })  
+                                    }
                                 }
                             })
+
+                            
                         }
                     }
                 })
@@ -389,11 +398,6 @@ exports.list = function(req, res) {
             var sortquery = {};
             sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
         }
-        //console.log("-----------query-------", query);
-        console.log("sortquery", sortquery);
-        console.log("page", page);
-        console.log("count", count);
-        console.log("skipNo", skipNo)
         var query = {};
         var searchStr = req.body.search;
         if (req.body.search) {
@@ -407,12 +411,11 @@ exports.list = function(req, res) {
             }]
         }
         query.is_deleted = false;
-        console.log("-----------query-------", query);
-        userObj.find(query).exec(function(err, data) {
-            console.log(data)
+        userObj.find([{}]).exec(function(err, data) {
             if (err) {
                 res.json("Error: " + err);
             } else {
+                console.log("data", data);
                 outputJSON = {
                         'status': 'success',
                         'messageId': 200,
@@ -648,12 +651,10 @@ exports.add = function(req, res) {
     var errorMessage = "";
     var outputJSON = "";
     var userModelObj = {};
-    console.log(req.body);
     userModelObj = req.body;
     userObj.findOne({
         email: req.body.email
     }, function(err, user) {
-        console.log("user", user)
         if (err) {
             outputJSON = {
                 'status': 'failure',
@@ -662,7 +663,6 @@ exports.add = function(req, res) {
             };
         } else {
             if (user == null) {
-                console.log("inside if");
                 userObj(userModelObj).save(req.body, function(err, data) {
                     if (err) {
                         switch (err.name) {
@@ -734,9 +734,7 @@ exports.update_user_info = function(req, res) {
                 };
                 res.jsonp(outputJSON)
             } else {
-                console.log("userf found", user_found)
                 var logintype = user_found[0].loginType
-                console.log("login type", logintype)
                 if (req.body.email == "") {
                     console.log("email not updated")
                     userObj.update({
@@ -781,9 +779,7 @@ exports.update_user_info = function(req, res) {
                                 };
                                 res.jsonp(outputJSON)
                             } else {
-                                console.log("useremail", useremail)
                                 if (useremail == "") {
-                                    console.log("logintype==1 ", logintype)
                                     userObj.update({
                                         _id: req.body._id
                                     }, {
@@ -796,7 +792,6 @@ exports.update_user_info = function(req, res) {
                                         }
                                     }, function(err, updateddata) {
                                         if (err) {
-                                            console.log("err", err);
                                             outputJSON = {
                                                 'status': 'failure',
                                                 'messageId': 401,
@@ -827,7 +822,6 @@ exports.update_user_info = function(req, res) {
                         })
                     } // end of if loginType==1
                     if (logintype == 2) {
-                        console.log("logintype==2", logintype)
                         userObj.update({
                             _id: req.body._id
                         }, {
@@ -839,7 +833,6 @@ exports.update_user_info = function(req, res) {
                             }
                         }, function(err, data) {
                             if (err) {
-                                console.log("err", err);
                                 outputJSON = {
                                     'status': 'failure',
                                     'messageId': 401,
@@ -895,42 +888,105 @@ exports.bulkUpdate = function(req, res) {
 }
 
 exports.reset_password = function(req, res) {
-    console.log("reset password wich", req.body._id);
-    console.log("new pass", req.body.password.newpassword)
+    console.log("TTTAAAANIIYAA")
+    console.log("new passsssss", req.body.password.newpassword)
     if (req.body._id != null) {
+        if (req.body.type == 1) {
+            console.log("insode 1");
+            userObj.update({
+                _id: req.body._id
+            }, {
+                $set: {
+                    "password": req.body.password.newpassword
+                }
+            }, function(err, updatedresponse) {
+                if (err) {
+                    outputJSON = {
+                        'status': 'error',
+                        'messageId': 400,
+                        'message': "Password not updated, Try again later"
+                    };
+                    res.jsonp(outputJSON)
+                } else {
+                    console.log("updated responseeeeee", updatedresponse)
+                    if (updatedresponse) {
+                        outputJSON = {
+                            'status': 'success',
+                            'messageId': 200,
+                            'message': "password updated successfully",
+                            "data": updatedresponse
+                        };
+                        res.jsonp(outputJSON)
+                    } else {
+                        outputJSON = {
+                            'status': 'failure',
+                            'messageId': 400,
+                            'message': "password not updated,try again later"
+                        };
+                        res.jsonp(outputJSON)
+                    }
 
-        userObj.update({
-            _id: req.body._id
-        }, {
-            $set: {
-                "password": req.body.password.newpassword
+                }
+            })
+
+        } else if (req.body.type == 2) {
+            console.log("insode 2");
+            Vendor.update({
+                    _id: req.body._id
+                }, {
+                    $set: {
+                        "password": req.body.password.newpassword
+                    }
+                }, function(err, updatedresponse) {
+                    if (err) {
+                        outputJSON = {
+                            'status': 'error',
+                            'messageId': 400,
+                            'message': "Password not updated, Try again later"
+                        };
+                        res.jsonp(outputJSON)
+                    } else {
+                        console.log(updatedresponse)
+                        console.log("updatedresponse")
+                        if (updatedresponse.nModified == 1) {
+                            outputJSON = {
+                                'status': 'success',
+                                'messageId': 200,
+                                'message': "password updated successfully",
+                                "data": updatedresponse
+                            };
+                            res.jsonp(outputJSON)
+                        } else {
+                            outputJSON = {
+                                'status': 'failure',
+                                'messageId': 400,
+                                'message': "password not updated"
+                            };
+                            res.jsonp(outputJSON)
+                        }
+                    }
+                })
             }
-        }, function(err, updatedresponse) {
-            if (err) {
-                outputJSON = {
-                    'status': 'error',
-                    'messageId': 400,
-                    'message': "Password not updated, Try again later"
-                };
-                res.jsonp(outputJSON)
-            } else {
-                outputJSON = {
-                    'status': 'success',
-                    'messageId': 200,
-                    'message': "password updated successfully",
-                    "data": updatedresponse
-                };
-                res.jsonp(outputJSON)
-            }
-        })
-    } else {
+    }
+     else {
         outputJSON = {
             'status': 'failure',
             'messageId': 400,
-            'message': "session expired"
+            'message': "please enter a reset password type",
+
         };
         res.jsonp(outputJSON)
     }
+
+
+/*} else {
+    outputJSON = {
+        'status': 'failure',
+        'messageId': 400,
+        'message': "session expired"
+    };
+    res.jsonp(outputJSON)
+}*/
 }
 
 exports.forgetpassword = function(req, res) {
@@ -982,63 +1038,132 @@ exports.forgetpassword = function(req, res) {
         })
     }
     if (req.body.email) {
-        console.log("inside email")
-        userObj.findOne({
-            email: req.body.email
-        }, function(err, data) {
-            if (err) {
-                outputJSON = {
-                    'status': 'failure',
-                    'messageId': 401,
-                    'message': "Error Occured"
-                };
-                res.jsonp(outputJSON);
-            } else {
-                if (data == null) {
+        console.log("reb.bosy", req.body)
+        var type = req.body.resetpassword_type;
+        if (type == 1) {
+            console.log("inside user")
+            userObj.findOne({
+                email: req.body.email
+            }, function(err, data) {
+                if (err) {
                     outputJSON = {
                         'status': 'failure',
                         'messageId': 401,
-                        'message': "Please enter a valid Email ID"
+                        'message': "Error Occured"
                     };
-                    res.jsonp(outputJSON)
+                    res.jsonp(outputJSON);
                 } else {
-                    var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
-                    var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id;
-                    var transporter = nodemailer.createTransport(mailDetail);
+                    if (data == null) {
+                        outputJSON = {
+                            'status': 'failure',
+                            'messageId': 401,
+                            'message': "Please enter a valid Email ID"
+                        };
+                        res.jsonp(outputJSON)
+                    } else {
+                        console.log("req.headers", req.headers.host)
 
-                    var mailOptions = {
-                        from: "abc",
-                        to: req.body.email,
-                        subject: 'Reset password',
-                        html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
-                    };
-                    transporter.sendMail(mailOptions, function(error, response) {
-                        if (error) {
-                            console.log("err", error)
-                            outputJSON = {
-                                'status': 'failure',
-                                'messageId': 401,
-                                'message': "error"
-                            };
-                            res.jsonp(outputJSON)
-                        } else {
-                            var response = {
-                                "status": 'success',
-                                "messageId": 200,
-                                "message": "Reset password link has been send to your Mail. Kindly reset.",
-                                "Sent on": Date(),
-                                "From": "Taniya Singh"
+                        var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+                        var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id + "/resetpassword_type/" + type;
+                        var transporter = nodemailer.createTransport(mailDetail);
+
+                        var mailOptions = {
+                            from: "abc",
+                            to: req.body.email,
+                            subject: 'Reset password',
+                            html: 'Welcome to Bridgit!Your request for reset password is  being proccessed .Please Follow the link to reset your password for customer   \n  ' + resetUrl
+                        };
+                        transporter.sendMail(mailOptions, function(error, response) {
+                            if (error) {
+                                console.log("err", error)
+                                outputJSON = {
+                                    'status': 'failure',
+                                    'messageId': 401,
+                                    'message': "error"
+                                };
+                                res.jsonp(outputJSON)
+                            } else {
+                                var response = {
+                                    "status": 'success',
+                                    "messageId": 200,
+                                    "message": "Reset password link has been send to your Mail. Kindly reset.",
+                                    "Sent on": Date(),
+                                    "From": "Taniya Singh"
+                                }
+                                res.jsonp(response)
                             }
-                            res.jsonp(response)
-                        }
-                    })
+                        })
+                    }
                 }
-            }
-        })
+            })
+
+        } else if (type == 2) {
+            console.log("inside vendor")
+            var vendor_email = req.body.email
+            console.log("vendor email", vendor_email)
+
+            Vendor.findOne({
+                vendor_email: vendor_email
+            }, function(err, data) {
+                if (err) {
+                    outputJSON = {
+                        'status': 'failure',
+                        'messageId': 401,
+                        'message': "Error Occured"
+                    };
+                    res.jsonp(outputJSON);
+                } else {
+                    if (data == null) {
+                        outputJSON = {
+                            'status': 'failure',
+                            'messageId': 401,
+                            'message': "Please enter a valid Email ID"
+                        };
+                        res.jsonp(outputJSON)
+                    } else {
+                        console.log("req.headers", req.headers.host)
+
+                        var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+                        var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id + "/resetpassword_type/" + type;
+                        var transporter = nodemailer.createTransport(mailDetail);
+
+                        var mailOptions = {
+                            from: "abc",
+                            to: vendor_email,
+                            subject: 'Reset password',
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password for vendor   \n  ' + resetUrl
+                        };
+                        console.log("mail options", mailOptions)
+                        transporter.sendMail(mailOptions, function(error, response) {
+                            if (error) {
+                                console.log("err", error)
+                                outputJSON = {
+                                    'status': 'failure',
+                                    'messageId': 401,
+                                    'message': "error"
+                                };
+                                res.jsonp(outputJSON)
+                            } else {
+                                console.log("url", resetUrl)
+                                var response = {
+                                    "status": 'success',
+                                    "messageId": 200,
+                                    "message": "Reset password link has been send to your Mail. Kindly reset.",
+                                    "Sent on": Date(),
+                                    "From": "Taniya Singh"
+                                }
+                                res.jsonp(response)
+                            }
+                        })
+                    }
+                }
+            })
+
+        }
+
     }
 }
 exports.deleteUser = function(req, res) {
-    console.log("asdasdas", req.body._id)
     if (req.body._id) {
         userObj.update({
             _id: req.body._id
@@ -1087,7 +1212,6 @@ exports.totalUser = function(req, res) {
 }
 exports.customer_orderlist = function(req, res) {
     var date = [];
-    console.log("customer order lis");
     order.find({
         customer_id: req.body._id
     }, function(err, orders) {
@@ -1134,9 +1258,6 @@ exports.customer_orderlist = function(req, res) {
                         res.jsonp(outputJSON);
                     } else {
                         if (orderlist.length > 0) {
-                            console.log("orderlist", orderlist[0].created_date)
-
-
 
                             for (var i = 0; i < orderlist.length; i++) {
                                 var d = orderlist[i].created_date;
@@ -1152,8 +1273,7 @@ exports.customer_orderlist = function(req, res) {
                                 min = min < 10 ? '0' + min : min;
                                 var strTime = hh + ':' + min + ' ' + ampm;
 
-                                //console.log("dats is",orderlist[i].created_date)
-                                orderlist[i].created_date = dd + "/" + mm + "/" + yy + ", " +strTime;
+                                orderlist[i].created_date = dd + "/" + mm + "/" + yy + ", " + strTime;
                                 console.log("new date is", orderlist[i].created_date)
                             }
                             //console.log("date array is",date)                
@@ -1180,7 +1300,7 @@ exports.customer_orderlist = function(req, res) {
                 outputJSON = {
                     'status': 'failure',
                     'messageId': 200,
-                    'message': "Not a valid customer id"
+                    'message': "No order placed yet"
 
                 }
                 res.jsonp(outputJSON);

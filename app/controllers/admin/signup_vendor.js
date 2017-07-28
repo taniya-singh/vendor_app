@@ -6,6 +6,8 @@ var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
 var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
 var nodemailer=require('nodemailer');
+var itemsObj = require('./../../models/items/items.js');
+var order = require('./../../models/order/order.js');
 
 
 
@@ -587,4 +589,62 @@ exports.forget_password=function(req,res){
                     }        
                  }
             })
+}
+exports.reset_password = function(req, res) {
+	console.log("AAAAAAAAAA")
+    console.log("new pass", req.body.password.newpassword)
+    if (req.body._id != null) {
+
+        vendor.update({
+            _id: req.body._id
+        }, {
+            $set: {
+                "password": req.body.password.newpassword
+            }
+        }, function(err, updatedresponse) {
+            if (err) {
+                outputJSON = {
+                    'status': 'error',
+                    'messageId': 400,
+                    'message': "Password not updated, Try again later"
+                };
+                res.jsonp(outputJSON)
+            } else {
+                outputJSON = {
+                    'status': 'success',
+                    'messageId': 200,
+                    'message': "password updated successfully",
+                    "data": updatedresponse
+                };
+                res.jsonp(outputJSON)
+            }
+        })
+    } else {
+        outputJSON = {
+            'status': 'failure',
+            'messageId': 400,
+            'message': "session expired"
+        };
+        res.jsonp(outputJSON)
+    }
+}
+
+exports.total_sales=function(req,res){
+
+	order.aggregate([{$match:{status:"Picked Up"}},{
+        $group : {
+           _id : null,
+           total_Count: { $sum: "$item_count" }
+            }
+        }],function(err,poonam){
+        	if(err){
+        		console.log("err",err)
+
+        	}
+        	else{
+        		console.log("aaaaaaaaaa",poonam)
+        		res.jsonp({"data":poonam})
+        	}
+        })
+
 }

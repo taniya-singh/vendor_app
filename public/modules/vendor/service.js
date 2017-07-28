@@ -96,8 +96,9 @@ angular.module('Vendor')
 		});
 	}
 
-	service.resetPassword = function(inputJsonString, callback) {
-			communicationService.resultViaPost(webservices.resetPassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+	service.resetpassword = function(inputJsonString, callback) {
+		console.log("inside service",inputJsonString)
+			communicationService.resultViaPost(webservices.resetpassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	}
