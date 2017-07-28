@@ -47,6 +47,8 @@ var webservices = {
 
     "updateVendordata" : baseUrl + "/admin/updateVendordata",
     "getCurrentVendorData" : baseUrl + "/admin/getCurrentVendorData",
+      "totalSales" : baseUrl + "/admin/totalSales",
+
 
 
 	//package

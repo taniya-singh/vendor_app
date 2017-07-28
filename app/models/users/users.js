@@ -26,7 +26,8 @@ var userSchema = new mongoose.Schema({
   loginType:{type: Number, default:1},// 1 simple,2 facebook, 3 google
   user_type:{type:String,default:"customer"},
   created_date:{type:Date, default: Date.now},
-  stripe_card_ids:{type:[cardSubschema]}
+  stripe_card_ids:{type:[cardSubschema]},
+  default_card_linked:{type:String}
  });
 
 userSchema.statics.load = function(id, cb) {

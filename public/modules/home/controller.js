@@ -49,8 +49,8 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 
 							$scope.loader=false;
 							if(response.messageId == 200) {
-							  
-								$scope.totalSales=response.data;
+							  	//console.log("response is yyyyyy",response.data.total_Count)
+								$scope.totalSales=response.data[0].total_Count;
 								console.log("The value is>>>>>>>>>>>>>>>>>>>>>>> : ",$scope.totalSales)
 
 							}

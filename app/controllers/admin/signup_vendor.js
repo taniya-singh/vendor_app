@@ -656,7 +656,8 @@ exports.reset_password = function(req, res) {
     }
 }*/
 
-exports.total_sales=function(req,res){
+exports.totalSales=function(req,res){
+	console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKK")
 
 	order.aggregate([{$match:{status:"Picked Up"}},{
         $group : {
@@ -669,8 +670,13 @@ exports.total_sales=function(req,res){
 
         	}
         	else{
-        		console.log("aaaaaaaaaa",poonam)
-        		res.jsonp({"data":poonam})
+        		outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': "Total sales retreived successfully",
+                'data':poonam
+            };
+        		res.jsonp(outputJSON)
         	}
         })
 
@@ -697,4 +703,34 @@ exports.total_sales=function(req,res){
         }
         res.jsonp(outputJSON);
     });
+}
+
+exports.totalRevenue=function(req,res){
+	var total;
+	console.log("insiode tottal")
+	order.aggregate([  
+	  {
+	  	$lookup:    
+	      {  from: "items",
+	         localField: "item_id",
+	         foreignField: "_id",     
+	         as: "items"       
+	       }
+
+	  },{$unwind:"$items"
+	}],function(err,orderdetails){
+	  	if(err){
+	  		console.log("err")
+
+	  	}else{
+	  		console.log(orderdetails)
+	  		for(var i=0;i<orderdetails.length;i++){
+	  			var calculated_price=orderdetails[i].item_count*orderdetails[i].items.p_price
+	  			total=total+calculated_price
+	  		}
+	  		console.log("total revenew is",total)
+	  		res.jsonp({orderdetails})
+
+	  	}
+	  })
 }
