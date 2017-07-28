@@ -58,10 +58,9 @@
                               <span style="color:red">Name maximum length 20</span>
                             </div>
                           </div>
-
                           <div class="form-group">
                             <label >Email<span class="requiredClass">*</span></label>
-                            <input autocomplete="off" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
+                            <input  autocomplete="off" type="email" class="form-control" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-model="vendor.vendor_email" placeholder="Email" name="vendor_email" required>
                             <div class="validationError" ng-messages="vendorForm.vendor_email.$error" ng-show="
                               vendorForm.vendor_email.$touched &&vendorForm.vendor_email.$invalid && (!vendorForm.vendor_email.$pristine || vendorForm.$submitted)" role="alert">
                               <span style="color:red" ng-message="pattern" class="error-message">Email is not valid</span>
@@ -74,7 +73,6 @@
                               <span style="color:red" class="error-message">Email Already exist</span>
                             </div>
                           </div>
-
                           <div class="row">
                             <div class="col-xs-6">
                               <div class="form-group">

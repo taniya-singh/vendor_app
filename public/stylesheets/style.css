@@ -143,6 +143,7 @@ input[type=number] {
   background: #222d32;
   z-index: 1;
 }
+
 .small-box.custom-small-bg > .inner { padding: 20px; }
 .small-box.custom-small-bg > .small-box-footer { padding: 8px 0; }
 .small-box.custom-small-bg .icon { top: 0; right: 20px; }

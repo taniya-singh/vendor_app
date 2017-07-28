@@ -44,6 +44,7 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 
 
 
+
 						VendorService.totalSales(function(response) {
 
 							$scope.loader=false;
@@ -65,6 +66,7 @@ munchapp.controller("homeController", ['$stateParams', '$state','$scope', '$root
 
 							}
 						});
+
 						
 						UserService.userAllJobs(1,0,5,function(response) {
 	        			if(response.messageId == 200) {

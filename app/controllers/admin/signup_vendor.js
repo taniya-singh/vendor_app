@@ -40,8 +40,10 @@ exports.signupVendor = function(req, res) {
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude];
 					
+
 					// var pswdd = JSON.parse(JSON.stringify(req.body.password));
                    //  vendorobj.password = md5(pswdd);
+
 
 				
 					vendor(vendorobj).save(vendorobj, function(err, data) { 

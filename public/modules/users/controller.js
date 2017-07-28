@@ -285,7 +285,9 @@ munchapp.controller("userController", ['$http','$stateParams', '$state','$scope'
 				passingDate.search = $scope.search;
 				$scope.tableParams = new ngTableParams({
 					page: 1,
+
 					count: 5,
+
 					sorting: {
 						created: "desc"
 					}

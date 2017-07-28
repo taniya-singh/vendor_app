@@ -13,6 +13,7 @@ angular.module('Vendor')
 
 	}
 
+
 	service.totalRevenue = function(callback) { 
 			communicationService.resultViaGet(webservices.totalRevenue, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
@@ -26,6 +27,7 @@ angular.module('Vendor')
 		});
 
 	}
+
 
 	
 	service.latestVendor = function(callback) { 
