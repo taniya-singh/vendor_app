@@ -1180,7 +1180,7 @@ exports.customer_orderlist = function(req, res) {
                 outputJSON = {
                     'status': 'failure',
                     'messageId': 200,
-                    'message': "Not a valid customer id"
+                    'message': "no order placed yet"
 
                 }
                 res.jsonp(outputJSON);

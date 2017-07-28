@@ -232,7 +232,7 @@ exports.view_cart_details=function(req,res){
 exports.update_pickup_status=function(req,res){
 	console.log("insode");
 	if(req.body.order_id){
-		order.update({_id:req.body.order_id},{$set:{status:"Pick Up"}},function(err,update){
+		order.update({_id:req.body.order_id},{$set:{status:"Picked Up"}},function(err,update){
 			if(err){
 				outputJSON = {
 							'status': 'success',
