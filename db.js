@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/vendorapp(local)');
 
 
-
 mongoose.connection.on('connected', function(error,data) {
 	if(error)
 	{

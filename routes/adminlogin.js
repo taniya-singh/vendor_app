@@ -11,8 +11,6 @@ module.exports = function(app, express, passport) {
 	router.post('/resetPassword', adminLoginObj.resetPassword);	
 	router.post('/changePassword', adminLoginObj.changePassword);	
 	router.post('/saveProfile', adminLoginObj.saveProfile);	
-//	router.post('/commissionSetting',[passport.authenticate('bearer', {session:true})], adminLoginObj.commissionSetting);		
-//	router.get('/getCommission',[passport.authenticate('bearer', {session:true})], adminLoginObj.getCommission);	
 	router.post('/uploadProImg', adminLoginObj.uploadProImg);	
 	router.param('adminId', adminLoginObj.admin);
 	router.get('/adminInfo/:adminId', adminLoginObj.findOne);

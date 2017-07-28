@@ -5,7 +5,6 @@
    .modal {
   text-align: center;
 }
-
 @media screen and (min-width: 768px) { 
   .modal:before {
     display: inline-block;
@@ -14,13 +13,11 @@
     height: 100%;
   }
 }
-
 .modal-dialog {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
 }
-
  </style>
 
 
@@ -30,7 +27,7 @@
                        FAQ                       
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a ui-sref="home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                       <li><a href="/#/home"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                         <li>FAQ</li>                       
                     </ol>
                 </section>
@@ -157,7 +154,10 @@
         <div class="modal-footer">
         
 
+
+
           <button type="button" ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-show="!modalData._id" ng-click="addQuestion()" ng-if="!updateButton">Submit</button>
+
 
           <button type="button"  ng-disabled="myform.$invalid" class="btn btn-default" data-dismiss="modal" ng-show="modalData._id" ng-click="update()">Update</button>
 
@@ -185,4 +185,5 @@
         </div>
       </div>
     </div>
+
   </div>            

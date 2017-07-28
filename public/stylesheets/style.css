@@ -144,5 +144,11 @@ input[type=number] {
   z-index: 1;
 }
 
-
-  
+.small-box.custom-small-bg > .inner { padding: 20px; }
+.small-box.custom-small-bg > .small-box-footer { padding: 8px 0; }
+.small-box.custom-small-bg .icon { top: 0; right: 20px; }
+.custom-accordian .panel-title { position: relative; padding-right: 90px; }
+.custom-accordian .right-btn { position: absolute; top: -2px; right: 0;  }
+.custom-accordian .right-btn button { border:none; padding: 3px 5px; border-radius: 2px; }
+.custom-accordian .right-btn button span.glyphicon { font-size: 12px; }
+.custom-accordian .right-btn button + button { margin-right: 8px; }

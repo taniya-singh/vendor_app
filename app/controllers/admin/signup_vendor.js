@@ -1,4 +1,5 @@
 var vendor = require('./../../models/admin/signup_vendor.js');
+var items = require('./../../models/items/items.js');
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs=require('fs');
@@ -8,8 +9,7 @@ var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
 var nodemailer=require('nodemailer');
 var itemsObj = require('./../../models/items/items.js');
 var order = require('./../../models/order/order.js');
-
-
+var md5 = require('md5'); 
 
 
 /* Vendor sign up form  */
@@ -51,7 +51,7 @@ exports.signupVendor = function(req, res) {
 					vendorobj.city=addressdetails[0].city;
 					vendorobj.country=addressdetails[0].country;
 					vendorobj.geo=[addressdetails[0].latitude,addressdetails[0].longitude]
-					vendor(vendorobj).save(vendorobj, function(err, vendetails) { 
+					vendor(vendorobj).save(vendorobj, function(err, vendetails) { 					
 						if(err) {
 							console.log("data if err",err)
 							switch(err.name) {
@@ -79,8 +79,10 @@ exports.signupVendor = function(req, res) {
 							userDetails.pass = vendorobj.password;
 							userDetails.firstname = vendorobj.vendor_name;
 							userDetails.app_link = "<a href='http://www.google.com'>Link</a>";
-							var frm = '<img src="logo.png">';
-							var emailSubject = 'bridgit Registration';
+
+							var frm = '<img src="images/app.png">';
+							var emailSubject = 'Welcome to Bridgit';
+
 							var emailTemplate = 'user_signup.html';
 							emailService.send(userDetails, emailSubject, emailTemplate, frm);
 							// end of send email
@@ -217,16 +219,11 @@ var data = res.req.user;
 /*update vendor information*/
 
 exports.update_vendor_info2=function(req,res){
-	console.log("inside vendor ")
-	if(req.body._id){
-		vendor.findOne({_id:req.body._id},function(err,data){
-			if(err){
-				outputJSON = {'status': 'error', 'messageId':400, 'message':"not a valid _id"}; 
-				res.jsonp(outputJSON)
-			}
-			else{
-                console.log("req.body",req.body)
-				vendor.update({_id:req.body._id},{$set:{"pickup_time":req.body.pickup_time,"vendor_email":req.body.vendor_email,"password":req.body.password,"vendor_name":req.body.vendor_name,"vendor_address":req.body.vendor_address,"phone_no":req.body.phone_no}},function(err,updatedresponse){
+	console.log("req.body",req.body)
+	var updatedinfo={};
+	updatedinfo=req.body;
+
+ vendor.update({_id:req.body._id},{$set:updatedinfo},function(err,updatedresponse){
 					if(err){
 						outputJSON = {'status': 'error', 'messageId':400, 'message':"not Updated"}; 
 						res.jsonp(outputJSON)
@@ -237,9 +234,8 @@ exports.update_vendor_info2=function(req,res){
 					 	res.jsonp(outputJSON)
 					 }
 				})
-			}
-		})
-	}
+	
+		
 }
 
 
@@ -286,8 +282,33 @@ exports.vendorList = function(req,res){
                         res.json("Error: "+err);   
                     }
                     else{
-                        outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-                    	res.json(outputJSON);
+                        //outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                    	//res.json(outputJSON);
+
+                    	var length = data.length;
+						vendor.find(
+							 query
+						).skip(skipNo).limit(count).sort(sortquery)
+						.exec(function(err, data1) {
+							//console.log(data)
+							if (err) {
+								console.log("tttte",err)
+								outputJSON = {
+									'status': 'failure',
+									'messageId': 203,
+									'message': 'data not retrieved '
+								};
+							} else {
+								outputJSON = {
+									'status': 'success',
+									'messageId': 200,
+									'message': 'data retrieve from products',
+									'data': data1,
+									'count': length
+								}
+							}
+							res.status(200).jsonp(outputJSON);
+						})
                     }
                 });
 
@@ -327,30 +348,39 @@ exports.vendorList = function(req,res){
 
     exports.deleteVendor = function(req,res){
 
+
+console.log("SDFDSFDSFDSFDS")
+
+
+
     if(req.body._id){
-        vendor.update({
-                _id: req.body._id
-            }, {
-                $set: {
-                    is_deleted:true
-                }
-            }, function(err, updRes) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log("device id updated", updRes);
-                    outputJSON = {
-                    'status': 'failure',
-                    'messageId': 203,
-                    'data': updRes,
-                    'message': "Customer has been deleted successfully"
-                     };
-                res.jsonp(outputJSON);
+    	vendor.remove({'_id':req.body._id},function(err,data){
+              
+              if(err){
 
+              }else{
+              	items.remove({'vendor_id':req.body._id},function(err,data){
 
-                }
+			     if (err) {
+			                    console.log(err);
+			        } else {
+			                  //  console.log("device id updated", updRes);
+			                    outputJSON = {
+			                    'status': 'success',
+			                    'messageId': 200,
+			                    'message': "Vendor  has been deleted successfully"
+			                     };
+			                   res.jsonp(outputJSON);
+			    }
 
-            })
+				});
+              }
+			    
+			
+
+        });
+
+       
     }
     
 }
@@ -485,9 +515,6 @@ exports.updateVendordata = function(req, res) {
 		});
 	} else {
 
-
-
-
 		outputJSON = {
 			'status': 'failure',
 			'messageId': 203,
@@ -546,7 +573,7 @@ uploadProImg = function(data, callback) {
 }
 
 
-exports.forget_password=function(req,res){
+/*exports.forget_password=function(req,res){
 	console.log("inside email")
 	if(req.body.vendor_email)
             vendor.findOne({vendor_email : req.body.vendor_email},function(err,data){
@@ -627,7 +654,7 @@ exports.reset_password = function(req, res) {
         };
         res.jsonp(outputJSON)
     }
-}
+}*/
 
 exports.total_sales=function(req,res){
 
@@ -647,4 +674,27 @@ exports.total_sales=function(req,res){
         	}
         })
 
+}
+ exports.totalVendor = function(req, res) {
+
+    var outputJSON = "";
+    vendor.count({
+        is_deleted: false
+    }, function(err, data) {
+        if (err) {
+            outputJSON = {
+                'status': 'failure',
+                'messageId': 203,
+                'message': constantObj.messages.errorRetreivingData
+            };
+        } else {
+            outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': constantObj.messages.successRetreivingData,
+                'data': data
+            }
+        }
+        res.jsonp(outputJSON);
+    });
 }

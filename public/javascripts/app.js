@@ -5,10 +5,10 @@ angular.module("Home", []);
 angular.module("communicationModule", []);
 angular.module("helpBlock",['oitozero.ngSweetAlert']);
 angular.module("Users", ['oitozero.ngSweetAlert']);
-angular.module("Vendor", ['oitozero.ngSweetAlert']);
+angular.module("Vendor", ['oitozero.ngSweetAlert', 'moment-picker']);
 angular.module("FAQ",[]);
 angular.module("emailManagement",[]);
-
+angular.module("myApp", ["ngTable"]);
 //angular.module("Packages",['oitozero.ngSweetAlert']);
 
 
@@ -141,22 +141,22 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		controller:'loginController',
 		templateUrl:'/modules/authentication/views/profile.html'
 	})
-	.state('/setting', {
+	// .state('/setting', {
 		
-		/*resolve: {
-				mess: function($location, $localStorage) {
+	// 	resolve: {
+	// 			mess: function($location, $localStorage) {
 
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
+	// 				if ($localStorage.userLoggedIn != true) {
+	// 					$state.go('/login');
+	// 				}
 					
 						
-				}
-			},*/
-		url: "/setting",
-		controller:'loginController',
-		templateUrl:'/modules/authentication/views/setting.html'
-	})
+	// 			}
+	// 		},
+	// 	url: "/setting",
+	// 	controller:'loginController',
+	// 	templateUrl:'/modules/authentication/views/setting.html'
+	// })
 	.state('/forgot-password', {
 		
 		url: "/forgot-password",
@@ -187,16 +187,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	})
 	.state('/users/list', {
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					console.log ($localStorage);
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-					
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/users",
 		controller : "userController",
 		templateUrl : "/modules/users/views/listuser.html"
@@ -205,15 +206,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	.state('/users/add', {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-					
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/users/add",
 		controller : "userController",
 		templateUrl : "/modules/users/views/adduser.html"
@@ -222,15 +225,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	.state('/users/edit/:id' , {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-					
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/users/edit/:id",
 		controller: "userController",
 		templateUrl : "/modules/users/views/adduser.html"
@@ -238,15 +243,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
   .state('/users/profile/:id' , {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-						
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/users/profile/:id",
 		controller: "userController",
 		templateUrl : "/modules/users/views/userprofile.html"
@@ -258,29 +265,35 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 
 	.state('/admin/vendorList', {
 		resolve: {
-				mess: function($location, $localStorage) {
-					// console.log ($localStorage);
-					if (! $localStorage.userLoggedIn) {
-						 $state.go('/login');
-					} 
-					
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/vendor",
 		controller : "vendorController",
 		templateUrl : "/modules/vendor/views/listvendor.html"
 	})
 
 	.state('/FAQ', {
-		// resolve: {
-		// 		mess: function($location, $localStorage) {
-		// 			// console.log ($localStorage);
-		// 			if (! $localStorage.userLoggedIn) {
-		// 				 $state.go('/login');
-		// 			} 
-					
-		// 		}
-		// 	},
+		resolve: {
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/FAQ",
 		controller : "faqController",	
 		templateUrl : "/modules/FAQ/views/faq.html"
@@ -289,15 +302,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	.state('/admin/signupVendor', {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-					
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/vendor/add",
 		controller : "vendorController",
 		templateUrl : "/modules/vendor/views/addvendor.html"
@@ -306,14 +321,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 	.state('/admin/edit/:id' , {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-		
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/vendor/edit/:id",
 		controller: "vendorController",
 		templateUrl : "/modules/vendor/views/addvendor.html"
@@ -321,15 +339,17 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
   .state('/admin/profile/:id' , {
 
 		resolve: {
-				mess: function($location, $localStorage) {
-
-					if ($localStorage.userLoggedIn != true) {
-						$state.go('/login');
-					}
-					
-						
-				}
-			},
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
 		url: "/vendor/profile/:id",
 		controller: "vendorController",
 		templateUrl : "/modules/vendor/views/vendorprofile.html"
@@ -340,57 +360,57 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 
 
 
-    .state('cmsManagement', {
-			url: '/help/cmsManagement',
-			controller: "cmsController",
-			templateUrl: "/modules/helpBlock/views/cmsManagement.html"
-			// resolve: {
-			// 		checklogin: cmsCheck
-			// 	}
-		})
+  //   .state('cmsManagement', {
+		// 	url: '/help/cmsManagement',
+		// 	controller: "cmsController",
+		// 	templateUrl: "/modules/helpBlock/views/cmsManagement.html"
+		// 	// resolve: {
+		// 	// 		checklogin: cmsCheck
+		// 	// 	}
+		// })
 
-		.state('cmsPageEdit', {
-			url: '/help/:_id',
-			params:{
-				_id:null
-			},
-			controller: "cmsController",
-			templateUrl: "/modules/helpBlock/views/cmsManagement.html"
-			// resolve: {
-			// 		checklogin: cmsCheck
-			// 	}
-		})
+		// .state('cmsPageEdit', {
+		// 	url: '/help/:_id',
+		// 	params:{
+		// 		_id:null
+		// 	},
+		// 	controller: "cmsController",
+		// 	templateUrl: "/modules/helpBlock/views/cmsManagement.html"
+		// 	// resolve: {
+		// 	// 		checklogin: cmsCheck
+		// 	// 	}
+		// })
 
-		.state('cmslisting', {
-			url: '/cmslisting',
-			controller: "cmsListingController",
-			templateUrl: "/modules/helpBlock/views/cmsListing.html"
-			// resolve: {
-			// 		checklogin: cmsCheck
-			// 	}
-		})
+		// .state('cmslisting', {
+		// 	url: '/cmslisting',
+		// 	controller: "cmsListingController",
+		// 	templateUrl: "/modules/helpBlock/views/cmsListing.html"
+		// 	// resolve: {
+		// 	// 		checklogin: cmsCheck
+		// 	// 	}
+		// })
 
-		.state('addpackage', {
-			url: '/addpackage',
-			controller: "packageController",
-			templateUrl: "/modules/packages/views/addpackage.html"		
-		})
+		// .state('addpackage', {
+		// 	url: '/addpackage',
+		// 	controller: "packageController",
+		// 	templateUrl: "/modules/packages/views/addpackage.html"		
+		// })
 
-		.state('packages', {
-			url: '/packages',
-			controller: "packageController",
-			templateUrl: "/modules/packages/views/packages.html"
+		// .state('packages', {
+		// 	url: '/packages',
+		// 	controller: "packageController",
+		// 	templateUrl: "/modules/packages/views/packages.html"
 			
-		})
+		// })
 
-		.state('editPackage', {
-			url: '/editPackage/:_id',
-			params:{
-				_id:null
-			},
-			controller: "packageController",
-			templateUrl: "/modules/packages/views/addpackage.html"	
-		})
+		// .state('editPackage', {
+		// 	url: '/editPackage/:_id',
+		// 	params:{
+		// 		_id:null
+		// 	},
+		// 	controller: "packageController",
+		// 	templateUrl: "/modules/packages/views/addpackage.html"	
+		// })
 
 		.state('reset_password',{
 			url:'/admin/:email/:id',

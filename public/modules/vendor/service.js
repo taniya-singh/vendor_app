@@ -7,18 +7,29 @@ angular.module('Vendor')
 	var service = {};
 
 	service.totalVendor = function(callback) { 
-			communicationService.resultViaGet(webservices.totalvendor, appConstants.authorizationKey, headerConstants.json, function(response) {
+			communicationService.resultViaGet(webservices.totalVendor, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
 		});
 
 	}
 
-	// service.getVendorList = function(callback) { 
-	// 		communicationService.resultViaGet(webservices.vendorList, appConstants.authorizationKey, headerConstants.json, function(response) {
-	// 		callback(response.data);
-	// 	});
 
-	// }
+	service.totalRevenue = function(callback) { 
+			communicationService.resultViaGet(webservices.totalRevenue, appConstants.authorizationKey, headerConstants.json, function(response) {
+			callback(response.data);
+		});
+
+	}
+
+	service.totalSales = function(callback) { 
+			communicationService.resultViaGet(webservices.totalSales, appConstants.authorizationKey, headerConstants.json, function(response) {
+			callback(response.data);
+		});
+
+	}
+
+
+	
 	service.latestVendor = function(callback) { 
 			communicationService.resultViaGet(webservices.latestVendor, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
@@ -31,6 +42,9 @@ angular.module('Vendor')
 			callback(response.data);
 		});
 	}
+
+
+	
 
 
 	service.getVendor= function(vendorId, callback) {
@@ -63,6 +77,7 @@ angular.module('Vendor')
 		callback(response.data);
 		});
 	}
+
 
 	service.updateVendorStatus = function(inputJsonString, callback) {
 			communicationService.resultViaPost(webservices.bulkUpdateVendor, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
@@ -105,20 +120,20 @@ angular.module('Vendor')
 
 	service.registration = function(inputJsonString, callback) {
 
-		//console.log("inputJsonString",inputJsonString);
+		
 			$http.post("//registration", inputJsonString, {
-				//	transformRequest: angular.identity,
+				
 					headers: {'Content-Type': undefined}
 				})
 				.success(function(response){
 						if(response){
 							callback(response);
-							//return { response:$q.defer().resolve(response)};
+							
 						}
 						else{
 							$q.reject(response);
 							callback({ response:$q.defer().promise});
-							//return { response:$q.defer().promise};
+							
 						}
 					})
 				.error(function(err){ 
@@ -126,26 +141,6 @@ angular.module('Vendor')
 				});
 	}
 
-	// service.registration = function(inputJsonString, callback) {
-	// 		$http.post("/vendor/registration", inputJsonString, {
-	// 			//	transformRequest: angular.identity,
-	// 				headers: {'Content-Type': undefined}
-	// 			})
-	// 			.success(function(response){
-	// 					if(response){
-	// 						callback(response);
-	// 						//return { response:$q.defer().resolve(response)};
-	// 					}
-	// 					else{
-	// 						$q.reject(response);
-	// 						callback({ response:$q.defer().promise});
-	// 						//return { response:$q.defer().promise};
-	// 					}
-	// 				})
-	// 			.error(function(err){ 
-	// 				alert('There was some error uploading your files. Please try Uploading them again.');
-	// 			});
-	// }
 	
     service.exportVendorList = function(callback) {
 		communicationService.resultViaGet(webservices.exportVendorList, appConstants.authorizationKey, headerConstants.json, function(response) {
@@ -155,7 +150,7 @@ angular.module('Vendor')
      
 
     service.updateVendordata = function(inputJsonString, callback) {
-			communicationService.resultViaPost("/admin/updateVendordata", appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			communicationService.resultViaPost("/admin/update_vendor_info2", appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	} 
@@ -165,19 +160,19 @@ angular.module('Vendor')
 		console.log("inputJsonString",inputJsonString);
 
 	$http.post("/vendor/updateVendorInformation", inputJsonString, {
-					//transformRequest: angular.identity,
+					
 					headers: {'Content-Type': undefined}
 				})
 				.success(function(response){
 						if(response){
 							console.log("m here in resposnne")
 							callback(response);
-							//return { response:$q.defer().resolve(response)};
+							
 						}
 						else{
 							$q.reject(response);
 							callback({ response:$q.defer().promise});
-							//return { response:$q.defer().promise};
+							 
 						}
 					})
 				.error(function(err){ 

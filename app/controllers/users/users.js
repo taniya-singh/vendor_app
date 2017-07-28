@@ -246,9 +246,7 @@ exports.faceBookLogin = function(req, res) {
                 details.email = req.body.email;
                 details.gender = req.body.gender;
                 details.loginType=req.body.loginType;
-
                 userObj.findOne({"google_id":details.google_id,"email":details.email}, function(err, user) {
-
                     if (err) {
                         console.log(err);
                         var response = {
@@ -315,11 +313,9 @@ exports.faceBookLogin = function(req, res) {
                                 //res.jsonp({ 'status': 'success', 'messageId': 200, 'message': 'User logged in successfully', "userdata": user });
                                 //}
                         }
-
                     }
                 })
             }
-
         } else {
             res.jsonp({
                 'status': 'faliure',
@@ -375,60 +371,82 @@ exports.findOne = function(req, res) {
  * List all user object
  * Input: 
  * Output: User json object*/
-exports.list = function(req, res) {
-    var outputJSON = {
-        'status': 'failure',
-        'messageId': 203,
-        'message': constantObj.messages.errorRetreivingData
-    };
-    userObj.find({
-        is_deleted: false
-    }, function(err, data) {
+exports.list = function(req,res){
+      var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+        userObj.find({is_deleted:false},function(err,data){
 
         var page = req.body.page || 1,
-            count = req.body.count || 1;
-        var skipNo = (page - 1) * count;
+        count = req.body.count || 1;
+    var skipNo = (page - 1) * count;
 
-        var sortdata = {};
-        var sortkey = null;
-        for (key in req.body.sort) {
-            sortkey = key;
-        }
-        if (sortkey) {
-            var sortquery = {};
-            sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
-        }
-        var query = {};
-        var searchStr = req.body.search;
-        if (req.body.search) {
-            query.$or = [{
-                first_name: new RegExp(searchStr, 'i')
+    var sortdata = {};
+    var sortkey = null;
+    for (key in req.body.sort) {
+        sortkey = key;
+    }
+    if (sortkey) {
+        var sortquery = {};
+        sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
+    }
+     //console.log("-----------query-------", query);
+    console.log("sortquery", sortquery);
+    console.log("page", page);
+    console.log("count", count);
+    console.log("skipNo",skipNo)
+    var query = {};
+    var searchStr = req.body.search;
+    if (req.body.search) {
+        query.$or = [{
+           first_name:new RegExp(searchStr, 'i')
+            
+        }, {
+            email: new RegExp(searchStr, 'i')
+        },{
+            phone_no: new RegExp(searchStr, 'i')
+        }]
+    }
+    query.is_deleted=false;
+    console.log("-----------query-------", query);
+    userObj.find(query).exec(function(err, data) {
+        console.log("hahahahhahahhahahaha",data);
+                    if(err){
+                        res.json("Error: "+err);   
+                    }
+                    else{
+                        //outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
+                        //res.json(outputJSON);
 
-            }, {
-                email: new RegExp(searchStr, 'i')
-            }, {
-                phone: new RegExp(searchStr, 'i')
-            }]
-        }
-        query.is_deleted = false;
-        userObj.find([{}]).exec(function(err, data) {
-            if (err) {
-                res.json("Error: " + err);
-            } else {
-                console.log("data", data);
-                outputJSON = {
-                        'status': 'success',
-                        'messageId': 200,
-                        'message': constantObj.messages.successRetreivingData,
-                        "data": data
-                    },
-                    res.json(outputJSON);
-            }
-        });
+                        var length = data.length;
+                        userObj.find(
+                             query
+                        ).skip(skipNo).limit(count).sort(sortquery)
+                        .exec(function(err, data1) {
+                            //console.log(data)
+                            if (err) {
+                                console.log("tttte",err)
+                                outputJSON = {
+                                    'status': 'failure',
+                                    'messageId': 203,
+                                    'message': 'data not retrieved '
+                                };
+                            } else {
+                                outputJSON = {
+                                    'status': 'success',
+                                    'messageId': 200,
+                                    'message': 'data retrieve from products',
+                                    'data': data1,
+                                    'count': length
+                                }
+                            }
+                            res.status(200).jsonp(outputJSON);
+                        })
+                    }
+                });
 
     });
 
 }
+
 
 // exports.list = function(req, res) {
 //             var outputJSON = "";
@@ -863,29 +881,21 @@ exports.update_user_info = function(req, res) {
  * Output: Success message
  * This function is used to for bulk updation for user object(s)
  */
-exports.bulkUpdate = function(req, res) {
-    var outputJSON = "";
-    var inputData = req.body;
-    var roleLength = inputData.data.length;
-    var bulk = userObj.collection.initializeUnorderedBulkOp();
-    for (var i = 0; i < roleLength; i++) {
-        var userData = inputData.data[i];
-        var id = mongoose.Types.ObjectId(userData.id);
-        bulk.find({
-            _id: id
-        }).update({
-            $set: userData
-        });
-    }
-    bulk.execute(function(data) {
-        outputJSON = {
-            'status': 'success',
-            'messageId': 200,
-            'message': constantObj.messages.userStatusUpdateSuccess
-        };
-    });
-    res.jsonp(outputJSON);
-}
+ exports.bulkUpdate = function(req, res) {
+            var outputJSON = "";
+            var inputData = req.body;
+            var roleLength = inputData.data.length;
+            var bulk = userObj.collection.initializeUnorderedBulkOp();
+            for(var i = 0; i< roleLength; i++){
+                var userData = inputData.data[i];
+                var id = mongoose.Types.ObjectId(userData.id);  
+                bulk.find({_id: id}).update({$set: userData});
+            }
+            bulk.execute(function (data) {
+                outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userStatusUpdateSuccess};
+            });
+            res.jsonp(outputJSON);
+         }
 
 exports.reset_password = function(req, res) {
     console.log("TTTAAAANIIYAA")
@@ -1163,32 +1173,47 @@ exports.forgetpassword = function(req, res) {
 
     }
 }
-exports.deleteUser = function(req, res) {
-    if (req.body._id) {
+exports.deleteUser = function(req,res){
+
+
+        
+
+
+
+console.log("asdasdas",req.body._id)
+    if(req.body._id){
         userObj.update({
-            _id: req.body._id
-        }, {
-            $set: {
-                is_deleted: true
-            }
-        }, function(err, updRes) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("device id updated", updRes);
-                outputJSON = {
+                _id: req.body._id
+            }, {
+                $set: {
+                    is_deleted:true
+                }
+            }, function(err, updRes) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("device id updated", updRes);
+                    outputJSON = {
                     'status': 'failure',
                     'messageId': 203,
                     'data': updRes,
                     'message': "Customer has been deleted successfully"
-                };
+                     };
                 res.jsonp(outputJSON);
-            }
-        })
+
+
+                }
+
+            })
     }
+    
 }
 
-exports.totalUser = function(req, res) {
+
+
+
+    exports.totalUser = function(req, res) {
+
     var outputJSON = "";
     userObj.count({
         is_deleted: false

@@ -26,10 +26,7 @@ var upload = multer({ storage: storage });
   
 var users = require('./../app/models/users/users');
 var adminpanel = require('./../app/models/adminlogins/adminlogin');
-//var nodeemail = require('./../common_modules/nodeemail');
-//var hauth = require('./../common_modules/hauth');
 
-//app.use(cors());
 
 function supportCrossOriginScript(req, res, next) {
     console.log(req.method);
@@ -299,12 +296,12 @@ router.post('/register', supportCrossOriginScript, function(req, res){
                         {
                           return res.send({status:1,code:200,message:'success'});   
                         }
-                        ///////////////////////////////////////////////////////
+                        
                       }
               });
           }
         });
-      /* Case To Send Mail End*/
+     
       }
     });
         
@@ -398,7 +395,7 @@ router.post('/registerweb', supportCrossOriginScript , upload.single('file'), fu
                         {
                           return res.send({status:1,code:200,message:'success'});   
                         }
-                        ///////////////////////////////////////////////////////
+                        
                         
                       }
               });
@@ -428,8 +425,7 @@ router.post('/forgetpassword', supportCrossOriginScript, function(req, res){
         }
         else
         {
-        //console.log(docs);  
-        //res.json(docs);
+        
         
         users.update({ email: req.body.email },{$set:{password: req.body.password}}, function (err7, docsup)
         {
@@ -646,7 +642,7 @@ router.post('/changePassword', supportCrossOriginScript, function (req, res) {
         
         var passinfo = new users(req.body);
         req.body.password = passinfo.createHash(req.body.password);
-        //req.body.oldpassword = passinfo.createHash(req.body.oldpassword);
+       
         
         users.findOne({_id:req.body.id},{password:1},function(err, olddata)
         {
@@ -655,7 +651,7 @@ router.post('/changePassword', supportCrossOriginScript, function (req, res) {
           }
         else
         {
-          //olddata = 1;
+         
           var validpassword = passinfo.validatePassword(req.body.oldpassword,olddata.password);
           if (validpassword != '' && validpassword != null)
           {

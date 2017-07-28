@@ -6,7 +6,7 @@ var userObj = require('./../app/controllers/users/users.js');
 
 	var router = express.Router();
 	 var userObj = require('./../app/controllers/users/users.js');
-	 router.get('/list', userObj.list);
+ 	router.post('/list', userObj.list);
 	 router.post('/add', userObj.add);
 	 router.post('/bulkUpdate', userObj.bulkUpdate);
 	 router.post('/userlogin', passport.authenticate('userLogin'),userObj.userlogin);
@@ -18,9 +18,7 @@ var userObj = require('./../app/controllers/users/users.js');
      router.post('/reset_password',userObj.reset_password);
 	 router.get('/totalUser', userObj.totalUser);
 	 router.post('/customer_orderlist', userObj.customer_orderlist);
-
-
-  
+	
 	 app.use('/users', router);
 
 }

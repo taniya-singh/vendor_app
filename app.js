@@ -1,4 +1,3 @@
-
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -78,11 +77,9 @@ var path = require('path'),
        debug : true,
        passphrase:"123456",
     };
-
 //connection1 = new apn.Connection(options);    
  
 notification = new apn.Notification();
-
 var gcmObject = new gcm.AndroidGcm('AIzaSyC_5mrHRfwNhN-xHNJ4_tv1hXpsmPbZnss');    
       
   // create new message     
@@ -224,6 +221,7 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
 
       vendor.findOne({vendor_email: username}, function(err, adminuser) {
         if(err) {
+
                return done(err,{"message":"Error"});
         }
         
@@ -239,9 +237,10 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
                     vendor_name: adminuser.vendor_name,
                     vendor_email: adminuser.vendor_email,
                     phone_no: adminuser.phone_no,
-                    password:adminuser,password,
+                    password:adminuser.password,
                     vendor_address: adminuser.vendor_address,
-                    pickup_time: adminuser.pickup_time,     
+                    pickup_time1: adminuser.pickup_time1,
+                    pickup_time2: adminuser.pickup_time2,      
                     user_type: adminuser.user_type,            
                     longitude: adminuser.longitude,
                     latitude: adminuser.latitude,
@@ -255,7 +254,6 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
       });
     }
   ));
-
 passport.serializeUser(function(adminLoginObj,done){
   done(null,adminLoginObj)
 })
@@ -346,11 +344,7 @@ require('./routes/order')(app, express, passport);
 require('./routes/faq')(app, express, passport);
 require('./routes/eManagement')(app, express,passport);
 require('./routes/common')(app, express,passport);
-
-
-
 require('./routes/adminlogin')(app, express, passport);
-require('./routes/likeAndDislike')(app, express,passport);
 require('./routes/setting')(app, express,passport);
 require('./routes/help')(app, express,passport);
 require('./routes/packages')(app, express,passport);

@@ -367,6 +367,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                 'message': "err"
                               })
                             } else {
+                              console.log("***",charge)
                               var ordersave = {}
                               ordersave.item_id = iteminfo[0]._id;
                               ordersave.vendor_id = iteminfo[0].vendor_id;
@@ -397,14 +398,26 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                           if(err){
                                             paymentcb(err,{"message":"Error in updating default status"})
                                           }else{
-                                            console.log("defaultstatus_update",defaultstatus_update[0].stripe_card_ids)
-                                             paymentcb(null, {
-                                          charge
-                                        })
+                                            console.log("card_id",charge.source.id)
+                                            //console.log("defaultstatus_update",defaultstatus_update[0].stripe_card_ids)
+                                            for(var i=0;i<defaultstatus_update.length;i++){
+                                              defaultstatus_update[i].default_status="false"
+                                              console.log("defaultstatus_update[i].card_id*****",defaultstatus_update[i].stripe_card_ids[0].card_id)
+                                              
+                                              for(var j=0;j<defaultstatus_update[i].stripe_card_ids.length;j++){
+                                                if(defaultstatus_update[i].stripe_card_ids[j].card_id==charge.source.id)
+                                              {
+                                                console.log("inRRRRRRRRRRRR")
+                                                defaultstatus_update[i].stripe_card_ids[j].default_status="true";
+                                              }
+
+                                              }
+                                              
+                                            }
+                                            console.log(defaultstatus_update[0].stripe_card_ids)
+                                             paymentcb(null, {charge})
                                           }
                                         })
-                                       
-
                                       } else {
                                         paymentcb(err, {
                                           'message': " Item count not updated"
