@@ -22,6 +22,7 @@ angular.module('Vendor')
 	}
 
 	service.totalSales = function(callback) { 
+		console.log("inisdee vendor service")
 			communicationService.resultViaGet(webservices.totalSales, appConstants.authorizationKey, headerConstants.json, function(response) {
 			callback(response.data);
 		});

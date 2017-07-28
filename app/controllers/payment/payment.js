@@ -367,7 +367,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                 'message': "err"
                               })
                             } else {
-                              console.log("***", charge)
+                              //console.log("***", charge)
                               var ordersave = {}
                               ordersave.item_id = iteminfo[0]._id;
                               ordersave.vendor_id = iteminfo[0].vendor_id;
@@ -394,23 +394,20 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                       })
                                     } else {
                                       if (updatecount) {
-                                        userObj.find({
-                                          _id: custdetail._id
-                                        }, function(err, defaultstatus_update) {
+                                        console.log("inside add new status")
+                                        console.log("custdetail",custdetail._id,charge.source.id)
+                                        var cid=charge.source.id
+                                        console.log("cid",cid)
+
+                                        userObj.update({_id:custdetail._id},{$set:{default_card_linked:cid}},function(err, defaultstatus_update) {
                                           if (err) {
+                                            console.log("inisde err")
                                             paymentcb(err, {
                                               "message": "Error in updating default status"
                                             })
                                           } else {
-                                            for (var i = 0; i < defaultstatus_update.length; i++) {
-                                              defaultstatus_update[i].default_status = "false";
-                                              for (var j = 0; j < defaultstatus_update[i].stripe_card_ids.length; j++) {
-                                                if (defaultstatus_update[i].stripe_card_ids[j].card_id == charge.source.id) {
-                                                  defaultstatus_update[i].stripe_card_ids[j].default_status = "true";
-                                                }
-                                              }
-                                            }
-                                            console.log(defaultstatus_update[0].stripe_card_ids)
+                                            console.log("inisde elase")
+                                            console.log("default card linked***",defaultstatus_update)
                                             paymentcb(null, {
                                               charge
                                             })
@@ -484,7 +481,7 @@ exports.pay = function(req, res) {
                 }
                 res.json(outputJSON)
                 } else {
-                  if(paymentcb.status=="success"){
+                  if(paymentcb){
                     outputJSON = {
                           'status': 'success',
                           'messageId': 200,
@@ -496,8 +493,7 @@ exports.pay = function(req, res) {
                     outputJSON = {
                           'status': 'failure',
                           'messageId': 400,
-                          'message': "Err",
-                          'data': paymentcb
+                          'message': "Something worng happen,try again later",
                         },
                         res.json(outputJSON);
 
@@ -525,7 +521,8 @@ exports.pay = function(req, res) {
                     if (err) {
 
                     } else {
-                      if(paymentcb.status=='success'){
+
+                      if(paymentcb){
                       outputJSON = {
                           'status': 'success',
                           'messageId': 200,
@@ -537,8 +534,8 @@ exports.pay = function(req, res) {
                         outputJSON = {
                           'status': 'Failure',
                           'messageId': 400,
-                          'message': "Errror",
-                          'data': paymentcb
+                          'message': "Something worng happen,try again later"
+                          
                         },
                         res.json(outputJSON);
                       }
