@@ -178,7 +178,8 @@ function findByUsername(username, fn) {
 var LocalStrategy = require('passport-local').Strategy;
   passport.use('adminLogin',new LocalStrategy(
     function(username, password, done) {
-      
+      password = JSON.parse(JSON.stringify(password));
+      password = md5(password);
       console.log("inside admin login")
       adminLoginObj.findOne({username: username}, function(err, adminuser) {
        

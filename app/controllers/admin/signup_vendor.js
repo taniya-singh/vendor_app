@@ -418,7 +418,24 @@ exports.deleteVendor = function(req, res) {
 			'_id': req.body._id
 		}, function(err, data) {
 
+<<<<<<< HEAD
 			if (err) {
+=======
+    exports.deleteVendor = function(req,res){
+
+
+console.log("SDFDSFDSFDSFDS")
+
+
+
+    if(req.body._id){
+    	vendor.remove({'_id':req.body._id},function(err,data){
+              
+              if(err){
+              			console.log("err",err);
+              }else{
+              	items.remove({'vendor_id':req.body._id},function(err,data){
+>>>>>>> 38d27647fd558c8162264e77e1aae86d55af0993
 
 			} else {
 				items.remove({
@@ -441,7 +458,6 @@ exports.deleteVendor = function(req, res) {
 		});
 	}
 }
-
 
 
 exports.getCurrentVendorData = function(req, res) {
@@ -825,3 +841,9 @@ exports.totalRevenue = function(req, res) {
 
 
 
+<<<<<<< HEAD
+=======
+	  	}
+	  })
+}
+>>>>>>> 38d27647fd558c8162264e77e1aae86d55af0993
