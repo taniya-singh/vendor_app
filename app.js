@@ -291,9 +291,12 @@ passport.use('userLogin',new LocalStrategy(
                     facebook_id:user.facebook_id,
                     loginType:user.loginType,
                     card_details:user.card_details,
-                    customer_stripe_id:user.customer_stripe_id
-
-                    
+                    customer_stripe_id:user.customer_stripe_id,
+                    default_card_linked:user.default_card_linked,
+                    //stripe_card_ids:user.stripe_card_ids,
+                    enable:user.enable,
+                    user_name:user.user_name,
+                    created_date:user.created_date                  
         });
       });
     }

@@ -18,7 +18,7 @@ var userSchema = new mongoose.Schema({
   customer_stripe_id:{type:String},
   card_details:{type:Boolean,default:false},
   gender:{type:String,default:"Female"},
-  enable: {type: Boolean, default:false},
+  enable: {type: Boolean, default:true},
   phone_no:{type:String},
   is_deleted:{type:Boolean, default:false},
   facebook_id:{type:String},
@@ -27,7 +27,7 @@ var userSchema = new mongoose.Schema({
   user_type:{type:String,default:"customer"},
   created_date:{type:Date, default: Date.now},
   stripe_card_ids:{type:[cardSubschema]},
-  default_card_linked:{type:String}
+  default_card_linked:{type:String,default:null}
  });
 
 userSchema.statics.load = function(id, cb) {

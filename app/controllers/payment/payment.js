@@ -512,7 +512,7 @@ exports.pay = function(req, res) {
                 outputJSON = {
                   'status': 'Failure',
                   'messageId': 400,
-                  'message': "Error in linking card"
+                  'message': err.raw.message
                 }
                 res.json(outputJSON)
               } else {
@@ -564,6 +564,13 @@ exports.pay = function(req, res) {
         }
       }
     })
+  }else{
+   outputJSON = {
+              'status': 'Failure',
+              'messageId': 400,
+              'message': "Error,customer _id is not defined"
+            },
+            res.json(outputJSON); 
   }
 }
         /*itemsObj.find({ _id: req.body.item_id }, function(err, items) {

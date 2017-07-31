@@ -17,6 +17,7 @@ var client = new twilio(accountSid, authToken);
  * Output: Role json object
  * This function gets called automatically whenever we have a roleId parameter in route. 
  * It uses load function which has been define in role model after that passes control to next calling function.
+ * Developed by :Taniya singh
  */
 
 exports.userlogin = function(req, res) {
@@ -104,6 +105,13 @@ exports.update_vendor_info = function(req, res) {
     }
 }
 
+/**
+ * Find role by _id
+ * Input: faccebook_id,loginType
+ * Output: Details of user corresponding to given facebook_id 
+ * This function created a new user,if facebook_id doesnot exist , and returne the users details,if exists 
+ * Devepoped by: Taniya Singh
+ */
 exports.faceBookLogin = function(req, res) {
 
         if (req.body.loginType == 2) {
@@ -447,219 +455,6 @@ exports.list = function(req,res){
 
 }
 
-
-// exports.list = function(req, res) {
-//             var outputJSON = "";
-//             userObj.find({}, function(err, data) {
-// var page = req.body.page || 1,
-//         count = req.body.count || 1;
-//     var skipNo = (page - 1) * count;
-
-//     var sortdata = {};
-//     var sortkey = null;
-//     for (key in req.body.sort) {
-//         sortkey = key;
-//     }
-//     if (sortkey) {
-//         var sortquery = {};
-//         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
-//     }
-//      //console.log("-----------query-------", query);
-//     console.log("sortquery", sortquery);
-//     console.log("page", page);
-//     console.log("count", count);
-//     console.log("skipNo",skipNo)
-//     var query = {};
-//     var searchStr = req.body.search;
-//     if (req.body.search) {
-//         query.$or = [{
-//             first_name:new RegExp(searchStr, 'i')
-
-//         }, {
-//             last_name: new RegExp(searchStr, 'i')
-//         },{
-//             email: new RegExp(searchStr, 'i')
-//         },{
-//             phone: new RegExp(searchStr, 'i')
-//         }]
-//     }
-//     query.is_deleted=false;
-//     console.log("-----------query-------", query);
-//     userObj.find(query).exec(function(err, data) {
-
-
-//                 if(err) {
-//                     outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-//                 }
-//                 else {
-
-//                    var length = data.length;
-//             userObj.find(
-//                  query
-//             ).skip(skipNo).limit(count).sort(sortquery)
-//             .exec(function(err, data1) {
-//                 console.log("asdasd",data1)
-
-//                 if(err) {
-//                     outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-//                 }
-//                 else {
-//                     outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 
-//                     'data': data}
-//                 }
-//                 res.jsonp(outputJSON);
-//             })
-//          }
-
-//      });
-// });
-//         }
-//      exports.list = function(req, res) {
-//         var outputJSON = "";
-//         userObj.find({is_deleted:false}, function(err, data) {
-
-
-//         var page = req.body.page || 1,
-//     count = req.body.count || 1;
-// var skipNo = (page - 1) * count;
-
-// var sortdata = {};
-// var sortkey = null;
-// for (key in req.body.sort) {
-//     sortkey = key;
-// }
-// if (sortkey) {
-//     var sortquery = {};
-//     sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
-// }
-//  //console.log("-----------query-------", query);
-// console.log("sortquery", sortquery);
-// console.log("page", page);
-// console.log("count", count);
-// console.log("skipNo",skipNo)
-// var query = {};
-// var searchStr = req.body.search;
-// if (req.body.search) {
-//     query.$or = [{
-//         first_name:new RegExp(searchStr, 'i')
-
-//     }, {
-//         last_name: new RegExp(searchStr, 'i')
-//     },{
-//         email: new RegExp(searchStr, 'i')
-//     },{
-//         phone: new RegExp(searchStr, 'i')
-//     }]
-// }
-// query.is_deleted=false;
-// console.log("-----------query-------", query);
-// userObj.find(query).exec(function(err, data) {
-
-
-//             if(err) {
-//                 outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
-//             }
-//             else {
-
-//                var length = data.length;
-//         userObj.find(
-//              query
-//         ).skip(skipNo).limit(count).sort(sortquery)
-//         .exec(function(err, data1) {
-//             console.log("asdasd",data1)
-//             if (err) {
-//                 console.log("tttte",err)
-//                 outputJSON = {
-//                     'status': 'failure',
-//                     'messageId': 203,
-//                     'message': 'data not retrieved '
-//                 };
-//                 res.jsonp(outputJSON);
-//             } else {
-//                 outputJSON = {
-//                     'status': 'success',
-//                     'messageId': 200,
-//                     'message': 'data retrieve from products',
-//                     'data': data1,
-//                     'count': length
-//                 }
-//             }
-//             res.status(200).jsonp(outputJSON);
-//         })
-//             }
-
-//         });
-//      });
-// }
-
-// exports.list = function(req, res) {
-//     console.log(req.body)
-//     var page = req.body.page || 1,
-//         count = req.body.count || 1;
-//     var skipNo = (page - 1) * count;
-
-//     var sortdata = {};
-//     var sortkey = null;
-//     for (key in req.body.sort) {
-//         sortkey = key;
-//     }
-//     if (sortkey) {
-//         var sortquery = {};
-//         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
-//     }
-//      //console.log("-----------query-------", query);
-//     console.log("sortquery", sortquery);
-//     console.log("page", page);
-//     console.log("count", count);
-//     console.log("skipNo",skipNo)
-//     var query = {};
-//     var searchStr = req.body.search;
-//     if (req.body.search) {
-//         query.$or = [{
-//             first_name:new RegExp(searchStr, 'i')
-
-//         }, {
-//             last_name: new RegExp(searchStr, 'i')
-//         },{
-//             gender: new RegExp(searchStr, 'i')
-//         },{
-//             phone: new RegExp(searchStr, 'i')
-//         }]
-//     }
-//     query.is_deleted=false;
-//     console.log("-----------query-------", query);
-//     userObj.find(query).exec(function(err, data) {
-//         if (err) {
-//             console.log(err)
-//         } else {
-//             var length = data.length;
-//             userObj.find(
-//                  query
-//             ).skip(skipNo).limit(count).sort(sortquery)
-//             .exec(function(err, data1) {
-//                 //console.log(data)
-//                 if (err) {
-//                     console.log("tttte",err)
-//                     outputJSON = {
-//                         'status': 'failure',
-//                         'messageId': 203,
-//                         'message': 'data not retrieved '
-//                     };
-//                 } else {
-//                     outputJSON = {
-//                         'status': 'success',
-//                         'messageId': 200,
-//                         'message': 'data retrieve from products',
-//                         'data': data1,
-//                         'count': length
-//                     }
-//                 }
-//                 res.status(200).jsonp(outputJSON);
-//             })
-//         }
-//     })
-// }
-
 /**
  * Create new user object
  * Input: User object
@@ -727,9 +522,10 @@ exports.add = function(req, res) {
 
 
 /**
- * Update user object
- * Input: User object
- * Output: User json object with success
+ * Input: user id ie _id and information to upadte
+ * Output:  Updated info message in json format
+ * This function updated the userinfo, corresponding to login_type 
+ * Devepoped by: Taniya Singh
  */
 exports.update_user_info = function(req, res) {
     userObj.find({
@@ -898,7 +694,7 @@ exports.update_user_info = function(req, res) {
          }
 
 exports.reset_password = function(req, res) {
-    console.log("TTTAAAANIIYAA")
+    
     console.log("new passsssss", req.body.password.newpassword)
     if (req.body._id != null) {
         if (req.body.type == 1) {
@@ -1067,7 +863,7 @@ exports.forgetpassword = function(req, res) {
                         outputJSON = {
                             'status': 'failure',
                             'messageId': 401,
-                            'message': "Please enter a valid Email ID"
+                            'message': "Email id does not exists"
                         };
                         res.jsonp(outputJSON)
                     } else {
@@ -1081,7 +877,7 @@ exports.forgetpassword = function(req, res) {
                             from: "abc",
                             to: req.body.email,
                             subject: 'Reset password',
-                            html: 'Welcome to Bridgit!Your request for reset password is  being proccessed .Please Follow the link to reset your password for customer   \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is  being proccessed .Please follow the link to reset your password for customer   \n  ' + resetUrl
                         };
                         transporter.sendMail(mailOptions, function(error, response) {
                             if (error) {
@@ -1096,7 +892,7 @@ exports.forgetpassword = function(req, res) {
                                 var response = {
                                     "status": 'success',
                                     "messageId": 200,
-                                    "message": "Reset password link has been send to your Mail. Kindly reset.",
+                                    "message": 'We’ve sent an email to '+req.body.email +'.Click the link to reset your password.',
                                     "Sent on": Date(),
                                     "From": "Taniya Singh"
                                 }

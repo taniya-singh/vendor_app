@@ -70,13 +70,35 @@ exports.items_added_by_vendor = function(req,res){
                             foreignField: "vendor_id",
                             as: "item_detail"
                         }
-                    },
-                    {
-                        $unwind:"$item_detail"
-                    }
-                    ],function(err,orderdetails){
-                        //console.log("orderdetails",orderdetails)
+                    },{ 
+                        $unwind: {
+                                 "path": "$item_detail",
+                                 "preserveNullAndEmptyArrays": true
+                     } 
+                     },
+                     {
+                         $project:{
+                                "_id":"$_id",
+                                "itemDetails":"$item_detail",
+                                "item_id":"$item_id",
+                                "item_count":"$item_count"
+                             }
+                     },
+                     {
+                        $group:{
+                              "_id":"$item_id",
+                              "total":{
+                                    "$sum":"$item_count"
+                                  },
+                                  "itemDetails":{$push:"$itemDetails"}
+
+                            }
+                     }       
+               ]
+                    ,function(err,orderdetails){
+                        console.log("orderdetails",orderdetails)
                         if(err){
+                            console.log(err)
                             outputJSON = {'status':'failure', 'messageId':400, 'message': "err"}, 
                             res.json(outputJSON);   
                         }else{
@@ -84,7 +106,7 @@ exports.items_added_by_vendor = function(req,res){
                                 outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":orderdetails }, 
                                 res.json(outputJSON);  
                             }else{
-                                outputJSON = {'status':'failure', 'messageId':400, 'message': "vendor does not exists"}, 
+                                outputJSON = {'status':'success', 'messageId':200, 'message': "No orders were placed yet"}, 
                                 res.json(outputJSON); 
                             }   
                         }
