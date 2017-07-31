@@ -425,8 +425,8 @@ $scope.activeTab = tab;
 
 
 	$scope.resetpassword=function(){	
-		console.log("insisde resetpassword",$stateParams.id,$stateParams.type)
-		var json={"_id":$stateParams.id,"password":$scope.register,"type":$stateParams.type}
+		console.log("insisde resetpassword",$stateParams.id)
+		var json={"_id":$stateParams.id,"password":$scope.register}
 		AuthenticationService.resetpassword(json,function(res){
 			$scope.register="";
 			if(res){
@@ -442,3 +442,4 @@ $scope.activeTab = tab;
 	};
 
 }]);
+

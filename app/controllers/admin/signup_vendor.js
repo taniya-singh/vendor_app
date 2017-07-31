@@ -357,7 +357,7 @@ console.log("SDFDSFDSFDSFDS")
     	vendor.remove({'_id':req.body._id},function(err,data){
               
               if(err){
-
+              			console.log("err",err);
               }else{
               	items.remove({'vendor_id':req.body._id},function(err,data){
 
@@ -384,7 +384,6 @@ console.log("SDFDSFDSFDSFDS")
     }
     
 }
-
 
 
 exports.getCurrentVendorData = function(req, res) {
