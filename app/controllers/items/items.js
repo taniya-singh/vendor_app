@@ -438,13 +438,29 @@ exports.item_listing_for_user = function(req, res) {
 				foreignField: "vendor_id",
 				as: "item_detail"
 			}
-		}/*,{
+		},{
 			$unwind:"$item_detail"
 		},
 
 		{
 			$match:{"item_detail.p_count":{$gt:0}}
-		}*/], function(err, items) {
+		},
+		{
+		    $group:{
+                    "_id":"$_id", 
+                    "vendor_name":{$first:"$vendor_name"}, 
+                    "vendor_email":{$first:"$vendor_email"},
+                    "vendor_address":{$first:"$vendor_address"},
+                    "password":{$first:"$password"},
+                    "pickup_time" :{$first:"$pickup_time"},
+                    "pickup_time1":{$first:"$pickup_time1"},
+                    "pickup_time2":{$first:"$pickup_time2"},
+                    "longitude":{$first:"$longitude"},
+                    "latitude":{$first:"$latitude"},
+                   "item_detail":{$push:"$item_detail"}     
+               
+                }     
+		}], function(err, items) {
 			if (err) {
 				console.log("err",err)
 				outputJSON = {

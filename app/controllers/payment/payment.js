@@ -6,7 +6,7 @@ var paymentObj = require('./../../models/payment/payment.js');
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs = require('fs');
-var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
+var stripe = require("stripe")("sk_test_PirOevMb5V4TmELqMjPZxTnJ");
 
 
 

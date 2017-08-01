@@ -2,14 +2,14 @@
 let FCM = require('fcm-node');
 let apn = require("apn");
 let path = require('path');
-let serverKey = 'AIzaSyAxYVocgXGryOjwZ-7WIW4KB1fQtZ5tXFY'; 
+let serverKey = 'AIzaSyDxyJiNN18nLH0wp3cW8cPyYdCoqUSnOVE'; 
 let fcm = new FCM(serverKey);
 let moment = require('moment');
 //let constantObj = require('./../constants.js');
-let crypto = require('crypto'),
+/*let crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = 'd6F3Efeq';
-
+*/
 let options;
 options = {
   token: {
@@ -23,7 +23,7 @@ options = {
 
 exports.notify = function(id,notificationKey){
     console.log("notifyyyyyyyyyyyy")
-    /*userObj.findOne({_id:id},function(err,result){
+    userObj.findOne({_id:id},function(err,result){
         if(result){
             if(result.device_type=='ios'){
                 pushSendToIOS(result.token,notificationKey)
@@ -32,10 +32,10 @@ exports.notify = function(id,notificationKey){
                 pushToAndroid(result.token,notificationKey)
             }
         }
-    })*/
+    })
 }
 
-/*let pushToAndroid = function  (token,key) {
+let pushToAndroid = function  (token,key) {
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
         to:  "dL-88Ju0VaA:APA91bGsdzHKJIcfsVSPNGQbno243M4NQqg0xwBkO0UkJPpixVWVzYPfFEiFuH1htU7I5MXBx2X7YMQqvsmr-ZjuW_rROlb6eA5oyLDdE5U3m5tQ-GofRas7eyPEyR6OmyuSoDSKDiJa", 
         // collapse_key: 'your_collapse_key', 
@@ -52,14 +52,14 @@ exports.notify = function(id,notificationKey){
 
     fcm.send(message, function(err, response){
         if (err) {
-            console.log("Something has gone wrong!");
+            console.log("Something has gone wrong!",err);
         } else {
             console.log("Successfully sent with response: ", response);
         }
     });
 }
 
-let pushSendToIOS = function(token,key) {
+/*let pushSendToIOS = function(token,key) {
     console.log("token here", token);
     let apnProvider = new apn.Provider(options);
     let deviceToken = "63933720580CE05CB091B58E3D2B9DF0C104DFA20A0A5002B6A9B8319E27045D";
