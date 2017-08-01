@@ -5,7 +5,7 @@ var constantObj = require('./../../../constants.js');
 var fs = require('fs');
 var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
-var stripe = require("stripe")("sk_test_fypIdKmVYJJmsl7Kk1UWm2RH");
+var stripe = require("stripe")("sk_test_PirOevMb5V4TmELqMjPZxTnJ");
 var nodemailer = require('nodemailer');
 var itemsObj = require('./../../models/items/items.js');
 var order = require('./../../models/order/order.js');
@@ -188,6 +188,7 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 								data: err
 							});
 						} else {
+							console.log("inosde update")
 							vendor.update({
 								_id: vdetails._id
 							}, {
