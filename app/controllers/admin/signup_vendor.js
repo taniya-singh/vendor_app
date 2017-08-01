@@ -821,3 +821,64 @@ exports.totalRevenue = function(req, res) {
 		}
 	})
 }
+
+
+
+
+
+
+
+exports.totalR = function(req, res) {
+	var total = 0;
+	var total_revenew = 0;
+	console.log("insiode totsssssssssstalssss")
+	order.aggregate([{
+		
+		$lookup: {
+			from: "vendor_details",
+			localField: "vendor_id",
+			foreignField: "_id",
+			as: "vendors"
+		}},{
+                $lookup: {
+			from: "items",
+			localField: "item_id",
+			foreignField: "_id",
+			as: "items"
+		},
+
+
+	}
+	], function(err, orderdetails) {
+		if (err) {
+			console.log("err",err)
+			outputJSON = {
+				'status': 'Failure',
+				'messageId': 400,
+				'message': "Error"
+
+			}
+			res.jsonp(outputJSON);
+
+		} else {
+			console.log(orderdetails)
+			// for (var i = 0; i < orderdetails.length; i++) {
+			// 	var calculated_price = orderdetails[i].item_count * orderdetails[i].items.p_price
+			// 	total = parseFloat(total) + parseFloat(calculated_price);
+
+			// }
+			// console.log("total revenew is", total.toFixed(2))
+			// total_revenew = total.toFixed(2)
+
+			outputJSON = {
+				'status': 'success',
+				'messageId': 200,
+				'message': "total revenew retreive successfully",
+				'data': orderdetails
+			}
+			res.jsonp(outputJSON);
+
+		}
+	})
+}
+
