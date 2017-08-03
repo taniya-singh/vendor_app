@@ -265,7 +265,7 @@ exports.vendor_login = function(req, res) {
 		var vendorid=res.req.user.id
 		var device_data={};
 		device_data.device_type=req.body.device_type;
-		device_data.device_id=req.body.device_id;
+		device_data.device_token=req.body.device_token;
 		device_data.vendor_id=res.req.user.id;
 
 		device.find({vendor_id:vendorid},function(err,devicedetails){
@@ -286,7 +286,7 @@ exports.vendor_login = function(req, res) {
 							res.jsonp(outputJSON)
 
 						}else{
-							data.device_id=req.body.device_id;
+							data.device_token=req.body.device_token;
 							data.device_type=req.body.device_type;
 							console.log("update",deviceupdate)
 							console.log("data is",data)
@@ -312,7 +312,7 @@ exports.vendor_login = function(req, res) {
 							};
 							res.jsonp(outputJSON)
 						}else{
-							data.device_id=req.body.device_id;
+							data.device_token=req.body.device_token;
 							data.device_type=req.body.device_type;
 							console.log("data is",data)
 							var outputJSON = {
