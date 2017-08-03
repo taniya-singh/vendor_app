@@ -4,9 +4,9 @@ var Schema = mongoose.Schema;
 
 
 var mySchema = new Schema({
-    device_id : {type:String},
+    device_token : {type:String},
     device_type: {type:String},
-    user_id:{type:Schema.Types.ObjectId}
+    vendor_id:{type:Schema.Types.ObjectId}
     });
 
 mySchema.statics.load = function(id, cb) {

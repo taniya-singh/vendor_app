@@ -1,10 +1,12 @@
 //let userObj = require('./../models/User.js');
 let FCM = require('fcm-node');
+var device = require('./../../models/devices/devices.js')
 let apn = require("apn");
 let path = require('path');
 let serverKey = 'AIzaSyDxyJiNN18nLH0wp3cW8cPyYdCoqUSnOVE'; 
 let fcm = new FCM(serverKey);
 let moment = require('moment');
+
 //let constantObj = require('./../constants.js');
 /*let crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
@@ -13,31 +15,34 @@ let moment = require('moment');
 let options;
 options = {
   token: {
-    key: path.resolve("./common/AuthKey_4MVSAKPE86.p8"),
-    keyId: "4MVSAKPE86",
-    teamId: "UKZ733R4T6"
+    key: path.resolve("./common/AuthKey_UEJKHFH34K.p8"),
+    cert:path.resolve("./common/certificates.pem"),
+    keyId: "UEJKHFH34K",
+    teamId: "Q9NZ7GGH6L"
   },
   production: false
 };
 
 
-exports.notify = function(id,notificationKey){
-    console.log("notifyyyyyyyyyyyy")
-    userObj.findOne({_id:id},function(err,result){
+exports.notify = function(req,res){
+    console.log("notifyyyyyyyyyyyy",req.body)
+     var token=req.body.device_token;
+    device.findOne({device_token:token},function(err,result){
         if(result){
             if(result.device_type=='ios'){
-                pushSendToIOS(result.token,notificationKey)
+                pushSendToIOS(result.token)
             }
             else if(result.device_type=='android'){
-                pushToAndroid(result.token,notificationKey)
+                pushToAndroid(result.device_token)
             }
         }
     })
 }
 
-let pushToAndroid = function  (token,key) {
+let pushToAndroid = function  (token) {
+    console.log("insode android")
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to:  "dL-88Ju0VaA:APA91bGsdzHKJIcfsVSPNGQbno243M4NQqg0xwBkO0UkJPpixVWVzYPfFEiFuH1htU7I5MXBx2X7YMQqvsmr-ZjuW_rROlb6eA5oyLDdE5U3m5tQ-GofRas7eyPEyR6OmyuSoDSKDiJa", 
+        to:  "AAAAtdgXiDI:APA91bEm02J_uqTbpvKXftLni-eAcJKwHdNvVsEwBmZnniFVKKfNo6X4oaVEnIkDuzaE-Eu1DMudLdALzD7pwXwKBzLBy2UVzpEAnz_yftXoOR7J4JqTiPNp8lLqZmPIzQvyw-SrCioy", 
         // collapse_key: 'your_collapse_key', 
         notification: {
             title: 'Title of your push notification', 
@@ -51,6 +56,7 @@ let pushToAndroid = function  (token,key) {
     };
 
     fcm.send(message, function(err, response){
+        console.log("inside function msg send")
         if (err) {
             console.log("Something has gone wrong!",err);
         } else {

@@ -164,27 +164,14 @@ exports.faceBookLogin = function(req, res) {
                                         'message': 'User is not found'
                                     });
                                 } else {
-                                    var data = {};
-                                    data.user_id = adduser._id;
-                                    data.device_id = req.body.device_id;
-                                    data.device_type = req.body.device_type;
-
-                                    device(device).save(data, function(err, devicedata) {
-                                        if (err) {
-                                            res.jsonp({
-                                                'status': 'faliure',
-                                                'messageId': 401,
-                                                'message': 'Either device_id or device_type is not available!'
-                                            });
-                                        } else {
                                             res.jsonp({
                                                 'status': 'success',
                                                 'messageId': 200,
                                                 'message': 'User logged in successfully',
                                                 "data": adduser
                                             });
-                                        }
-                                    })
+                                        
+                                    
                                 }
                             })
                         } else {
@@ -193,26 +180,14 @@ exports.faceBookLogin = function(req, res) {
 
                                 }else{
                                     if(updatedata){
-                                      var dev = {};
-                                        dev.user_id = user._id;
-                                        dev.device_id = req.body.device_id;
-                                        dev.device_type = req.body.device_type;
-                                        device(dev).save(dev, function(err, data) {
-                                            if (err) {
-                                                res.jsonp({
-                                                    'status': 'faliure',
-                                                    'messageId': 401,
-                                                    'message': 'Either device_id or device_type is not available!'
-                                                });
-                                            } else {
                                                 res.jsonp({
                                                     'status': 'success',
                                                     'messageId': 200,
                                                     'message': 'Facebook credentials already exists',
                                                     "data": user
                                                 });
-                                            }
-                                        })  
+                                            
+                                          
                                     }
                                 }
                             })
