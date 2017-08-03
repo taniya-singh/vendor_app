@@ -251,6 +251,7 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
                     Account_Number: adminuser.Account_Number,
                     Account_Holder_Name: adminuser.Account_Holder_Name,
                     Account_Holder_Type: adminuser.Account_Holder_Type
+
         });
       });
     }

@@ -14,8 +14,8 @@ var notification;
 
 var options = {
   token: {
-    key: path.resolve("./common/APNsAuthKey_W378WKXETM.p8"),
-    cert: path.resolve('./common/apnsProduction.pem'),
+    key: path.resolve("./common/AuthKey_UEJKHFH34K.p8"),
+    cert: path.resolve('./common/certificates.pem'),
     keyId: "W378WKXETM",
     teamId: "33P3VUARHV"
   },

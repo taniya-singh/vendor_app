@@ -1,6 +1,7 @@
 var vendor = require('./../../models/admin/signup_vendor.js');
 var items = require('./../../models/items/items.js');
 var mongoose = require('mongoose');
+var device = require('./../../models/devices/devices.js')
 var constantObj = require('./../../../constants.js');
 var fs = require('fs');
 var NodeGeocoder = require('node-geocoder');
@@ -235,6 +236,7 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 
 /* Vendor login api*/
 exports.vendor_login = function(req, res) {
+	console.log("re body",req.body)
 	console.log("login ", res.req.user)
 
 	var data = res.req.user;
@@ -260,14 +262,103 @@ exports.vendor_login = function(req, res) {
 		};
 		res.jsonp(outputJSON)
 	} else {
-		var outputJSON = {
-			'status': 'success',
-			'messageId': 200,
-			'message': "login successfully",
-			"data": data
-		};
-		res.jsonp(outputJSON)
+		var vendorid=res.req.user.id
+		var device_data={};
+		device_data.device_type=req.body.device_type;
+		device_data.device_id=req.body.device_id;
+		device_data.vendor_id=res.req.user.id;
 
+		device.find({vendor_id:vendorid},function(err,devicedetails){
+			console.log("inosde find")
+			if(err){
+				console.log("err",err)
+
+			}else{
+				if(devicedetails.length>0){
+					console.log("inside modifly")
+					device.update({vendor_id:vendorid},{$set:device_data},function(err,deviceupdate){
+						if(err){
+							var outputJSON = {
+								'status': 'failure',
+								'messageId': 400,
+								'message': "Err"
+							};
+							res.jsonp(outputJSON)
+
+						}else{
+							data.device_id=req.body.device_id;
+							data.device_type=req.body.device_type;
+							console.log("update",deviceupdate)
+							console.log("data is",data)
+
+							var outputJSON = {
+								'status': 'success',
+								'messageId': 200,
+								'message': "login successfully",
+								'data':data
+							};
+							res.jsonp(outputJSON)
+						}
+					})
+
+				}else{
+					console.log("insode save new")
+					device(device_data).save(device_data,function(err,deviceadd){
+						if(err){
+							var outputJSON = {
+								'status': 'failure',
+								'messageId': 400,
+								'message': "Err"
+							};
+							res.jsonp(outputJSON)
+						}else{
+							data.device_id=req.body.device_id;
+							data.device_type=req.body.device_type;
+							console.log("data is",data)
+							var outputJSON = {
+								'status': 'success',
+								'messageId': 200,
+								'message': "login successfully",
+								'data':data
+							};
+							res.jsonp(outputJSON)
+
+						}
+					})
+				}
+				
+			}
+		})
+
+
+
+		/*
+		device(device_data).save(device_data,function(err,deviceids){
+			if(err){
+					var outputJSON = {
+					'status': 'failure',
+					'messageId': 400,
+					'message': "Error"
+					
+					};
+					res.jsonp(outputJSON)
+
+			}
+				else{
+
+					console.log("updation of device id's",deviceids)
+					var outputJSON = {
+						'status': 'success',
+						'messageId': 200,
+						'message': "login successfully",
+						"data": data
+					};
+					res.jsonp(outputJSON)
+		
+				}
+			
+		})
+*/
 	}
 }
 
@@ -883,3 +974,10 @@ exports.totalR = function(req, res) {
 	})
 }
 
+
+
+
+exports.totalrev=function(req,res){
+	console.log("req",req.body)
+	
+}

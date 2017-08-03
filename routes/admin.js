@@ -23,6 +23,7 @@ module.exports = function(app, express,passport) {
      router.get('/totalR', vendor.totalR);
     router.get('/totalVendor', vendor.totalVendor);
     router.get('/totalRevenue', vendor.totalRevenue);
+    router.post('/totalrev', vendor.totalrev);
 
 
 	app.use('/admin', router);
