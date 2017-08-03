@@ -10,6 +10,8 @@ var nodemailer = require('nodemailer');
 var itemsObj = require('./../../models/items/items.js');
 var order = require('./../../models/order/order.js');
 var md5 = require('md5');
+var moment = require('moment');
+var async = require('async');
 
 
 /* Vendor sign up form  */
@@ -880,5 +882,119 @@ exports.totalR = function(req, res) {
 
 		}
 	})
+}
+
+
+
+
+exports.monthlydata = function(req,res)
+{
+	let vendor_id = req.body.vendor_id;
+	function firstDayOfMonth() {
+        var d = new Date(Date.apply(null, arguments));
+        d.setDate(1);
+        return d.toISOString();
+    }
+    function lastDayOfMonth() {
+        var d = new Date(Date.apply(null, arguments));
+        d.setMonth(d.getMonth() + 1);
+        d.setDate(0);
+        return d.toISOString();
+    }
+
+    var now = Date.now();
+    //Below line for getting the first date of current month
+    var startDayOfMonth = firstDayOfMonth(now);
+    console.log("startdate",startDayOfMonth)
+    //Below line for getting the last date of current month
+    var endDayOfMonth = lastDayOfMonth(now);
+    console.log("enddate",endDayOfMonth)
+    //Below line for getting the current week first day
+    var currentDayOfweek = moment().day(0); // Sunday
+    console.log("currentdat",currentDayOfweek)
+    //Below line for getting the current week last day
+    var lastDayOfweek = moment().day(6); // saturday
+    console.log("lastdayeweek",lastDayOfweek)
+    console.log("vendor id",vendor_id)
+    async.parallel({
+        one: function (parallelCb) {
+            // get barber total sales of current month
+            getTotalSaleOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function (err, result) {
+                parallelCb(null, result)
+            });
+        },
+        two: function (parallelCb) {
+            // get barber sale of current week
+            getTotalSaleOnDates(vendor_id, currentDayOfweek, lastDayOfweek, function (err, result) {
+                parallelCb(null, result)
+            });
+        }
+    }, function (err, results) {
+        // results will have the results of all 3
+        console.log("total month sale", results.one);
+        console.log("total week sale", results.two);
+        res.status(200).send({
+            msg: constantObj.messages.successRetreivingData,
+            data: {
+                monthSale: results.one,
+                weekSale: results.two,
+
+            }
+        })
+    });
+
+}
+
+
+var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
+    var vendorId = mongoose.Types.ObjectId(vendor_id);
+    console.log("vendor here",vendorId)
+    var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+    var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+   console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
+   console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
+   order.aggregate([  
+    {      
+    	$lookup:      
+              {        
+               from: "items", 
+               localField: "item_id", 
+               foreignField: "_id", 
+               as: "items"       
+               }  },
+    
+    {  
+        $match: 
+               { 
+               	  $and: 
+               	          
+                             [ { vendor_id : vendorId }, 
+                               {
+                                   created_date: {
+                                   $lte: Enddate,
+                                   $gte: Startdate 
+                                   }    
+                               }   
+                             ]
+                          
+                }
+    },
+    {
+        $group :   
+        {      
+            _id : null,   
+            total_Count: { $sum: "$item_count" }
+         }
+     }
+  ]).exec(function(err, result) {
+    console.log("here",result);
+        if (err) {
+            cb(err, null);
+            
+        } else {
+            cb(null, result)
+            console.log("database",result)
+        }
+    })
 }
 
