@@ -66,35 +66,23 @@ exports.items_added_by_vendor = function(req,res){
                     {
                         $lookup: {
                             from: "items",
-                            localField: "vendor_id",
-                            foreignField: "vendor_id",
+                            localField: "item_id",
+                            foreignField: "_id",
                             as: "item_detail"
                         }
-                    },{ 
-                        $unwind: {
-                                 "path": "$item_detail",
-                                 "preserveNullAndEmptyArrays": true
-                     } 
-                     },
-                     {
-                         $project:{
-                                "_id":"$_id",
-                                "itemDetails":"$item_detail",
-                                "item_id":"$item_id",
-                                "item_count":"$item_count"
-                             }
-                     },
-                     {
+                    },
+                    {
+                        $unwind:"$item_detail"
+                    },
+                    {
                         $group:{
-                              "_id":"$item_id",
-                              "total":{
-                                    "$sum":"$item_count"
-                                  },
-                                  "itemDetails":{$push:"$itemDetails"}
+                                "_id":"$item_id",
+                                "total":{$sum:"$item_count"},
+                                "itemDetails":{$push:"$item_detail"}
 
-                            }
-                     }       
-               ]
+                                }
+                    }
+                ]
                     ,function(err,orderdetails){
                         console.log("orderdetails",orderdetails)
                         if(err){
