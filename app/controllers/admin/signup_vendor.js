@@ -8,6 +8,7 @@ var NodeGeocoder = require('node-geocoder');
 var emailService = require('./../email/emailService.js');
 var stripe = require("stripe")("sk_test_PirOevMb5V4TmELqMjPZxTnJ");
 var nodemailer = require('nodemailer');
+var device = require('./../../models/devices/devices.js')
 var itemsObj = require('./../../models/items/items.js');
 var order = require('./../../models/order/order.js');
 var md5 = require('md5');

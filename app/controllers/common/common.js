@@ -15,7 +15,7 @@ let moment = require('moment');
 let options;
 options = {
   token: {
-key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
+    key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
     cert:path.resolve(__dirname,"./../../../common/certificates.pem"),
     keyId: "UEJKHFH34K",
     teamId: "Q9NZ7GGH6L"
@@ -23,30 +23,44 @@ key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
   production: false
 };
 
-console.log("ggggggggg",path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"))
-exports.notify = function(req,res){
-    console.log("notifyyyyyyyyyyyy",req.body)
-     var token=req.body.device_token;
+exports.notify = function(device_token,iteminfo,no_of_items,cbnotify){
+    console.log("notifyyyyyyyyyyyy",device_token,iteminfo)
+    var item_information=iteminfo[0];
+     var token=device_token;
     device.findOne({device_token:token},function(err,result){
+        console.log("found resild",result)
         if(result){
             if(result.device_type=='ios'){
-                pushSendToIOS(result.token)
+                pushSendToIOS(result.device_token,item_information,no_of_items,function (err,cb) {
+                if(err){
+
+                }else{
+
+                }
+                })
             }
             else if(result.device_type=='android'){
-                pushToAndroid(result.device_token)
+                pushToAndroid(result.device_token,item_information,no_of_items,function(err,cb) {
+                    if(err){
+                        cbnotify(err,{"message":"error in push notify"})
+                    }else
+                    {console.log(cb)
+                        cbnotify(null,{cb})
+                    }
+                })
             }
         }
     })
 }
 
-let pushToAndroid = function  (token) {
-    console.log("insode android")
+let pushToAndroid = function  (token,item_information,no_of_items,cb) {
+    console.log("insode android",token)
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to:token, 
+        to:token,
         // collapse_key: 'your_collapse_key', 
         notification: {
-            title: 'Title of your push notification', 
-            body: 'Body of your push notification' 
+            title: 'Item purchased', 
+            body:no_of_items+" "+item_information.p_name+" purchased from your account."   
         },
         
         data: {  //you can send only notification or only data(or include both) 
@@ -55,42 +69,43 @@ let pushToAndroid = function  (token) {
         }
     };
 
-    fcm.send(message, function(err, response){
+    fcm.send(message, function(err, pushresponse){
         console.log("inside function msg send")
         if (err) {
             console.log("Something has gone wrong!",err);
+            cb(err,{"message":"error in push notification android"})
         } else {
-            console.log("Successfully sent with response: ", response);
+            console.log("Successfully sent with response: ", pushresponse);
+            cb(null,{pushresponse})
         }
     });
 }
 
-/*let pushSendToIOS = function(token,key) {
+let pushSendToIOS = function(token) {
     console.log("token here", token);
     let apnProvider = new apn.Provider(options);
-    let deviceToken = "63933720580CE05CB091B58E3D2B9DF0C104DFA20A0A5002B6A9B8319E27045D";
+    let deviceToken = token;
     let note = new apn.Notification();
     note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
     note.badge = 3;
-    note.sound = "ping.aiff";
+    //note.sound = "ping.aiff";
     note.alert = "You have a new notification.";
     note.payload = {
         'messageFrom': 'Appointment'
     };
-    note.topic = "com.development.BarbrDo";
+    note.topic = "Bridgit";
     note.notifyType = "matchNotification"
     apnProvider.send(note, deviceToken).then((result) => {
         console.log("result is", JSON.stringify(result));
         if (result.failed.length > 0) {
             console.log("error in sending notification");
         } else {
-            console.log("success in sending notification");
+            console.log("success in sending notification",result);
         }
     });
 }
 
-
-
+/*
 exports.encrypt = function(text) {
     let cipher = crypto.createCipher(algorithm, password)
     let crypted = cipher.update(text, 'utf8', 'hex')
@@ -127,18 +142,4 @@ exports.addOffset = function(dobFormat) {
     let dateInUtc = dateInMilli + userOffsetMilli;
     return dateInUtc;
 }
-
-let accountSid = 'AC865177abe2f391adae3a6d528a87e4d7'; // Your Account SID from www.twilio.com/console
-let authToken = '2eadab4ae69fe6583bbc54793208eea1';   // Your Auth Token from www.twilio.com/console
-
-let twilio = require('twilio');
-let client = new twilio(accountSid, authToken);
-
-exports.sentMessage = function () {
-client.messages.create({
-    body: 'Hello from Node',
-    to: '+91 7696516981',  // Text this number
-    from: '+14157410903' // From a valid Twilio number
-})
-.then((message) => console.log(message.sid));
-}*/
+*/
