@@ -420,6 +420,8 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                                 common.notify(device_token,iteminfo,no_of_items,function(err,cbnotify){
                                                   if(err){
                                                     console.log("err",err);
+                                                    paymentcb(err, {"message":"err in notification"
+                                                    })
                                                   }else{
                                                     console.log("notification successfull",cbnotify)
                                                     paymentcb(null, {

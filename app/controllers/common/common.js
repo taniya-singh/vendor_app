@@ -3,7 +3,7 @@ let FCM = require('fcm-node');
 var device = require('./../../models/devices/devices.js')
 let apn = require("apn");
 let path = require('path');
-let serverKey = 'AIzaSyAGezexybpDqWCnASzL-rcEybb5AfrSXnA '; 
+let serverKey = 'AIzaSyAGezexybpDqWCnASzL-rcEybb5AfrSXnA'; 
 let fcm = new FCM(serverKey);
 let moment = require('moment');
 
@@ -16,7 +16,7 @@ let options;
 options = {
   token: {
     key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
-    cert:path.resolve(__dirname,"./../../../common/certificates.pem"),
+    // cert:path.resolve(__dirname,"./../../../common/certificates.pem"),
     keyId: "UEJKHFH34K",
     teamId: "Q9NZ7GGH6L"
   },
@@ -35,8 +35,10 @@ exports.notify = function(device_token,iteminfo,no_of_items,cbnotify){
             if(result.device_type=='ios'){
                 pushSendToIOS(result.device_token,item_information,no_of_items,function (err,cb) {
                 if(err){
+                        cbnotify(err,{"message":"error in push notify"})
 
                 }else{
+                        cbnotify(null,{cb})
 
                 }
                 })
@@ -83,26 +85,31 @@ let pushToAndroid = function  (token,item_information,no_of_items,cb) {
     });
 }
 
-let pushSendToIOS = function(token) {
-    console.log("token here", token);
+let pushSendToIOS = function(token,item_information,no_of_items,cb) {
+
     let apnProvider = new apn.Provider(options);
     let deviceToken = token;
     let note = new apn.Notification();
     note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
     note.badge = 3;
     //note.sound = "ping.aiff";
-    note.alert = "You have a new notification.";
+    note.alert = no_of_items+" "+item_information.p_name+" purchased from your account." ;
     note.payload = {
-        'messageFrom': 'Appointment'
+        'messageFrom': 'Bridgit'
     };
-    note.topic = "Bridgit";
+   
     note.notifyType = "matchNotification"
-    apnProvider.send(note, deviceToken).then((result) => {
-        console.log("result is", JSON.stringify(result));
-        if (result.failed.length > 0) {
+    console.log(note,"device token",deviceToken)
+    apnProvider.send(note, deviceToken).then((err,pushresponse) => {
+        console.log("result is", JSON.stringify(pushresponse));
+        if (err) {
             console.log("error in sending notification");
+            cb(null,{pushresponse})
+
         } else {
-            console.log("success in sending notification",result);
+            console.log("success in sending notification",pushresponse);
+                        cb(null,{pushresponse})
+
         }
     });
 }
