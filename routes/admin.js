@@ -16,11 +16,11 @@ module.exports = function(app, express,passport) {
     router.post('/updateVendordata', vendor.updateVendordata);
     router.post('/getCurrentVendorData', vendor.getCurrentVendorData);
  router.get('/totalSales', vendor.totalSales);
-
      router.get('/totalVendor', vendor.totalVendor);
     router.get('/totalRevenue', vendor.totalRevenue);
     router.post('/saleData', vendor.saleData);
      router.post('/revenueData', vendor.revenueData);
+      
 
     
 

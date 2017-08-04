@@ -1,6 +1,7 @@
 var vendor = require('./../../models/admin/signup_vendor.js');
 var items = require('./../../models/items/items.js');
 var mongoose = require('mongoose');
+var device = require('./../../models/devices/devices.js')
 var constantObj = require('./../../../constants.js');
 var fs = require('fs');
 var NodeGeocoder = require('node-geocoder');
@@ -236,6 +237,7 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 
 /* Vendor login api*/
 exports.vendor_login = function(req, res) {
+	console.log("re body",req.body)
 	console.log("login ", res.req.user)
 
 	var data = res.req.user;
@@ -261,16 +263,76 @@ exports.vendor_login = function(req, res) {
 		};
 		res.jsonp(outputJSON)
 	} else {
-		var outputJSON = {
-			'status': 'success',
-			'messageId': 200,
-			'message': "login successfully",
-			"data": data
-		};
-		res.jsonp(outputJSON)
+		var vendorid=res.req.user.id
+		var device_data={};
+		device_data.device_type=req.body.device_type;
+		device_data.device_token=req.body.device_token;
+		device_data.vendor_id=res.req.user.id;
 
+		device.find({vendor_id:vendorid},function(err,devicedetails){
+			console.log("inosde find")
+			if(err){
+				console.log("err",err)
+
+			}else{
+				if(devicedetails.length>0){
+					console.log("inside modifly")
+					device.update({vendor_id:vendorid},{$set:device_data},function(err,deviceupdate){
+						if(err){
+							var outputJSON = {
+								'status': 'failure',
+								'messageId': 400,
+								'message': "Err"
+							};
+							res.jsonp(outputJSON)
+
+						}else{
+							data.device_token=req.body.device_token;
+							data.device_type=req.body.device_type;
+							console.log("update",deviceupdate)
+							console.log("data is",data)
+
+							var outputJSON = {
+								'status': 'success',
+								'messageId': 200,
+								'message': "login successfully",
+								'data':data
+							};
+							res.jsonp(outputJSON)
+						}
+					})
+
+				}else{
+					console.log("insode save new")
+					device(device_data).save(device_data,function(err,deviceadd){
+						if(err){
+							var outputJSON = {
+								'status': 'failure',
+								'messageId': 400,
+								'message': "Err"
+							};
+							res.jsonp(outputJSON)
+						}else{
+							data.device_token=req.body.device_token;
+							data.device_type=req.body.device_type;
+							console.log("data is",data)
+							var outputJSON = {
+								'status': 'success',
+								'messageId': 200,
+								'message': "login successfully",
+								'data':data
+							};
+							res.jsonp(outputJSON)
+
+						}
+					})
+				}
+				
+			}
+		})
 	}
 }
+
 
 /*update vendor information*/
 
@@ -831,7 +893,7 @@ exports.totalRevenue = function(req, res) {
 
 exports.saleData = function(req,res)
 {
-	let vendor_id = req.body.vendor_id;
+	var vendor_id = req.body.vendor_id;
 	function firstDayOfMonth() {
         var d = new Date(Date.apply(null, arguments));
         d.setDate(1);
@@ -859,32 +921,38 @@ exports.saleData = function(req,res)
     console.log("lastdayeweek",lastDayOfweek)
     console.log("vendor id",vendor_id)
     async.parallel({
-        one: function (parallelCb) {
+        monthlysale: function (parallelCb) {
             // get barber total sales of current month
             getTotalSaleOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function (err, result) {
                 parallelCb(null, result)
                  console.log(">>>>>>>>>>>>>>>>1111111",result)
             });
         },
-        two: function (parallelCb) {
+        weeklysale: function (parallelCb) {
             // get barber sale of current week
             getTotalSaleOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function (err, result) {
                 parallelCb(null, result)
                 console.log(">>>>>>>>>>>>>>>>22222222",result)
             });
         }
-    }, function (err, results) {
-        // results will have the results of all 3
-        console.log("total month sale", results.one);
-        console.log("total week sale", results.two);
-        res.status(200).send({
-            msg: constantObj.messages.successRetreivingData,
-            data: {
-                monthSale: results.one,
-                weekSale: results.two,
+    },function(err, result) {
+        if (err) {
+            outputJSON = {
+                'status': 'failure',
+                'messageId': 203,
+                'message': constantObj.messages.errorRetreivingData
+            };
+        } else {
+            outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': constantObj.messages.successRetreivingData,
+                'data': result
 
+                    
             }
-        })
+        }
+        res.jsonp(outputJSON);
     });
 
 }
@@ -995,15 +1063,9 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
     })
 }
 
-
-
-
-
-
-
 exports.revenueData = function(req,res)
 {
-	let vendor_id = req.body.vendor_id;
+	var vendor_id = req.body.vendor_id;
 	function firstDayOfMonth() {
         var d = new Date(Date.apply(null, arguments));
         d.setDate(1);
@@ -1017,10 +1079,8 @@ exports.revenueData = function(req,res)
     }
 
     var now = Date.now();
-    //Below line for getting the first date of current month
     var startDayOfMonth = firstDayOfMonth(now);
     console.log("startdate",startDayOfMonth)
-    //Below line for getting the last date of current month
     var endDayOfMonth = lastDayOfMonth(now);
     console.log("enddate",endDayOfMonth)
     //Below line for getting the current week first day
@@ -1031,32 +1091,38 @@ exports.revenueData = function(req,res)
     console.log("lastdayeweek",lastDayOfweek)
     console.log("vendor id",vendor_id)
     async.parallel({
-        one: function (parallelCb) {
+        monthlyrevenue: function (parallelCb) {
             // get barber total sales of current month
            getTotalRevenueOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function (err, result) {
                 parallelCb(null, result)
                  console.log(">>>>>>>>>>>>>>>>1111111",result)
             });
         },
-        two: function (parallelCb) {
+        weeklyrevenue: function (parallelCb) {
             // get barber sale of current week
             getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function (err, result) {
                 parallelCb(null, result)
                 console.log(">>>>>>>>>>>>>>>>22222222",result)
             });
         }
-    }, function (err, results) {
-        // results will have the results of all 3
-        console.log("total month sale", results.one);
-        console.log("total week sale", results.two);
-        res.status(200).send({
-            msg: constantObj.messages.successRetreivingData,
-            data: {
-                monthSale: results.one,
-                weekSale: results.two,
+    },function(err, result) {
+        if (err) {
+            outputJSON = {
+                'status': 'failure',
+                'messageId': 203,
+                'message': constantObj.messages.errorRetreivingData
+            };
+        } else {
+            outputJSON = {
+                'status': 'success',
+                'messageId': 200,
+                'message': constantObj.messages.successRetreivingData,
+                'data': result
 
+                    
             }
-        })
+        }
+        res.jsonp(outputJSON);
     });
 
 }
@@ -1071,8 +1137,7 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
     var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
    console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
    console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
-   var total=0;
-	var total_revenew=0;
+  
 	console.log("insiode tottal")
 	order.aggregate([
         

@@ -294,7 +294,7 @@ exports.link_card = function(req, res) {
               outputJSON = {
                 'status': 'success',
                 'messageId': 200,
-                'message': "Csrd is successfully linked",
+                'message': "Card is successfully linked",
                 'data': customer
               }
               res.json(outputJSON)

@@ -3,7 +3,7 @@ let FCM = require('fcm-node');
 var device = require('./../../models/devices/devices.js')
 let apn = require("apn");
 let path = require('path');
-let serverKey = 'AIzaSyDxyJiNN18nLH0wp3cW8cPyYdCoqUSnOVE'; 
+let serverKey = 'AIzaSyAGezexybpDqWCnASzL-rcEybb5AfrSXnA'; 
 let fcm = new FCM(serverKey);
 let moment = require('moment');
 
@@ -15,15 +15,15 @@ let moment = require('moment');
 let options;
 options = {
   token: {
-    key: path.resolve("./common/AuthKey_UEJKHFH34K.p8"),
-    cert:path.resolve("./common/certificates.pem"),
+key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
+    cert:path.resolve(__dirname,"./../../../common/certificates.pem"),
     keyId: "UEJKHFH34K",
     teamId: "Q9NZ7GGH6L"
   },
   production: false
 };
 
-
+console.log("ggggggggg",path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"))
 exports.notify = function(req,res){
     console.log("notifyyyyyyyyyyyy",req.body)
      var token=req.body.device_token;
@@ -42,7 +42,7 @@ exports.notify = function(req,res){
 let pushToAndroid = function  (token) {
     console.log("insode android")
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
-        to:  "AAAAtdgXiDI:APA91bEm02J_uqTbpvKXftLni-eAcJKwHdNvVsEwBmZnniFVKKfNo6X4oaVEnIkDuzaE-Eu1DMudLdALzD7pwXwKBzLBy2UVzpEAnz_yftXoOR7J4JqTiPNp8lLqZmPIzQvyw-SrCioy", 
+        to:token, 
         // collapse_key: 'your_collapse_key', 
         notification: {
             title: 'Title of your push notification', 
