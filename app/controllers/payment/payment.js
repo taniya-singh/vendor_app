@@ -2,10 +2,13 @@ var itemsObj = require('./../../models/items/items.js');
 var vendor = require('./../../models/admin/signup_vendor.js');
 var userObj = require('./../../models/users/users.js');
 var order = require('./../../models/order/order.js');
+var device = require('./../../models/devices/devices.js')
+
 var paymentObj = require('./../../models/payment/payment.js');
 var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs = require('fs');
+var common=require('./../common/common.js')
 var stripe = require("stripe")("sk_test_PirOevMb5V4TmELqMjPZxTnJ");
 
 
@@ -334,6 +337,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
               })
             } else {
               if (iteminfo.length > 0) {
+                var no_of_items=custdetail.item_count
                 //console.log("item info retreived", iteminfo)
                 if (iteminfo[0].p_count >= custdetail.item_count) {
                   var amount = (iteminfo[0].p_price) * (custdetail.item_count);
@@ -380,7 +384,6 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                   })
                                 } else {
                                   var latest_count = (iteminfo[0].p_count) - (custdetail.item_count);
-                                  //console.log("latest count is", latest_count);
                                   itemsObj.update({
                                     _id: custdetail.item_id
                                   }, {
@@ -406,11 +409,30 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                               "message": "Error in updating default status"
                                             })
                                           } else {
-                                            console.log("inisde elase")
-                                            console.log("default card linked***",defaultstatus_update)
-                                            paymentcb(null, {
-                                              charge
+                                            /* push notifications after payment
+                                                made on:4th august
+                                            */
+                                            device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
+                                              if(err){
+
+                                              }else{
+                                                var device_token=pushnotify[0].device_token;
+                                                common.notify(device_token,iteminfo,no_of_items,function(err,cbnotify){
+                                                  if(err){
+                                                    console.log("err",err);
+                                                  }else{
+                                                    console.log("notification successfull",cbnotify)
+                                                    paymentcb(null, {
+                                                    charge
+                                                    })
+
+                                                  }
+                                                })
+
+                                              }
                                             })
+
+                                            
                                           }
                                         })
                                       } else {
@@ -496,7 +518,6 @@ exports.pay = function(req, res) {
                           'message': "Something worng happen,try again later",
                         },
                         res.json(outputJSON);
-
                   }
                   
                 }
@@ -519,7 +540,13 @@ exports.pay = function(req, res) {
                 if (customer) {
                   procede_to_pay(custdetail, custdetails, function(err, paymentcb) {
                     if (err) {
-
+                      outputJSON = {
+                          'status': 'Failure',
+                          'messageId': 400,
+                          'message': "Something worng happen,try again later"
+                          
+                        },
+                        res.json(outputJSON);
                     } else {
 
                       if(paymentcb){
@@ -529,7 +556,8 @@ exports.pay = function(req, res) {
                           'message': "Payment successfull after linking card",
                           'data': paymentcb
                         },
-                        res.json(outputJSON);  
+                        res.json(outputJSON); 
+
                       }else{
                         outputJSON = {
                           'status': 'Failure',
