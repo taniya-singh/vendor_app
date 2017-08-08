@@ -70,7 +70,6 @@ exports.list_all_customers=function(req,res){
 );
 }
 var create_customer_on_stripe = function(custdetail, cb) {
-  console.log("ffff", custdetail)
   userObj.find({
     _id: custdetail._id
   }, function(err, user) {
@@ -151,6 +150,19 @@ var create_customer_on_stripe = function(custdetail, cb) {
     }
   })
 }
+
+
+/**
+ * Input: Card details EX.{"_id" :"59798ac51329747c4511d3c5",
+                          "exp_month" : 11,
+                          "exp_year" : 2018,
+                          "cvc" : 100,
+                          "account_no" : 4242424242424242
+                          }
+
+ * Output: CARD ADDED outputJSON
+ * This function adds a new card correspongding to already existing customer on stripe 
+ */
 exports.add_new_card = function(req, res) {
   var card_det = {};
   var card_info = [];
@@ -158,10 +170,14 @@ exports.add_new_card = function(req, res) {
   custdetail = req.body;
   create_customer_on_stripe(custdetail, function(err, customers) {
     if (err) {
-      console.log("idf err", err)
+      outputJSON = {
+                  'status': 'Failure',
+                  'messageId': 400,
+                  'message': "err",
+                },
+                res.json(outputJSON);
 
     } else {
-      console.log("rrrrrrrrrrrrrrrrrrrrr", customers)
       var stripe_id = customers.customer.id;
       stripe.customers.createSource(stripe_id, {
         source: {
@@ -175,11 +191,9 @@ exports.add_new_card = function(req, res) {
         if (err) {
           console.log("err", err)
         } else {
-          console.log("card", card)
           card_det = {
             card_id: card.id
           }
-          console.log("card det", card_det)
           card_info.push(card_det)
           userObj.update({
             customer_stripe_id: stripe_id
@@ -190,11 +204,10 @@ exports.add_new_card = function(req, res) {
               }
             },$set:{card_details:true}
           }, function(err, addcard) {
-            console.log("ADD", addcard)
             if (err) {
               console.log(err)
               outputJSON = {
-                  'status': 'err',
+                  'status': 'Failure',
                   'messageId': 400,
                   'message': "err",
                 },
@@ -202,7 +215,6 @@ exports.add_new_card = function(req, res) {
             } else {
               console.log("updation", addcard);
               outputJSON = {
-
                   'status': 'success',
                   'messageId': 200,
                   'message': "card Added to your account",
@@ -216,25 +228,33 @@ exports.add_new_card = function(req, res) {
     }
   });
 }
+
+
+/**
+ * Input: _id of the customer,whose card details are to be fetched
+ * Output: json of all card lists
+ * This function lists all card corresponding to a valid customer id
+ */
 exports.list_all_cards=function(req,res){
-console.log("req bodu",req.body)
 userObj.find({_id:req.body._id},function(err,userdetail){
   if(err){
-
+  outputJSON = {
+              'status': 'Failure',
+              'messageId': 400,
+              'message': "Error"
+            },
+            res.json(outputJSON);
   }else{
     if(userdetail.length>0){
-      console.log("user detail",userdetail)
       var cust_stripe_id=userdetail[0].customer_stripe_id;
       stripe.customers.listCards(cust_stripe_id, function(err, cards) {
           if(err){
-            console.log("err is",err)
             outputJSON = {
               'status': 'Failure',
               'messageId': 400,
               'message': "Error in retreiving cards"
             },
             res.json(outputJSON);
-
           }else{
             if(cards){
               outputJSON = {
@@ -264,8 +284,14 @@ userObj.find({_id:req.body._id},function(err,userdetail){
     }
   }
 })
-
 }
+
+
+/**
+ * Input: card_id
+ * Output: json of all card linked
+ * This function gets automatically called customer has multiple cards, and it inputed card gets linked
+ */
 
 exports.link_card = function(req, res) {
   userObj.find({
@@ -316,6 +342,12 @@ exports.link_card = function(req, res) {
     }
   })
 }
+
+
+/**
+ * This function gets automatically called when payment api is hit.
+ */
+
 var procede_to_pay = function(custdetail, custdetails, paymentcb) {
   console.log("card is linked")
   stripe.customers.retrieveCard(
@@ -338,7 +370,6 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
             } else {
               if (iteminfo.length > 0) {
                 var no_of_items=custdetail.item_count
-                //console.log("item info retreived", iteminfo)
                 if (iteminfo[0].p_count >= custdetail.item_count) {
                   var amount = (iteminfo[0].p_price) * (custdetail.item_count);
                   var amount_to_pay = amount * 100;
@@ -410,13 +441,15 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                             })
                                           } else {
                                             /* push notifications after payment
-                                                made on:4th august
+                                               made on:4th august
                                             */
-                                            device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
+                                            /*device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
                                               if(err){
-
+                                                console.log("err",err)
                                               }else{
-                                                var device_token=pushnotify[0].device_token;
+                                              console.log("push notify",pushnotify)
+                                                if(pushnotify.length>0){
+                                                   var device_token=pushnotify[0].device_token;
                                                 common.notify(device_token,iteminfo,no_of_items,function(err,cbnotify){
                                                   if(err){
                                                     console.log("err",err);
@@ -427,14 +460,16 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                                     paymentcb(null, {
                                                     charge
                                                     })
-
                                                   }
                                                 })
-
+                                                }else{
+                                                  paymentcb(null,charge)
+                                                }
                                               }
-                                            })
-
-                                            
+                                            }) */  
+                                           paymentcb(null, {
+                                                    charge
+                                                    })  
                                           }
                                         })
                                       } else {
@@ -476,8 +511,19 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
       }
     }
   );
-
 }
+
+/**
+ * Input: Example {
+                    "_id" :"59798ac51329747c4511d3c5",
+                    "item_id" : "596c542c1f259971030dcadf",
+                    "item_count" : 2 ,
+                    "stripe_card_id":"card_1AkR1AACYsLTDfEYYJb0zuy4"
+                  }
+ * Output: payment is successfully done json output
+ * This function is called which creates account on stripe, add card, link card and update local data base
+   with the stripe id and card id. 
+ */
 exports.pay = function(req, res) {
   var custdetail = {};
   var ordersave = {};
@@ -603,156 +649,7 @@ exports.pay = function(req, res) {
             res.json(outputJSON); 
   }
 }
-        /*itemsObj.find({ _id: req.body.item_id }, function(err, items) {
-          if (err) {
-            outputJSON = {
-                'status': 'Failure',
-                'messageId': 400,
-                'message': "Error"
-              },
-              res.json(outputJSON);
-          } else {
-            console.log("inside items")
-            if ((items[0].p_count) >= (req.body.item_count)) {
-              var amount = (items[0].p_price) * (req.body.item_count);
-              var amount_to_pay = amount * 100;
-              vendor.find({
-                _id: items[0].vendor_id
-              }, function(err, vendetails) {
-                if (err) {
-                  console.log("errr", err)
-                  outputJSON = {
-
-                      'status': 'Failure',
-                      'messageId': 400,
-                      'message': "Error",
-                      'data': err
-                    },
-                    res.json(outputJSON);
-                } else {
-                  stripe.customers.retrieveCard(
-                    custdetails.customer.id,
-                    custdetail.stripe_card_id,
-                    function(err, card) {
-
-                      if (err) {
-                        console.log("errr", err)
-
-                        outputJSON = {
-                            'status': 'Failure',
-                            'messageId': 400,
-                            'message': "error",
-                            'data': err
-                          },
-                          res.json(outputJSON);
-                      } else {
-                        if (card) {
-                          console.log("inide card", card)
-                          if (vendetails.length > 0) {
-                            accntid = vendetails[0].stripe_account_id
-                            console.log("**************", amount_to_pay)
-                            console.log("RRRRRRRRRRRRR", custdetails.customer.id)
-                            stripe.charges.create({
-                                amount: amount_to_pay,
-                                currency: "usd",
-                                customer: custdetails.customer.id,
-                                source: card.id, // obtained with Stripe.js
-                                destination: {
-                                  account: accntid
-                                },
-                                description: "Charge for Customer food",
-                                //application_fee: 500, // amount in cents
-                                capture: false
-                              },
-                              function(err, charge) {
-                                if (err) {
-                                  console.log("eeeee", err)
-                                  res.json(err);
-                                } else {
-
-                                  ordersave.item_id = items[0]._id;
-                                  ordersave.vendor_id = items[0].vendor_id;
-                                  ordersave.customer_id = custdetail._id;
-                                  ordersave.item_count = req.body.item_count;
-                                  order(ordersave).save(ordersave, function(err, saveorder) {
-                                    if (err) {
-                                      outputJSON = {
-                                          'status': 'failure',
-                                          'messageId': 400,
-                                          'message': "Err"
-
-                                        },
-                                        res.json(outputJSON);
-                                    } else {
-                                      var latest_count = (items[0].p_count) - (req.body.item_count);
-                                      console.log("latest count is", latest_count);
-                                      itemsObj.update({
-                                        _id: req.body.item_id
-                                      }, {
-                                        $set: {
-                                          p_count: latest_count
-                                        }
-                                      }, function(err, updatecount) {
-                                        if (err) {
-
-                                        } else {
-                                          if (updatecount) {
-                                            console.log("save order", updatecount)
-                                            outputJSON = {
-                                                'status': 'success',
-                                                'messageId': 200,
-                                                'message': "Payed successfully",
-                                                'data': charge
-                                              },
-                                              res.json(outputJSON);
-                                          } else {
-                                            outputJSON = {
-                                                'status': 'failure',
-                                                'messageId': 400,
-                                                'message': "something worng happened"
-                                              },
-                                              res.json(outputJSON);
-                                          }
-                                        }
-                                      })
-                                    }
-
-                                  })
-                                }
-                              })
-                          } else {
-                            outputJSON = {
-                                'status': 'Failure',
-                                'messageId': 400,
-                                'message': "vendor details does not exists"
-                              },
-                              res.json(outputJSON);
-                          }
-                        } else {
-                          outputJSON = {
-                              'status': 'Failure',
-                              'messageId': 400,
-                              'message': "card does not exist"
-                            },
-                            res.json(outputJSON);
-                        }
-                      }
-                    })
-                }
-              })
-            } else {
-              outputJSON = {
-                  'status': 'Failure',
-                  'messageId': 400,
-                  'message': "Item out of stock"
-                },
-                res.json(outputJSON);
-            }
-          }
-
-          })
-*/        
-      
+  
       
 
 exports.retrieve_balance=function(err,res){

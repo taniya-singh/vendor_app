@@ -413,6 +413,12 @@ exports.customerListItem = function(req, res) {
 
 
 }
+/**
+ * Input: Current location (longitute And lattitude)
+ * Output: item  json object
+ * This function displays all items, which are at near by location of 25000 radians
+ * Devepoped by: 
+ */ 
 
 exports.item_listing_for_user = function(req, res) {
 	var available_items=[];
@@ -470,7 +476,6 @@ exports.item_listing_for_user = function(req, res) {
 					},
 					res.json(outputJSON);
 			} else {
-				console.log("items",items)
 				outputJSON = {
 						'status': 'success',
 						'messageId': 200,

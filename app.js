@@ -392,8 +392,8 @@ app.use(function(err, req, res, next) {
 
 // })
 
-// var decrypted = decipher.update('14a0f68f2312944a57fdd20704ad9f72', 'hex', 'binary');
-//           decrypted += decipher.final('binary');
+var decrypted = decipher.update('14a0f68f2312944a57fdd20704ad9f72', 'hex', 'binary');
+          decrypted += decipher.final('binary');
 
         
 module.exports = app;
