@@ -428,12 +428,12 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                       })
                                     } else {
                                       if (updatecount) {
-                                        console.log("inside add new status")
+                                        console.log("inside add new status",card.last4)
                                         console.log("custdetail",custdetail._id,charge.source.id)
                                         var cid=charge.source.id
                                         console.log("cid",cid)
 
-                                        userObj.update({_id:custdetail._id},{$set:{default_card_linked:cid}},function(err, defaultstatus_update) {
+                                        userObj.update({_id:custdetail._id},{$set:{default_card_linked:cid,last4:card.last4}},function(err, defaultstatus_update) {
                                           if (err) {
                                             console.log("inisde err")
                                             paymentcb(err, {

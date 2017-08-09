@@ -1,6 +1,7 @@
+
 var userObj = require('./../../models/users/users.js');
-//var vendor = require('./../../models/vendordetails/vendordetails.js');
-var Vendor = require('./../../models/admin/signup_vendor.js');
+var vendor = require('./../../models/vendordetails/vendordetails.js');
+//var Vendor = require('./../../models/admin/signup_vendor.js');
 var order = require('./../../models/order/order.js');
 var itemsObj = require('./../../models/items/items.js');
 var device = require('./../../models/devices/devices.js')
@@ -200,6 +201,8 @@ exports.faceBookLogin = function(req, res) {
 
         }
     }
+    /*The following code is preserved for future use . In this code login is done using id*/
+
     /* else if (req.body.loginType == 3) {  // loginType= 3  for google login
             if (!req.body.google_id) {
                 res.jsonp({
@@ -758,17 +761,15 @@ exports.reset_password = function(req, res) {
         };
         res.jsonp(outputJSON)
     }
-
-
-/*} else {
-    outputJSON = {
-        'status': 'failure',
-        'messageId': 400,
-        'message': "session expired"
-    };
-    res.jsonp(outputJSON)
-}*/
 }
+
+/**
+ * Forget password
+ * Input: registered email_id or phone no
+ * Output: Success message
+ * This function is will send a link on provided email id, or phone_no,and
+    corresponding to that link, reset password window will open
+ */
 
 exports.forgetpassword = function(req, res) {
     if (req.body.phone_no) {
@@ -852,7 +853,7 @@ exports.forgetpassword = function(req, res) {
                             from: "abc",
                             to: req.body.email,
                             subject: 'Reset password',
-                            html: 'Welcome to Bridgit!Your request for reset password is  being proccessed .Please follow the link to reset your password for customer   \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is  being proccessed. Please follow the link to reset your password for customer   \n  ' + resetUrl
                         };
                         transporter.sendMail(mailOptions, function(error, response) {
                             if (error) {
@@ -945,13 +946,6 @@ exports.forgetpassword = function(req, res) {
     }
 }
 exports.deleteUser = function(req,res){
-
-
-        
-
-
-
-console.log("asdasdas",req.body._id)
     if(req.body._id){
         userObj.update({
                 _id: req.body._id
@@ -1006,6 +1000,9 @@ console.log("asdasdas",req.body._id)
         res.jsonp(outputJSON);
     });
 }
+
+
+
 exports.customer_orderlist = function(req, res) {
     var date = [];
     order.find({
@@ -1020,6 +1017,7 @@ exports.customer_orderlist = function(req, res) {
             }
             res.jsonp(outputJSON);
         } else {
+            console.log("DDD",orders)
             if (orders.length > 0) {
                 order.aggregate([{
                     $match: {
@@ -1043,8 +1041,11 @@ exports.customer_orderlist = function(req, res) {
                     $unwind: "$item"
                 }, {
                     $unwind: "$vendordetails"
-                }], function(err, orderlist) {
+                },{
+                    $sort:{created_date:-1}
+                 }], function(err, orderlist) {
                     if (err) {
+                        console.log(err)
                         outputJSON = {
                             'status': 'failure',
                             'messageId': 400,
@@ -1070,7 +1071,7 @@ exports.customer_orderlist = function(req, res) {
                                 var strTime = hh + ':' + min + ' ' + ampm;
 
                                 orderlist[i].created_date = dd + "/" + mm + "/" + yy + ", " + strTime;
-                                console.log("new date is", orderlist[i].created_date)
+                                //console.log("new date is", orderlist[i].created_date)
                             }
                             //console.log("date array is",date)                
                             outputJSON = {

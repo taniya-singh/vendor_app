@@ -6,6 +6,12 @@ var constantObj = require('./../../../constants.js');
 var fs=require('fs');
 var emailService = require('./../email/emailService.js');
 
+/**
+ * Input:  -
+ * Output: Role json object containing all vendors
+ * This function lists all regsitered vendors
+ * Developed by :
+ */
 
 exports.vendorList = function(req,res){
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
