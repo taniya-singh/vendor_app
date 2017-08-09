@@ -255,13 +255,11 @@ exports.vendor_login = function(req, res) {
 		device_data.vendor_id=res.req.user.id;
 
 		device.find({vendor_id:vendorid},function(err,devicedetails){
-			console.log("inosde find")
 			if(err){
 				console.log("err",err)
 
 			}else{
 				if(devicedetails.length>0){
-					console.log("inside modifly")
 					device.update({vendor_id:vendorid},{$set:device_data},function(err,deviceupdate){
 						if(err){
 							var outputJSON = {
@@ -300,7 +298,6 @@ exports.vendor_login = function(req, res) {
 						}else{
 							data.device_token=req.body.device_token;
 							data.device_type=req.body.device_type;
-							console.log("data is",data)
 							var outputJSON = {
 								'status': 'success',
 								'messageId': 200,
@@ -378,11 +375,6 @@ exports.vendorList = function(req, res) {
 			var sortquery = {};
 			sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
 		}
-		//console.log("-----------query-------", query);
-		//console.log("sortquery", sortquery);
-		//console.log("page", page);
-		//console.log("count", count);
-		//console.log("skipNo",skipNo)
 		var query = {};
 		var searchStr = req.body.search;
 		if (req.body.search) {
@@ -396,15 +388,10 @@ exports.vendorList = function(req, res) {
 			}]
 		}
 		query.is_deleted = false;
-		// console.log("-----------query-------", query);
 		vendor.find(query).exec(function(err, data) {
-			//console.log("hahahahhahahhahahaha",data);
 			if (err) {
 				res.json("Error: " + err);
 			} else {
-				//outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, "data":data }, 
-				//res.json(outputJSON);
-
 				var length = data.length;
 				vendor.find(
 						query
@@ -478,7 +465,6 @@ exports.deleteVendor = function(req, res) {
 					if (err) {
 						console.log(err);
 					} else {
-						//  console.log("device id updated", updRes);
 						outputJSON = {
 							'status': 'success',
 							'messageId': 200,
@@ -518,23 +504,13 @@ exports.getCurrentVendorData = function(req, res) {
 		})
 }
 
-// var generateOtp = function () {
-// var text = "";
-// var possible = "0123456789";
-//  for (var i = 0; i < 4; i++){
-// 	text += possible.charAt(Math.floor(Math.random() * possible.length));
-//  }
-//  return text;
-// }
 
 
 exports.updateVendorInformation = function(req, res) {
-	// console.log("inside update user information");
 	console.log("daada", req.body);
 	console.log(req.files);
 	var _id = req.body._id;
 	var details = {};
-	// details._id = _id;
 	var imagesToDelete = [];
 	if (req.body.deleteImages) {
 		var imgArray = req.body.deleteImages;
@@ -652,8 +628,6 @@ uploadProImg = function(data, callback) {
 			name: photoname
 		}];
 
-		//console.log("asdfasdsa",saveData)
-
 		fs.writeFile(imagename, base64Data, 'base64', function(err) {
 			if (err) {
 				console.log(err);
@@ -682,92 +656,7 @@ uploadProImg = function(data, callback) {
 }
 
 
-/*exports.forget_password=function(req,res){
-	console.log("inside email")
-	if(req.body.vendor_email)
-            vendor.findOne({vendor_email : req.body.vendor_email},function(err,data){
-                if(err){
-                    outputJSON = {'status': 'failure', 'messageId':400, 'message':"Error Occured"};
-                    res.jsonp(outputJSON);
-                }else{
-                    if(data==null){
-                        outputJSON={'status': 'failure', 'messageId':400,'message':"Please enter a valid Email ID"};
-                        res.jsonp(outputJSON)    
-                    }else
-                    {
-                    var mailDetail="smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
-                    var resetUrl = "http://"+req.headers.host+"/#"+"/resetpassword/"+data._id;
-                    console.log("reset url",resetUrl)
-                    var transporter = nodemailer.createTransport(mailDetail);
-                        
-                        var mailOptions = {
-                            from: "abc",
-                            to: req.body.vendor_email,
-                            subject: 'Reset password',
-                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password    \n  ' + resetUrl
-                        };
-                    transporter.sendMail(mailOptions, function(error, response) {
-                        if (error) {
-
-                            console.log("err",error)
-                             outputJSON={'status': 'failure', 'messageId':401,'message':"error"};
-                            res.jsonp(outputJSON)    
-                        }else{
-                            var response = {
-                            "status": 'success',
-                            "messageId": 200,
-                            "message": "Reset password link has been send to your Mail. Kindly reset.",
-                            "Sent on":Date(),
-                            "From":"Taniya Singh"}  
-                            res.jsonp(response)
-                        }
-                    })  
-                    }        
-                 }
-            })
-}
-exports.reset_password = function(req, res) {
-	console.log("AAAAAAAAAA")
-    console.log("new pass", req.body.password.newpassword)
-    if (req.body._id != null) {
-
-        vendor.update({
-            _id: req.body._id
-        }, {
-            $set: {
-                "password": req.body.password.newpassword
-            }
-        }, function(err, updatedresponse) {
-            if (err) {
-                outputJSON = {
-                    'status': 'error',
-                    'messageId': 400,
-                    'message': "Password not updated, Try again later"
-                };
-                res.jsonp(outputJSON)
-            } else {
-                outputJSON = {
-                    'status': 'success',
-                    'messageId': 200,
-                    'message': "password updated successfully",
-                    "data": updatedresponse
-                };
-                res.jsonp(outputJSON)
-            }
-        })
-    } else {
-        outputJSON = {
-            'status': 'failure',
-            'messageId': 400,
-            'message': "session expired"
-        };
-        res.jsonp(outputJSON)
-    }
-}*/
-
 exports.totalSales = function(req, res) {
-	console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKK")
-
 	order.aggregate([{
 		$match: {
 			status: "Picked Up"
@@ -870,8 +759,6 @@ exports.totalRevenue = function(req, res) {
 		}
 	})
 }
-
-
 
 
 
@@ -1218,10 +1105,82 @@ var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek,
 	  			total=parseFloat(total)+parseFloat(calculated_price);
 	  			
 	  		}
-	  		console.log("total revenewwwwwwwwwwwwwwww is",total.toFixed(2))
+	  		console.log("total revenewwwwwis",total.toFixed(2))
 	  		total_revenew=total.toFixed(2)
 
 	  	}
     })
 
+}
+
+exports.add_device_info=function(req,res){
+	console.log("insode")
+	if(req.body.device_token && req.body.device_type){
+		var deviceinfo={};
+		deviceinfo.device_token=req.body.device_token;
+		deviceinfo.device_type=req.body.device_type;
+		device.find({vendor_id:req.body.vendor_id},function(err,vendorinfo){		
+			if(err){
+				outputJSON = {
+			                'status': 'failure',
+			                'messageId': 400,
+			                'message': "err" 
+        					}
+        				res.jsonp(outputJSON);
+			}else{
+				console.log("vendorinfo",vendorinfo)
+				if(vendorinfo.length>0){
+					console.log("insode update")
+					device.update({vendor_id:req.body.vendor_id},
+								  {$set:{device_token:req.body.device_token,device_type:req.body.device_type}},function(err,deviceupdated){
+						if(err){
+							outputJSON = {
+			                'status': 'failure',
+			                'messageId': 400,
+			                'message': "err" 
+        					}
+        				res.jsonp(outputJSON);
+						}else{
+							outputJSON = {
+			                'status': 'success',
+			                'messageId': 200,
+			                'message': "Device Info added successfully",
+			                'data': deviceupdated                  
+            				}				
+        				res.jsonp(outputJSON);
+						}
+					})
+				}else{
+					console.log("save")
+					device(deviceinfo).save(deviceinfo,function(err,savedevice){
+						if(err){
+						outputJSON = {
+			                'status': 'failure',
+			                'messageId': 400,
+			                'message': "err" 
+        					}
+        				res.jsonp(outputJSON);
+						}else{
+							console.log("savedevice",savedevice)
+							outputJSON = {
+			                'status': 'success',
+			                'messageId': 200,
+			                'message': "Device Info added successfully",
+			                'data': savedevice                  
+            				}				
+        				res.jsonp(outputJSON);
+						}
+						})
+					}
+				}
+			
+		})
+	}else{
+		outputJSON = {
+                'status': 'Failure',
+                'messageId': 400,
+                'message': "Please enter device details properly"
+            }
+        res.jsonp(outputJSON);
+	}
 }
