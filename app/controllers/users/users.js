@@ -945,13 +945,6 @@ exports.forgetpassword = function(req, res) {
     }
 }
 exports.deleteUser = function(req,res){
-
-
-        
-
-
-
-console.log("asdasdas",req.body._id)
     if(req.body._id){
         userObj.update({
                 _id: req.body._id
@@ -1043,7 +1036,9 @@ exports.customer_orderlist = function(req, res) {
                     $unwind: "$item"
                 }, {
                     $unwind: "$vendordetails"
-                }], function(err, orderlist) {
+                },{
+                    $sort:{created_date:-1}
+                 }], function(err, orderlist) {
                     if (err) {
                         outputJSON = {
                             'status': 'failure',
