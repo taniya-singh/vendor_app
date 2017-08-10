@@ -1082,6 +1082,7 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
         } else{
 	  		console.log("result database",result)
 	  		if (result[i].item_detail.length > 0) {
+	  			
 							for (var j = 0; j < result[i].item_detail.length; j++){
 									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
 									total = parseFloat(total) + parseFloat(calculated_price);
