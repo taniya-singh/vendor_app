@@ -431,6 +431,24 @@ $scope.submit = function(){
 		
  	        }
 
+
+
+$scope.saleData = function(){
+ 	        		var arr=[];
+ 	        		var vendor_name=[];
+ 	        		console.log("hree in saleeeeee")
+ 	        		var inputJSon = {vendor_id:"5981bbbb8492bf2e7465fd41"};
+				 	VendorService.saleData(inputJSon,function(response){
+				 		console.log("resonse JJJJJJJJJ",response.data);
+				 		$scope.saledata = response.data;
+				 	});
+				 	
+		
+ 	        }
+
+
+
+
  $scope.performAction = function(id,action) {
 
 			var actionsArr=["enable","disable" ,"delete"];
