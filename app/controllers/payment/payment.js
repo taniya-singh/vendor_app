@@ -443,11 +443,11 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                             /* push notifications after payment
                                                made on:4th august
                                             */
-                                            /*device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
+                                            device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
                                               if(err){
                                                 console.log("err",err)
                                               }else{
-                                              console.log("push notify",pushnotify)
+                                            
                                                 if(pushnotify.length>0){
                                                    var device_token=pushnotify[0].device_token;
                                                 common.notify(device_token,iteminfo,no_of_items,function(err,cbnotify){
@@ -466,10 +466,10 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                                   paymentcb(null,charge)
                                                 }
                                               }
-                                            }) */  
-                                           paymentcb(null, {
+                                            })   
+                                           /*paymentcb(null, {
                                                     charge
-                                                    })  
+                                                    })*/  
                                           }
                                         })
                                       } else {

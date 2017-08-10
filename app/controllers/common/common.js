@@ -9,7 +9,7 @@ let options;
 options = {
   token: {
     key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
-    cert:path.join(__dirname,"./../../../common/certificates.pem"),
+    cert:path.join(__dirname,"./../../../common/bridgit.pem"),
     keyId: "UEJKHFH34K",
     teamId: "Q9NZ7GGH6L"
   },
@@ -56,18 +56,17 @@ exports.notify = function(device_token,iteminfo,no_of_items,cbnotify){
 /* Push notification for android */
 
 let pushToAndroid = function  (token,item_information,no_of_items,cb) {
-    console.log("insode android",token)
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
         to:token,
         // collapse_key: 'your_collapse_key', 
         notification: {
-            title: 'Item purchased', 
+            //title: 'Item purchased Alert', 
             body:no_of_items+" "+item_information.p_name+" purchased from your account."   
         },
         
         data: {  //you can send only notification or only data(or include both) 
-            my_key: 'Appointment',
-            my_another_key: 'my another value'
+            my_key: 'Bridgit',
+            //my_another_key: 'my another value'
         }
     };
 
@@ -86,26 +85,27 @@ let pushToAndroid = function  (token,item_information,no_of_items,cb) {
 
 let pushSendToIOS = function(token,item_information,no_of_items,cb) {
     console.log("inside ios")
-    let apnProvider = new apn.Provider(options);
-    let deviceToken = token;
-    let note = new apn.Notification();
-    note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-    note.badge = 1;
-    note.alert = no_of_items+" "+item_information.p_name+" purchased from your account." ;
-    note.payload = {
-        'messageFrom': 'Bridgit'
+    var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera) 
+        to:token,
+        // collapse_key: 'your_collapse_key', 
+        notification: {
+            //title: 'Item purchased Alert', 
+            body:no_of_items+" "+item_information.p_name+" purchased from your account."   
+        },
+        
+        data: {  //you can send only notification or only data(or include both) 
+            my_key: 'Bridgit',
+            //my_another_key: 'my another value'
+        }
     };
-   
-    note.notifyType = "matchNotification"
-    apnProvider.send(note, deviceToken).then((err,pushresponse) => {
+
+    fcm.send(message, function(err, pushresponse){
         if (err) {
-            console.log("error in sending notification",err);
-            cb(null,{pushresponse})
-
+            console.log("Something has gone wrong!",err);
+            cb(err,{"message":"error in push notification ios"})
         } else {
-            console.log("success in sending notification",pushresponse);
-                        cb(null,{pushresponse})
-
+            console.log("Successfully sent with response: ", pushresponse);
+            cb(null,{pushresponse})
         }
     });
 }

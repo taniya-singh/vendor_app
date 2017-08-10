@@ -299,7 +299,7 @@ passport.use('userLogin',new LocalStrategy(
                     enable:user.enable,
                     user_name:user.user_name,
                     created_date:user.created_date,
-		    last4:user.last4                  
+                    last4:user.last4                  
         });
       });
     }
