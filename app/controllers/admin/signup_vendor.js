@@ -1119,6 +1119,7 @@ exports.add_device_info=function(req,res){
 		var deviceinfo={};
 		deviceinfo.device_token=req.body.device_token;
 		deviceinfo.device_type=req.body.device_type;
+		deviceinfo.vendor_id=req.body.vendor_id;
 		device.find({vendor_id:req.body.vendor_id},function(err,vendorinfo){		
 			if(err){
 				outputJSON = {

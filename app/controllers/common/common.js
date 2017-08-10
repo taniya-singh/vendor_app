@@ -9,7 +9,7 @@ let options;
 options = {
   token: {
     key: path.join(__dirname,"./../../../common/AuthKey_UEJKHFH34K.p8"),
-    cert:path.join(__dirname,"./../../../common/certificates.pem"),
+    cert:path.join(__dirname,"./../../../common/bridgit.pem"),
     keyId: "UEJKHFH34K",
     teamId: "Q9NZ7GGH6L"
   },
@@ -88,10 +88,13 @@ let pushSendToIOS = function(token,item_information,no_of_items,cb) {
     console.log("inside ios")
     let apnProvider = new apn.Provider(options);
     let deviceToken = token;
+    let topic =" hi m "
     let note = new apn.Notification();
     note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
     note.badge = 1;
+    //note.topic=topic;
     note.alert = no_of_items+" "+item_information.p_name+" purchased from your account." ;
+    note.sound="ping.aiff";
     note.payload = {
         'messageFrom': 'Bridgit'
     };
@@ -99,7 +102,7 @@ let pushSendToIOS = function(token,item_information,no_of_items,cb) {
     note.notifyType = "matchNotification"
     apnProvider.send(note, deviceToken).then((err,pushresponse) => {
         if (err) {
-            console.log("error in sending notification",err);
+            console.log("error in sending notification",err.failed[0].response);
             cb(null,{pushresponse})
 
         } else {

@@ -298,7 +298,8 @@ passport.use('userLogin',new LocalStrategy(
                     //stripe_card_ids:user.stripe_card_ids,
                     enable:user.enable,
                     user_name:user.user_name,
-                    created_date:user.created_date                  
+                    created_date:user.created_date,
+                    last4:user.last4                  
         });
       });
     }

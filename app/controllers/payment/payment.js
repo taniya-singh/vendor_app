@@ -443,7 +443,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                             /* push notifications after payment
                                                made on:4th august
                                             */
-                                            /*device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
+                                           /* device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
                                               if(err){
                                                 console.log("err",err)
                                               }else{
@@ -466,7 +466,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                                   paymentcb(null,charge)
                                                 }
                                               }
-                                            }) */  
+                                            })*/   
                                            paymentcb(null, {
                                                     charge
                                                     })  
