@@ -48,7 +48,7 @@ var webservices = {
     "getCurrentVendorData" : baseUrl + "/admin/getCurrentVendorData",
       "totalSales" : baseUrl + "/admin/totalSales",
       "totalRevenue" : baseUrl + "/admin/totalRevenue",
-
+         "saleData" : baseUrl + "/admin/saleData",
 
 
 	//package
@@ -82,7 +82,7 @@ var nav = [
 		       {text:'Manage Vendors', path:'/#/vendor',icon:'fa-users',activeText:'/vendor'},
                {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
                {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-users',activeText:'/FAQ'},
-
+		{text:'Sales & Revenue', path:'/#/saleData',icon:'fa-users',activeText:'/saleData'},
                          ];
 
 var facebookConstants = {

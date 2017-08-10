@@ -222,6 +222,29 @@ munchapp.config(['$routeProvider','$stateProvider', '$urlRouterProvider' , '$htt
 		templateUrl : "/modules/users/views/adduser.html"
 	})
 
+
+
+		.state('/admin/saleData', {
+		resolve: {
+                    mess: function($localStorage,$q,$state) {
+                        var deferred = $q.defer();
+                        if ($localStorage.userLoggedIn!= true) {
+                             setTimeout(function() {
+                                deferred.resolve()
+                                $state.go('/login');
+                            }, 0);
+                            return deferred.promise;
+                        }
+                    }
+                },
+		url: "/saleData",
+		controller : "vendorController",
+		templateUrl : "/modules/vendor/views/detail.html"
+	})
+
+
+
+
 	.state('/users/edit/:id' , {
 
 		resolve: {

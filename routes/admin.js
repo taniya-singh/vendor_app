@@ -19,7 +19,7 @@ module.exports = function(app, express,passport) {
     router.get('/totalVendor', vendor.totalVendor);
     router.get('/totalRevenue', vendor.totalRevenue);
     router.post('/saleData', vendor.saleData);
-    router.post('/revenueData', vendor.revenueData);
+    //router.post('/revenueData', vendor.revenueData);
     router.post('/add_device_info', vendor.add_device_info);
 
       

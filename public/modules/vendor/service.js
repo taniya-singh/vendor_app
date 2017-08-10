@@ -29,6 +29,15 @@ angular.module('Vendor')
 
 	}
 
+service.saleData = function(inputJsonString, callback) {
+		console.log("inside saleData service")
+			communicationService.resultViaPost(webservices.saleData, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			callback(response.data);
+		});
+	}
+
+
+
 
 	
 	service.latestVendor = function(callback) { 
