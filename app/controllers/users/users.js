@@ -675,6 +675,7 @@ exports.reset_password = function(req, res) {
     
     console.log("new passsssss", req.body.password.newpassword)
     if (req.body._id != null) {
+        console.log("req.body",req.body)
         if (req.body.type == 1) {
             console.log("insode 1");
             userObj.update({
@@ -685,6 +686,7 @@ exports.reset_password = function(req, res) {
                 }
             }, function(err, updatedresponse) {
                 if (err) {
+                    console.log(err)
                     outputJSON = {
                         'status': 'error',
                         'messageId': 400,

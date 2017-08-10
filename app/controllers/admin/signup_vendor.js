@@ -770,7 +770,6 @@ exports.totalRevenue = function(req, res) {
 
 
 exports.saleData = function(req, res) {
-	// console.log("here in controller>>>>>>>>>>")
 	var vendor_id = req.body.vendor_id;
 
 	function firstDayOfMonth() {
@@ -810,10 +809,10 @@ exports.saleData = function(req, res) {
 		weekrevenue: function(parallelCb) {
 			getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
 				parallelCb(null, result)
-				// console.log(">>>>>>>>>>>>>>>>22222222", result)
 			});
 		}
 	}, function(err, result) {
+		console.log("result is here",result)
 		if (err) {
 			outputJSON = {
 				'status': 'failure',
@@ -822,19 +821,13 @@ exports.saleData = function(req, res) {
 			};
 		} else {
 
-			// console.log("monthrev", JSON.stringify(result.monthrevenue))
-			// console.log("weekrev", JSON.stringify(result.weekrevenue));
-			// console.log("monthsale", JSON.stringify(result.monthsale))
-			// console.log("weeksale", JSON.stringify(result.weeksale));
-
+			
 			let resultArray1 = [];
 			let resultArray2 = [];
 			for (var i = 0; i < result.monthsale.length; i++) {
 				let k = 0;
 				for (var j = 0; j < result.weeksale.length; j++) {
-					// console.log(result.monthsale[i].vendor_details[0]._id,result.weeksale[j].vendor_details[0]._id)
 					if (result.monthsale[i].vendor_details[0]._id.equals(result.weeksale[j].vendor_details[0]._id)) {
-						// console.log("inside")
 						let obj = {
 							_id: result.monthsale[i].vendor_details[0]._id,
 							name: result.monthsale[i].vendor_details[0].vendor_name,
@@ -845,24 +838,25 @@ exports.saleData = function(req, res) {
 						k=1;
 					}
 				}
+				console.log(';hgfhjhjgj',resultArray1)
 				if(k==0){
 					let obj = {
+
 							_id: result.monthsale[i].vendor_details[0]._id,
 							name: result.monthsale[i].vendor_details[0].vendor_name,
 							monthsale: result.monthsale[i].tot_sales
 						}
 						resultArray1.push(obj)
 				}
+
 			}
 
-			// console.log()
 
 			for (var m = 0; m < result.monthrevenue.length; m++) {
+				//console.log("TTTTTTTTT",result)
 				let r = 0;
 				for (var n = 0; n < result.weekrevenue.length; n++) {
-					// console.log(result.monthsale[i].vendor_details[0]._id,result.weeksale[j].vendor_details[0]._id)
 					if (result.monthrevenue[m].vendor_details[0]._id.equals(result.weekrevenue[n].vendor_details[0]._id)) {
-						// console.log("inside")
 						let obj = {
 							_id: result.monthrevenue[m].vendor_details[0]._id,
 							name: result.monthrevenue[m].vendor_details[0].vendor_name,
@@ -870,6 +864,8 @@ exports.saleData = function(req, res) {
 							weekrevenue:result.weekrevenue[n].rev
 						}
 						resultArray2.push(obj)
+						//console.log("dddddddd",resultArray2)
+
 						r=1;
 					}
 				}
@@ -894,7 +890,7 @@ exports.saleData = function(req, res) {
 
 				// var new_array = old_array.concat(value1[, value2[, ...[, valueN]]])
 
-			console.log("resultArray1",JSON.stringify(resultArray1));
+			console.log("resultArray1",resultArray1);
 			// console.log("resultArray2",JSON.stringify(resultArray2));
 			outputJSON = {
 				'status': 'success',
@@ -964,7 +960,7 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 
 		} else {
 			cb(null, result)
-				// console.log("database",result)
+				console.log("database",result)
 		}
 	})
 }
@@ -1028,14 +1024,18 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
 }
 
 var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
-	console.log("here")
-		var total = 0;
-	var total_revenew=0;
-    var vendorId = mongoose.Types.ObjectId(vendor_id);
-    // console.log("vendor here",vendorId)
-    var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-    var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
- 		order.aggregate([{
+	var itemtotal=0;
+	var total = 0;
+	var total_revenew = 0;
+	var vendorId = mongoose.Types.ObjectId(vendor_id);
+	// console.log("vendor here",vendorId)
+	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	// console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
+	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
+
+	//console.log("insiode tottal")
+	order.aggregate([{
 		$match: {
 			created_date: {
 				$lte: Enddate,
@@ -1063,6 +1063,7 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 	}, {
 		$group: {
 			"_id": "$vendor_id",
+			"item_count":{$push:"$item_count"},
 			"tot_sales": {
 				$sum: "$item_count"
 			},
@@ -1075,49 +1076,47 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 		}
 	}]).exec(function(err, result) {
 		let resultArray = [];
-    // console.log("here",result);
-        if (err) {
-            cb(err, null);
-            
-        } else{
-	  		console.log("result database",result)
-	  		if (result[i].item_detail.length > 0) {
-	  			
+		// console.log("here",result);
+		if (err) {
+			cb(err, null);
+
+		} else {
+					console.log("res",result)
+					for (var i = 0; i<result.length; i++) {
+						if (result[i].item_detail.length > 0) {
 							for (var j = 0; j < result[i].item_detail.length; j++){
 									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
 									total = parseFloat(total) + parseFloat(calculated_price);
+									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
 								}
 
-								resultArray.push(total.toFixed(2))
+								resultArray.push(itemtotal.toFixed(2))
+								console.log(" single item total revenue of month "+i+" is "+itemtotal)
+								itemtotal=0
 
-	  			}
-
-	  		console.log("total revenew is",resultArray)
-	  		total_revenew=total.toFixed(2)
-	  		for(var i=0;i<result.length;i++){
-	  			for(var j=0;j<resultArray.length;j++)
-	  			{
-	  				result[j].rev = resultArray[j];
 	  			}
 	  	
 	  		}
-	  		console.log("final data",result)
+	  		console.log("final data to monthly revenue",total)
+	  		for (var i = 0; i < result.length; i++) {
+				for (var j = 0; j < resultArray.length; j++) {
+					result[j].rev = resultArray[j];
+				}
+
+			}
+	  		total_revenew=total.toFixed(2)
 	  		cb(null, result)
-
 	  	}
-    })
+	})
 }
-
 
 var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb) {
    var total=0;
+   var itemtotal=0;
 	var total_revenew=0;
     var vendorId = mongoose.Types.ObjectId(vendor_id);
-    // console.log("vendor here",vendorId)
     var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
     var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-   // console.log("currentDayOfweek>>>>>>>>>>>>>>>>>",currentDayOfweek)
-   // console.log("lastDayOfweek>>>>>>>>>>>>>>>>>>>",lastDayOfweek)
    order.aggregate([{
 		$match: {
 			created_date: {
@@ -1166,20 +1165,27 @@ var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek,
         } else{
 					//console.log("res",result.length)
 					for (var i = 0; i<result.length; i++) {
-
-						//console.log("result["+i+"].tot_sales",result[i].item_count[1])
 						if (result[i].item_detail.length > 0) {
 							for (var j = 0; j < result[i].item_detail.length; j++){
 									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
 									total = parseFloat(total) + parseFloat(calculated_price);
+									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
 								}
 
-								resultArray.push(total.toFixed(2))
+								resultArray.push(itemtotal.toFixed(2))
+								console.log(" single item total revenue of "+i+" is "+itemtotal)
+								itemtotal=0
 
 	  			}
 	  	
 	  		}
 	  		console.log("final data to weekly revenue",total)
+	  		for (var i = 0; i < result.length; i++) {
+				for (var j = 0; j < resultArray.length; j++) {
+					result[j].rev = resultArray[j];
+				}
+
+			}
 	  		total_revenew=total.toFixed(2)
 	  		cb(null, result)
 	  	}

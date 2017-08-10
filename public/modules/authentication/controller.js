@@ -426,15 +426,18 @@ $scope.activeTab = tab;
 
 	$scope.resetpassword=function(){	
 		console.log("insisde resetpassword",$stateParams.id)
-		var json={"_id":$stateParams.id,"password":$scope.register}
+		console.log("aaaaa",$stateParams)
+		var json={"_id":$stateParams.id,"password":$scope.register,"type":$stateParams.type}
 		AuthenticationService.resetpassword(json,function(res){
 			$scope.register="";
 			if(res){
+				console.log("res",res)
 				if(res.messageId==200){
-					$scope.successmsg=res.message;
+
+					$scope.successmsg="Your password has been updated,Please close this page and login from your App";
 				}
 				else{
-					$scope.errormsg=res.message;
+					$scope.errormsg="Some error occured, please reset your password after some time";
 				}
 			}
 		})
