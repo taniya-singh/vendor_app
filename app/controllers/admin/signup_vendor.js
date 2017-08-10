@@ -670,107 +670,109 @@ uploadProImg = function(data, callback) {
 }
 
 
-exports.totalSales=function(req,res){
-	console.log("KKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+exports.totalSales = function(req, res) {
+	order.aggregate([{
+		$match: {
+			status: "Picked Up"
+		}
+	}, {
+		$group: {
+			_id: null,
+			total_Count: {
+				$sum: "$item_count"
+			}
+		}
+	}], function(err, totalsales) {
+		console.log("total sales", totalsales)
+		if (err) {
+			outputJSON = {
+				'status': 'failure',
+				'messageId': 400,
+				'message': "err"
 
-	order.aggregate([{$match:{status:"Picked Up"}},{
-        $group : {
-           _id : null,
-           total_Count: { $sum: "$item_count" }
-            }
-        }],function(err,totalsales){
-        	console.log("total sales",totalsales)
-        	if(err){
-        		outputJSON = {
-                'status': 'failure',
-                'messageId': 400,
-                'message': "err"
-                
-            };
-        		res.jsonp(outputJSON)
-        	}
-        	else{
-        		outputJSON = {
-                'status': 'success',
-                'messageId': 200,
-                'message': "Total sales retreived successfully",
-                'data':totalsales
-            };
-        		res.jsonp(outputJSON)
-        	}
-        })
+			};
+			res.jsonp(outputJSON)
+		} else {
+			outputJSON = {
+				'status': 'success',
+				'messageId': 200,
+				'message': "Total sales retreived successfully",
+				'data': totalsales
+			};
+			res.jsonp(outputJSON)
+		}
+	})
 
 }
- exports.totalVendor = function(req, res) {
+exports.totalVendor = function(req, res) {
 
-    var outputJSON = "";
-    vendor.count({
-        is_deleted: false
-    }, function(err, data) {
-        if (err) {
-            outputJSON = {
-                'status': 'failure',
-                'messageId': 203,
-                'message': constantObj.messages.errorRetreivingData
-            };
-        } else {
-            outputJSON = {
-                'status': 'success',
-                'messageId': 200,
-                'message': constantObj.messages.successRetreivingData,
-                'data': data
-            }
-        }
-        res.jsonp(outputJSON);
-    });
+	var outputJSON = "";
+	vendor.count({
+		is_deleted: false
+	}, function(err, data) {
+		if (err) {
+			outputJSON = {
+				'status': 'failure',
+				'messageId': 203,
+				'message': constantObj.messages.errorRetreivingData
+			};
+		} else {
+			outputJSON = {
+				'status': 'success',
+				'messageId': 200,
+				'message': constantObj.messages.successRetreivingData,
+				'data': data
+			}
+		}
+		res.jsonp(outputJSON);
+	});
 }
 
-exports.totalRevenue=function(req,res){
-	var total=0;
-	var total_revenew=0;
-	console.log("insiode total")
-	order.aggregate([  
-	  {
-	  	$lookup:    
-	      {  from: "items",
-	         localField: "item_id",
-	         foreignField: "_id",     
-	         as: "items"       
-	       }
+exports.totalRevenue = function(req, res) {
+	var total = 0;
+	var total_revenew = 0;
+	console.log("insiode tottal")
+	order.aggregate([{
+		$lookup: {
+			from: "items",
+			localField: "item_id",
+			foreignField: "_id",
+			as: "items"
+		}
 
-	  },{$unwind:"$items"
-	}],function(err,orderdetails){
-	  	if(err){
-	  		outputJSON = {
-                'status': 'Failure',
-                'messageId': 400,
-                'message': "Error"
-                
-            }
-            res.jsonp(outputJSON);
+	}, {
+		$unwind: "$items"
+	}], function(err, orderdetails) {
+		if (err) {
+			outputJSON = {
+				'status': 'Failure',
+				'messageId': 400,
+				'message': "Error"
 
-	  	}else{
-	  		//console.log(orderdetails)
-	  		for(var i=0;i<orderdetails.length;i++){
-	  			var calculated_price=orderdetails[i].item_count*orderdetails[i].items.p_price
-	  			total=parseFloat(total)+parseFloat(calculated_price);
-	  			
-	  		}
-	  		console.log("total revenew is",total.toFixed(2))
-	  		total_revenew=total.toFixed(2)
+			}
+			res.jsonp(outputJSON);
 
-	  		outputJSON = {
-                'status': 'success',
-                'messageId': 200,
-                'message': "total revenew retreive successfully",
-                'data': total_revenew
-            }
-            res.jsonp(outputJSON);
+		} else {
+			//console.log(orderdetails)
+			for (var i = 0; i < orderdetails.length; i++) {
+				var calculated_price = orderdetails[i].item_count * orderdetails[i].items.p_price
+				total = parseFloat(total) + parseFloat(calculated_price);
 
-	  	}
-	  })
+			}
+			console.log("total revenew is", total.toFixed(2))
+			total_revenew = total.toFixed(2)
+
+			outputJSON = {
+				'status': 'success',
+				'messageId': 200,
+				'message': "total revenew retreive successfully",
+				'data': total_revenew
+			}
+			res.jsonp(outputJSON);
+
+		}
+	})
 }
-
 
 
 
@@ -941,6 +943,10 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
 	order.aggregate([{
 		$match: {
+			status: "Picked Up"
+		}
+	},{
+		$match: {
 			created_date: {
 				$lte: Enddate,
 				$gte: Startdate
@@ -997,6 +1003,10 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
 	// console.log("currentDayOfweek>>>>>>>>>>>>>>>>>",currentDayOfweek)
 	// console.log("lastDayOfweek>>>>>>>>>>>>>>>>>>>",lastDayOfweek)
 	order.aggregate([{
+		$match: {
+			status: "Picked Up"
+		}
+	},{
 		$match: {
 			created_date: {
 				$lte: lastDayOfweek,
