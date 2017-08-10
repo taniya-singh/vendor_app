@@ -230,9 +230,6 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 
 /* Vendor login api*/
 exports.vendor_login = function(req, res) {
-	console.log("re body", req.body)
-	console.log("login ", res.req.user)
-
 	var data = res.req.user;
 	if (data.message == 'Invalid username') {
 		var outputJSON = {
@@ -261,7 +258,6 @@ exports.vendor_login = function(req, res) {
 		device_data.device_type = req.body.device_type;
 		device_data.device_token = req.body.device_token;
 		device_data.vendor_id = res.req.user.id;
-
 		device.find({
 			vendor_id: vendorid
 		}, function(err, devicedetails) {
@@ -286,9 +282,6 @@ exports.vendor_login = function(req, res) {
 						} else {
 							data.device_token = req.body.device_token;
 							data.device_type = req.body.device_type;
-							console.log("update", deviceupdate)
-							console.log("data is", data)
-
 							var outputJSON = {
 								'status': 'success',
 								'messageId': 200,
