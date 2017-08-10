@@ -1081,11 +1081,15 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
             
         } else{
 	  		console.log("result database",result)
-	  		for(var i=0;i<result.length;i++){
-	  			var calculated_price=result[i].tot_sales*result[i].item_detail[i].p_price;
-	  			 total=parseFloat(total)+parseFloat(calculated_price);
-	  			resultArray.push(total.toFixed(2)) 
-	  		}
+	  		if (result[i].item_detail.length > 0) {
+							for (var j = 0; j < result[i].item_detail.length; j++){
+									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
+									total = parseFloat(total) + parseFloat(calculated_price);
+								}
+
+								resultArray.push(total.toFixed(2))
+
+	  			}
 
 	  		console.log("total revenew is",resultArray)
 	  		total_revenew=total.toFixed(2)
