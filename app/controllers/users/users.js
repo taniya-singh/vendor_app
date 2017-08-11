@@ -675,6 +675,7 @@ exports.reset_password = function(req, res) {
     
     console.log("new passsssss", req.body.password.newpassword)
     if (req.body._id != null) {
+        console.log("req.body",req.body)
         if (req.body.type == 1) {
             console.log("insode 1");
             userObj.update({
@@ -685,6 +686,7 @@ exports.reset_password = function(req, res) {
                 }
             }, function(err, updatedresponse) {
                 if (err) {
+                    console.log(err)
                     outputJSON = {
                         'status': 'error',
                         'messageId': 400,
@@ -715,7 +717,7 @@ exports.reset_password = function(req, res) {
 
         } else if (req.body.type == 2) {
             console.log("insode 2");
-            Vendor.update({
+            vendor.update({
                     _id: req.body._id
                 }, {
                     $set: {
@@ -881,11 +883,11 @@ exports.forgetpassword = function(req, res) {
 
         } else if (type == 2) {
             console.log("inside vendor")
-            var vendor_email = req.body.email
-            console.log("vendor email", vendor_email)
+            var vendoremail = req.body.email
+            console.log("vendor email", vendoremail)
 
-            Vendor.findOne({
-                vendor_email: vendor_email
+            vendor.find({
+                vendor_email: vendoremail
             }, function(err, data) {
                 if (err) {
                     outputJSON = {
@@ -895,7 +897,9 @@ exports.forgetpassword = function(req, res) {
                     };
                     res.jsonp(outputJSON);
                 } else {
-                    if (data == null) {
+			                    console.log("ddd",data)
+			
+                    if (data.length<0) {
                         outputJSON = {
                             'status': 'failure',
                             'messageId': 401,
@@ -911,7 +915,7 @@ exports.forgetpassword = function(req, res) {
 
                         var mailOptions = {
                             from: "abc",
-                            to: vendor_email,
+                            to: vendoremail,
                             subject: 'Reset password',
                             html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password for vendor   \n  ' + resetUrl
                         };
@@ -930,7 +934,7 @@ exports.forgetpassword = function(req, res) {
                                 var response = {
                                     "status": 'success',
                                     "messageId": 200,
-                                    "message": "Reset password link has been send to your Mail. Kindly reset.",
+                                   "message": 'We’ve sent an email to '+vendoremail +'.Click the link to reset your password',
                                     "Sent on": Date(),
                                     "From": "Taniya Singh"
                                 }
