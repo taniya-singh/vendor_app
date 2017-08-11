@@ -15,14 +15,10 @@ module.exports = function(app, express,passport) {
     router.post('/vendorList', vendor.vendorList);
     router.post('/updateVendordata', vendor.updateVendordata);
     router.post('/getCurrentVendorData', vendor.getCurrentVendorData);
-/*<<<<<<< HEAD
-    router.post('/forget_password', vendor.forget_password);
-    router.post('/reset_password', vendor.reset_password);
-   */ router.get('/totalSales', vendor.totalSales);
-
-     
+    router.get('/totalSales', vendor.totalSales);
     router.get('/totalVendor', vendor.totalVendor);
     router.get('/totalRevenue', vendor.totalRevenue);
+    router.post('/saleData', vendor.saleData);
 
 	app.use('/admin', router);
 

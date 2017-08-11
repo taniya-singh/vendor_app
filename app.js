@@ -220,6 +220,7 @@ passport.deserializeUser(adminLoginObj.deserializeUser);
   passport.use('vendorLogin',new LocalStrategy(
     function(username, password, done) {
 
+
       vendor.findOne({vendor_email: username}, function(err, adminuser) {
         if(err) {
 

@@ -30,6 +30,24 @@ angular.module('Vendor')
 	}
 
 
+
+
+
+service.revenueData = function(inputJsonString, callback) {
+		console.log("inside revenueData service")
+			communicationService.resultViaPost(webservices.revenuesale, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			callback(response.data);
+		});
+	}
+	
+service.saleData = function(inputJsonString, callback) {
+		console.log("inside saleData service")
+			communicationService.resultViaPost(webservices.saleData, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+			callback(response.data);
+		});
+	}
+
+
 	
 	service.latestVendor = function(callback) { 
 			communicationService.resultViaGet(webservices.latestVendor, appConstants.authorizationKey, headerConstants.json, function(response) {

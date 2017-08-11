@@ -157,7 +157,7 @@
                     
                   <div class="input-group"
      moment-picker="vendor.pickup_time1"
-     format="HH:mm:ss">
+     format="LT">
     <span class="input-group-addon">
         <i class="octicon octicon-clock"></i>
     </span>
@@ -165,6 +165,7 @@
            placeholder="Select start time"
            ng-model="vendor.pickup_time1"
            ng-model-options="{ updateOn: 'blur' }"  required  name="pickup_time1" >
+
 </div>
 </div>
   </div>     
@@ -174,7 +175,7 @@
                     
 <div class="input-group"
      moment-picker="vendor.pickup_time2"
-     format="HH:mm:ss">
+     format="LT">
     <span class="input-group-addon">
         <i class="octicon octicon-clock"></i>
     </span>
@@ -187,8 +188,8 @@
 </div>
 </div>
 </div>
-<span ng-if="vendor.pickup_time1>vendor.pickup_time2" style="color:red" >End time should be greater than Start time
-
+<!-- <span ng-if="vendor.pickup_time1>vendor.pickup_time2" style="color:red" >End time should be greater than Start time
+ -->
 
 </span>
 
@@ -305,11 +306,11 @@
                          
                
        <div class="form-group"> 
-       <span> <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" ng-disabled="vendorForm.$invalid || vendor.pickup_time1>vendor.pickup_time2"></span>
+       <span> <input class="btn btn-primary" ng-if="submitButton" type="submit" name="login"  ng-click="submit()" value="Submit" ng-disabled="vendorForm.$invalid "></span>
       </div>
 
     <div class="form-group">
-    <span><input class="btn btn-primary" type="submit" ng-if="updateButton" name="update" ng-disabled="vendorForm.$invalid || vendor.pickup_time1>vendor.pickup_time2" ng-click="update()" value="Update "></span>
+    <span><input class="btn btn-primary" type="submit" ng-if="updateButton" name="update" ng-disabled="vendorForm.$invalid" ng-click="update()" value="Update "></span>
      </div>
 
 
