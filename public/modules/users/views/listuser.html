@@ -33,17 +33,16 @@
                           </div>
 
                          <div class="clearfix"></div> 
-                          <form name="searchForm" novalidate ng-submit="getAllUsers()">
+                           <form name="searchForm" novalidate ng-submit="getAllUsers()">
                             <div class="input-group">
-                              
-                               <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" required />
-                               <span class="input-group-btn">
+                                <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" ng-change="getAllUsers()" required />
+                                <span class="input-group-btn">
                               <button class="btn btn-default" type="submit"  ng-click="getAllUsers()">
                                 <span class="glyphicon glyphicon-search"></span>
-                               </button>
-                                 </span>
-                              </div>
-                           </form>
+                                </button>
+                                </span>
+                            </div>
+                        </form>
                          </div> 
 
              <div class="box-body table-responsive">

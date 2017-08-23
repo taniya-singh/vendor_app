@@ -22,6 +22,7 @@ var client = new twilio(accountSid, authToken);
 
 exports.userlogin = function(req, res) {
     var data = res.req.user;
+console.log("data",data)
     if (req.body.loginType == 1) {
         if (data.message == 'Invalid username') {
             var outputJSON = {
@@ -713,9 +714,8 @@ exports.reset_password = function(req, res) {
                 }
             })
 
-        } else if (req.body.type == 2) {
-            console.log("insode 2",req.body);
-            vendor.update({
+        } else if (req.body.type == 2) { 
+           vendor.update({
                     _id: req.body._id
                 }, {
                     $set: {
@@ -894,7 +894,8 @@ exports.forgetpassword = function(req, res) {
                         'message': "Error Occured"
                     };
                     res.jsonp(outputJSON);
-                } else {
+                } else{
+
                     console.log("ddd",data)
                     if (data.length<1) {
                         outputJSON = {
@@ -913,7 +914,7 @@ exports.forgetpassword = function(req, res) {
                             from: "abc",
                             to: vendoremail,
                             subject: 'Reset password',
-                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password for vendor   \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Click on the link to reset your password.   \n  ' + resetUrl
                         };
                         console.log("mail options", mailOptions)
                         transporter.sendMail(mailOptions, function(error, response) {
@@ -930,7 +931,7 @@ exports.forgetpassword = function(req, res) {
                                 var response = {
                                     "status": 'success',
                                     "messageId": 200,
-                                    "message": "Reset password link has been send to your Mail. Kindly reset.",
+                                   "message": 'We’ve sent an email to '+vendoremail +'.Click the link to reset your password',
                                     "Sent on": Date(),
                                     "From": "Taniya Singh"
                                 }

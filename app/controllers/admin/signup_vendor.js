@@ -228,6 +228,9 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 
 /* Vendor login api*/
 exports.vendor_login = function(req, res) {
+	console.log("re body", req.body)
+	console.log("login ", res.req.user)
+
 	var data = res.req.user;
 	if (data.message == 'Invalid username') {
 		var outputJSON = {
@@ -256,6 +259,7 @@ exports.vendor_login = function(req, res) {
 		device_data.device_type = req.body.device_type;
 		device_data.device_token = req.body.device_token;
 		device_data.vendor_id = res.req.user.id;
+
 		device.find({
 			vendor_id: vendorid
 		}, function(err, devicedetails) {
@@ -280,6 +284,9 @@ exports.vendor_login = function(req, res) {
 						} else {
 							data.device_token = req.body.device_token;
 							data.device_type = req.body.device_type;
+							console.log("update", deviceupdate)
+							console.log("data is", data)
+
 							var outputJSON = {
 								'status': 'success',
 								'messageId': 200,
@@ -647,10 +654,6 @@ uploadProImg = function(data, callback) {
 
 exports.totalSales = function(req, res) {
 	order.aggregate([{
-		$match: {
-			status: "Picked Up"
-		}
-	}, {
 		$group: {
 			_id: null,
 			total_Count: {
@@ -766,12 +769,29 @@ exports.saleData = function(req, res) {
 		d.setDate(0);
 		return d.toISOString();
 	}
-
+	var startDate = req.body.startDate;
+	var endDate = req.body.endDate;
+	var startDayOfMonth;
+	var endDayOfMonth;
+	var currentDayOfweek; // Sunday
+	var lastDayOfweek; // saturdays
 	var now = Date.now();
-	var startDayOfMonth = firstDayOfMonth(now);
-	var endDayOfMonth = lastDayOfMonth(now);
-		var currentDayOfweek = moment().day(0); // Sunday
-	var lastDayOfweek = moment().day(6); // saturday
+
+	if (req.body.startDate && req.body.endDate) {
+		startDate = req.body.startDate;
+		endDate = req.body.endDate;
+		startDayOfMonth = req.body.startDate;
+		endDayOfMonth = req.body.endDate;
+		currentDayOfweek = req.body.startDate // Sunday
+		lastDayOfweek = req.body.endDate;
+	} else {
+		endDate = req.body.endDate;
+		now = Date.now();
+		startDayOfMonth = firstDayOfMonth(now);
+		endDayOfMonth = lastDayOfMonth(now);
+		currentDayOfweek = moment().day(0); // Sunday
+		lastDayOfweek = moment().day(6); // saturday
+	}
 	async.parallel({
 		monthsale: function(parallelCb) {
 			getTotalSaleOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function(err, result) {
@@ -789,12 +809,12 @@ exports.saleData = function(req, res) {
 			});
 		},
 		weekrevenue: function(parallelCb) {
-			getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
-				parallelCb(null, result)
-			});
-		}
+				getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
+					parallelCb(null, result)
+				});
+			}
+			
 	}, function(err, result) {
-		console.log("result is here",result)
 		if (err) {
 			outputJSON = {
 				'status': 'failure',
@@ -802,8 +822,6 @@ exports.saleData = function(req, res) {
 				'message': constantObj.messages.errorRetreivingData
 			};
 		} else {
-
-			
 			let resultArray1 = [];
 			let resultArray2 = [];
 			for (var i = 0; i < result.monthsale.length; i++) {
@@ -814,26 +832,21 @@ exports.saleData = function(req, res) {
 							_id: result.monthsale[i].vendor_details[0]._id,
 							name: result.monthsale[i].vendor_details[0].vendor_name,
 							monthsale: result.monthsale[i].tot_sales,
-							weeksale:result.weeksale[j].tot_sales
+							weeksale: result.weeksale[j].tot_sales
 						}
 						resultArray1.push(obj)
-						k=1;
+						k = 1;
 					}
 				}
-				console.log(';hgfhjhjgj',resultArray1)
-				if(k==0){
+				if (k == 0) {
 					let obj = {
-
-							_id: result.monthsale[i].vendor_details[0]._id,
-							name: result.monthsale[i].vendor_details[0].vendor_name,
-							monthsale: result.monthsale[i].tot_sales
-						}
-						resultArray1.push(obj)
+						_id: result.monthsale[i].vendor_details[0]._id,
+						name: result.monthsale[i].vendor_details[0].vendor_name,
+						monthsale: result.monthsale[i].tot_sales
+					}
+					resultArray1.push(obj)
 				}
-
 			}
-
-
 			for (var m = 0; m < result.monthrevenue.length; m++) {
 				let r = 0;
 				for (var n = 0; n < result.weekrevenue.length; n++) {
@@ -842,66 +855,58 @@ exports.saleData = function(req, res) {
 							_id: result.monthrevenue[m].vendor_details[0]._id,
 							name: result.monthrevenue[m].vendor_details[0].vendor_name,
 							monthrevenue: result.monthrevenue[m].rev,
-							weekrevenue:result.weekrevenue[n].rev
+							weekrevenue: result.weekrevenue[n].rev
 						}
 						resultArray2.push(obj)
-						//console.log("dddddddd",resultArray2)
-
-						r=1;
+						r = 1;
 					}
 				}
-				if(r==0){
+				if (r == 0) {
 					let obj = {
-							_id: result.monthrevenue[m].vendor_details[0]._id,
-							name: result.monthrevenue[m].vendor_details[0].vendor_name,
-							monthrevenue: result.monthrevenue[m].rev
-						}
-						resultArray2.push(obj)
+						_id: result.monthrevenue[m].vendor_details[0]._id,
+						name: result.monthrevenue[m].vendor_details[0].vendor_name,
+						monthrevenue: result.monthrevenue[m].rev
+					}
+					resultArray2.push(obj)
 				}
 			}
 
-			for(var p=0;p<resultArray1.length;p++){
-	  			for(var q=0;q<resultArray2.length;q++)
-	  			{
-	  				resultArray1[q].monthrevenue = resultArray2[q].monthrevenue;
-	  				resultArray1[q].weekrevenue = resultArray2[q].weekrevenue;
-	  			}
-	  	
-	  		}
+			for (var p = 0; p < resultArray1.length; p++) {
+				for (var q = 0; q < resultArray2.length; q++) {
+					resultArray1[q].monthrevenue = resultArray2[q].monthrevenue;
+					resultArray1[q].weekrevenue = resultArray2[q].weekrevenue;
+				}
 
-				// var new_array = old_array.concat(value1[, value2[, ...[, valueN]]])
-
-			console.log("resultArray1",resultArray1);
-			// console.log("resultArray2",JSON.stringify(resultArray2));
+			}
 			outputJSON = {
 				'status': 'success',
 				'messageId': 200,
 				'message': constantObj.messages.successRetreivingData,
-				"data" : resultArray1
+				"data": resultArray1
 			}
 			res.jsonp(outputJSON);
 		}
-		
+
 	});
 }
 
 
 var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
-	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
+
+	// var Startdate = new Date(startDate);
+	// var Enddate = new Date(endDate);
+
+	console.log("startdate:", Startdate);
+	console.log("Enddate:", Enddate);
+
 	order.aggregate([{
-		$match:{
-			status:"Picked Up"
-		       }
-	  },{
 		$match: {
 			created_date: {
-				$lte: Enddate,
-				$gte: Startdate
+				$gte: Startdate,
+				$lte: Enddate
 			}
 		}
 	}, {
@@ -941,7 +946,7 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 
 		} else {
 			cb(null, result)
-				console.log("database",result)
+
 		}
 	})
 }
@@ -1000,8 +1005,8 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
 }
 
 var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
-	var itemtotal=0;
 	var total = 0;
+	var itemtotal = 0;
 	var total_revenew = 0;
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
 	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
@@ -1034,7 +1039,9 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 	}, {
 		$group: {
 			"_id": "$vendor_id",
-			"item_count":{$push:"$item_count"},
+			"item_count": {
+				$push: "$item_count"
+			},
 			"tot_sales": {
 				$sum: "$item_count"
 			},
@@ -1047,120 +1054,121 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 		}
 	}]).exec(function(err, result) {
 		let resultArray = [];
-		// console.log("here",result);
 		if (err) {
 			cb(err, null);
 
 		} else {
-					console.log("res",result)
-					for (var i = 0; i<result.length; i++) {
-						if (result[i].item_detail.length > 0) {
-							for (var j = 0; j < result[i].item_detail.length; j++){
-									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
-									total = parseFloat(total) + parseFloat(calculated_price);
-									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
-								}
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].item_detail.length > 0) {
+					for (var j = 0; j < result[i].item_count.length; j++) {
+						var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
+						total = parseFloat(total) + parseFloat(calculated_price);
+						itemtotal = parseFloat(itemtotal) + parseFloat(calculated_price);
+					}
 
-								resultArray.push(itemtotal.toFixed(2))
-								console.log(" single item total revenue of month "+i+" is "+itemtotal)
-								itemtotal=0
+					resultArray.push(itemtotal.toFixed(2))
+					itemtotal = 0
 
-	  			}
-	  	
-	  		}
-	  		console.log("final data to monthly revenue",total)
-	  		for (var i = 0; i < result.length; i++) {
+				}
+
+			}
+			for (var i = 0; i < result.length; i++) {
 				for (var j = 0; j < resultArray.length; j++) {
 					result[j].rev = resultArray[j];
 				}
 
 			}
-	  		total_revenew=total.toFixed(2)
-	  		cb(null, result)
-	  	}
+			total_revenew = total.toFixed(2)
+			cb(null, result)
+
+
+		}
 	})
 }
 
+
 var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb) {
-   var total=0;
-   var itemtotal=0;
-	var total_revenew=0;
-    var vendorId = mongoose.Types.ObjectId(vendor_id);
-    var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-    var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-   order.aggregate([{
-		$match: {
-			created_date: {
-				$lte: lastDayOfweek,
-				$gte: currentDayOfweek
+	var total = 0;
+	var itemtotal = 0;
+	var total_revenew = 0;
+	var vendorId = mongoose.Types.ObjectId(vendor_id);
+	var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	order.aggregate([{
+			$match: {
+				created_date: {
+					$lte: lastDayOfweek,
+					$gte: currentDayOfweek
+				}
+			}
+		},
+
+		{
+			$lookup: {
+				from: "items",
+				localField: "item_id",
+				foreignField: "_id",
+				as: "item_detail"
+			}
+		}, {
+			$lookup: {
+				from: "vendor_details",
+				localField: "vendor_id",
+				foreignField: "_id",
+				as: "vendorDetail"
+			}
+		}, {
+			$unwind: "$vendorDetail"
+		}, {
+			$unwind: "$item_detail"
+		}, {
+			$group: {
+				"_id": "$vendor_id",
+				"item_count": {
+					$push: "$item_count"
+				},
+				"tot_sales": {
+					$sum: "$item_count"
+				},
+				"vendor_details": {
+					$push: "$vendorDetail"
+				},
+				"item_detail": {
+					$push: "$item_detail"
+				}
 			}
 		}
-	}, {
-		$lookup: {
-			from: "items",
-			localField: "item_id",
-			foreignField: "_id",
-			as: "item_detail"
-		}
-	}, {
-		$lookup: {
-			from: "vendor_details",
-			localField: "vendor_id",
-			foreignField: "_id",
-			as: "vendorDetail"
-		}
-	}, {
-		$unwind: "$vendorDetail"
-	}, {
-		$unwind: "$item_detail"
-	}, {
-		$group: {
-			"_id": "$vendor_id",
-			"item_count":{$push:"$item_count"},
-			"tot_sales": {
-				$sum: "$item_count"
-			},
-			"vendor_details": {
-				$push: "$vendorDetail"
-			},
-			"item_detail": {
-				$push: "$item_detail"
-			}
-		}
-	}]).exec(function(err, result) {
+	]).exec(function(err, result) {
 		let resultArray = [];
-    // console.log("here",result);
-        if (err) {
-            cb(err, null);
-            
-        } else{
-					//console.log("res",result.length)
-					for (var i = 0; i<result.length; i++) {
-						if (result[i].item_detail.length > 0) {
-							for (var j = 0; j < result[i].item_detail.length; j++){
-									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
-									total = parseFloat(total) + parseFloat(calculated_price);
-									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
-								}
+		if (err) {
+			cb(err, null);
 
-								resultArray.push(itemtotal.toFixed(2))
-								console.log(" single item total revenue of "+i+" is "+itemtotal)
-								itemtotal=0
+		} else {
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].item_detail.length > 0) {
+					for (var j = 0; j < result[i].item_count.length; j++) {
+						var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
+						total = parseFloat(total) + parseFloat(calculated_price);
+						itemtotal = parseFloat(itemtotal) + parseFloat(calculated_price);
+					}
 
-	  			}
-	  	
-	  		}
-	  		console.log("final data to weekly revenue",total)
-	  		for (var i = 0; i < result.length; i++) {
+					resultArray.push(itemtotal.toFixed(2))
+					itemtotal = 0
+
+				}
+
+			}
+			for (var i = 0; i < result.length; i++) {
 				for (var j = 0; j < resultArray.length; j++) {
 					result[j].rev = resultArray[j];
 				}
 
 			}
-	  		total_revenew=total.toFixed(2)
-	  		cb(null, result)
-	  	}
-    })
+			total_revenew = total.toFixed(2)
+
+			cb(null, result)
+		}
+	})
 
 }
 

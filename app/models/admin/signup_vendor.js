@@ -9,7 +9,7 @@ var mySchema = new Schema({
   vendor_email: { type: String ,required: 'Please enter the email.'},
   password: { type: String, required: 'Please enter the password.' },
   facebook: String,
-  enable: {type: Boolean, default:false},
+  enable: {type: Boolean, default:true},
   phone_no:{type:String, required: 'Please enter the phone number.'},
   vendor_address:{type:String},
   city:{type:String},
