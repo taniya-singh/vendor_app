@@ -113,7 +113,6 @@ exports.update_vendor_info = function(req, res) {
  * Devepoped by: Taniya Singh
  */
 exports.faceBookLogin = function(req, res) {
-
         if (req.body.loginType == 2) {
             if (!req.body.facebook_id) {
                 res.jsonp({

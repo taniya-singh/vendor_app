@@ -17,7 +17,7 @@ var mySchema = new Schema({
   faceBookFlag:{type: Boolean, default:false},
   user_type:{type:String,default:"vendor"},
   created_date:{type:Date, default: Date.now},
-  pickup_time:{type:String,default:"10:00-10:30am"}
+  pickup_time:{type:String}
     
 });
 

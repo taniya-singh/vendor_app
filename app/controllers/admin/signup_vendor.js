@@ -149,7 +149,6 @@ var createStripeAccount = function(req, res, userDetails, bankdetails, vdetails,
 			})
 		} else {
 			stripe_account_details = account
-			console.log("customer created on stripe is", account.id)
 			createExtraAccount(req, res, bankdetails, stripe_account_details, vdetails, function(err, accountresponse) {
 				if (err) {
 
@@ -190,7 +189,6 @@ var createExtraAccount = function(req, res, bankdetails, stripe_account_details,
 					},
 					function(err, bank_account) {
 						if (err) {
-							console.log("errrrrrrrrrrrrrr", err)
 							cb(null, {
 								"message": "Err"
 							})
@@ -404,7 +402,6 @@ exports.vendorList = function(req, res) {
 						query
 					).skip(skipNo).limit(count).sort(sortquery)
 					.exec(function(err, data1) {
-						//console.log(data)
 						if (err) {
 							console.log("tttte", err)
 							outputJSON = {
@@ -525,16 +522,7 @@ exports.updateVendorInformation = function(req, res) {
 	}
 
 	var detailsData = JSON.parse(JSON.stringify(req.body));
-	console.log("detailsData", detailsData);
-	console.log("imagesToDelete", imagesToDelete);
-
-
-	console.log(req.body._id);
-
-	// var utfString = fields.conditions;
-	// conditions = JSON.parse(utfString.toString('utf8'));
 	var allImages = {};
-
 	if (req.body.WebRequest == "WebRequest") {
 		if (req.body.password) {
 			detailsData.password = md5(req.body.password);
@@ -549,7 +537,6 @@ exports.updateVendorInformation = function(req, res) {
 					userimg.push(obj);
 				}
 				detailsData.userImages = userimg;
-				// detailsData.userImages = req.files[0].filename;
 			}
 		}
 	}
@@ -569,11 +556,8 @@ exports.updateVendordata = function(req, res) {
 		reqdata.profile_image = req.body.profile_image;
 	if (req.body.profile_image != undefined || req.body.profile_image != undefined) {
 
-		//console.log("req",req.body)
 		uploadProImg(reqdata, function(responce) {
 			console.log(responce);
-			//outputJSON = {'status':'success', 'messageId':200, 'message':constantObj.messages.userStatusUpdateSuccess,'data':responce};
-			//	res.jsonp(outputJSON);
 			delete req.body.profile_image;
 			delete req.body.userImages;
 
@@ -614,8 +598,6 @@ exports.updateVendordata = function(req, res) {
 
 
 uploadProImg = function(data, callback) {
-
-	//console.log("data",data);
 	var photoname = data._id + '_' + Date.now() + '.jpg';
 
 	var folder = "";
@@ -853,7 +835,6 @@ exports.saleData = function(req, res) {
 
 
 			for (var m = 0; m < result.monthrevenue.length; m++) {
-				//console.log("TTTTTTTTT",result)
 				let r = 0;
 				for (var n = 0; n < result.weekrevenue.length; n++) {
 					if (result.monthrevenue[m].vendor_details[0]._id.equals(result.weekrevenue[n].vendor_details[0]._id)) {
@@ -968,11 +949,8 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 
 var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb) {
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("currentDayOfweek>>>>>>>>>>>>>>>>>",currentDayOfweek)
-	// console.log("lastDayOfweek>>>>>>>>>>>>>>>>>>>",lastDayOfweek)
 	order.aggregate([{
 		$match: {
 			created_date: {
@@ -1012,13 +990,11 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
 			}
 		}
 	}]).exec(function(err, result) {
-		// console.log("here",result);
 		if (err) {
 			cb(err, null);
 
 		} else {
 			cb(null, result)
-				// console.log("database",result)
 		}
 	})
 }
@@ -1028,13 +1004,8 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 	var total = 0;
 	var total_revenew = 0;
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
-	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
-
-	//console.log("insiode tottal")
 	order.aggregate([{
 		$match: {
 			created_date: {
