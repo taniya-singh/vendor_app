@@ -32,17 +32,16 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-xs-10">                                  
-                                    <form name="searchForm" novalidate ng-submit="getAllVendor()">
-                                        <div class="input-group">
-                                          
-                                          <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" required />
-                                          <span class="input-group-btn">
+                                     <form name="searchForm" novalidate ng-submit="getAllVendor()">
+                                <div class="input-group">
+                                    <input type="text" id="ser" class="form-control" placeholder="Search term" name="searchTerm" ng-model="search" ng-change="getAllVendor()" required />
+                                    <span class="input-group-btn">
                                             <button class="btn btn-default" type="submit"  ng-click="getAllVendor()">
                                               <span class="glyphicon glyphicon-search"></span>
-                                          </button>
-                                          </span>
-                                        </div>
-                                    </form>
+                                    </button>
+                                    </span>
+                                </div>
+                            </form>
                                   </div>
                                   <div class="col-xs-2 pull-right">
                                     <div class="pull-right"><a href='/#/vendor/add' align='right'  class="btn btn-primary">Add New Vendor</a></div>

@@ -433,18 +433,46 @@ $scope.submit = function(){
 
 
 
-$scope.saleData = function(){
- 	        		var arr=[];
- 	        		var vendor_name=[];
- 	        		console.log("hree in saleeeeee")
- 	        		var inputJSon = {vendor_id:"5981bbbb8492bf2e7465fd41"};
-				 	VendorService.saleData(inputJSon,function(response){
-				 		console.log("resonse JJJJJJJJJ",response.data);
-				 		$scope.saledata = response.data;
-				 	});
-				 	
-		
- 	        }
+$scope.Sort = function(val) {
+		console.log("here")
+		if ($scope.sort == val) {
+			$scope.reverse = !$scope.reverse;
+			//return;
+		}
+		$scope.sort = val;
+		$('th i').each(function() {
+			// icon reset
+			$(this).removeClass().addClass('icon-sort');
+		});
+
+		if ($scope.reverse) {
+			$('th .' + val + ' i').removeClass().addClass('icon-chevron-up');
+		} else {
+			$('th .' + val + ' i').removeClass().addClass('icon-chevron-down');
+		}
+	};
+
+
+
+	$scope.saleData = function() {
+
+		var arr = [];
+		var vendor_name = [];
+		var inputJSon = {
+			vendor_id: "5981bbbb8492bf2e7465fd41",
+			startDate: $scope.vendor.startDate != null ? $scope.vendor.startDate : null,
+			endDate: $scope.vendor.endDate != null ? $scope.vendor.endDate : null
+
+		};
+		VendorService.saleData(inputJSon, function(response) {
+			console.log(response, "responnnnnnnnseeeeee", $scope.vendor);
+			$scope.saledata = response.data;
+		});
+
+
+
+	}
+
 
 
 

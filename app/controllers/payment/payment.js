@@ -74,7 +74,7 @@ var create_customer_on_stripe = function(custdetail, cb) {
     _id: custdetail._id
   }, function(err, user) {
     if (err) {
-      console.log("err", err)
+      console.log("err in find customer", err)
       cb(err, {
         "message": "err"
       })
@@ -91,7 +91,7 @@ var create_customer_on_stripe = function(custdetail, cb) {
           }
         }, function(err, existing_customer) {
           if (err) {
-            console.log("err", err) // item detail != null
+            console.log("err in retreiving customer detail", err) // item detail != null
             cb(err, {
               "message": "Err"
             })
@@ -102,7 +102,7 @@ var create_customer_on_stripe = function(custdetail, cb) {
                 email: user.email
               }, function(err, customer) {
                 if (err) {
-                  console.log("kkkkk", err);
+                  console.log("kkkkk err in create customer", err);
                   cb(err, {
                     "message": "Err"
                   })
@@ -133,7 +133,7 @@ var create_customer_on_stripe = function(custdetail, cb) {
               var customerid = existing_customer[0].customer_stripe_id
               stripe.customers.retrieve(customerid, function(err, customer) {
                 if (err) {
-                  console.log("err", err)
+                  console.log("err in retreiving cust details", err)
                   cb(err, {
                     'message': "Err"
                   })
@@ -311,7 +311,7 @@ exports.link_card = function(req, res) {
           default_source: card_id
         }, function(err, customer) {
           if (err) {
-            console.log("err",err)
+            console.log("err in card link update ",err)
             outputJSON = {
               'status': 'Failure',
               'messageId': 400,
@@ -355,6 +355,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
     custdetail.stripe_card_id,
     function(err, card) {
       if (err) {
+console.log("err in procede to payment",err)
         paymentcb(err, {
           'message': "Err"
         })
@@ -364,6 +365,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
             _id: custdetail.item_id
           }, function(err, iteminfo) {
             if (err) {
+		console.log("error in finding item correspindign to card",err)
               paymentcb(err, {
                 'message': "Error in item info retreival"
               })
@@ -378,6 +380,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                     _id: vendorid
                   }, function(err, vendordetails) {
                     if (err) {
+			console.log("vendor not found",err)
                       paymentcb(err, {
                         'message': "Error in vendor info retreival"
                       })
@@ -398,6 +401,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                           },
                           function(err, charge) {
                             if (err) {
+				console.log("error in charge",err)
                               paymentcb(err, {
                                 'message': "err"
                               })
@@ -410,6 +414,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                               ordersave.item_count = custdetail.item_count;
                               order(ordersave).save(ordersave, function(err, saveorder) {
                                 if (err) {
+				console.log("eroro on save order",err)
                                   paymentcb(err, {
                                     'message': "Error in vendor info retreival"
                                   })
@@ -435,7 +440,7 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
 
                                         userObj.update({_id:custdetail._id},{$set:{default_card_linked:cid,last4:card.last4}},function(err, defaultstatus_update) {
                                           if (err) {
-                                            console.log("inisde err")
+                                            console.log("inisde update default card linked")
                                             paymentcb(err, {
                                               "message": "Error in updating default status"
                                             })
@@ -445,21 +450,21 @@ var procede_to_pay = function(custdetail, custdetails, paymentcb) {
                                             */
                                             device.find({vendor_id:ordersave.vendor_id},function(err,pushnotify){
                                               if(err){
-                                                console.log("err",err)
+                                                console.log("err in device find",err)
                                               }else{
                                             
                                                 if(pushnotify.length>0){
                                                    var device_token=pushnotify[0].device_token;
                                                 common.notify(device_token,iteminfo,no_of_items,function(err,cbnotify){
                                                   if(err){
-                                                    console.log("err",err);
-                                                    paymentcb(err, {"message":"err in notification"
-                                                    })
+                                                    console.log("err in pudh notification",err);
+                                                    paymentcb(null, charge
+                                                    )
                                                   }else{
                                                     console.log("notification successfull",cbnotify)
-                                                    paymentcb(null, {
+                                                    paymentcb(null, 
                                                     charge
-                                                    })
+                                                    )
                                                   }
                                                 })
                                                 }else{
@@ -544,6 +549,7 @@ exports.pay = function(req, res) {
           if (custdetails.customer.default_source == req.body.stripe_card_id) {
             procede_to_pay(custdetail, custdetails, function(err, paymentcb) {
                 if (err) {
+		console.log("err is",err)
                   outputJSON = {
                   'status': 'Failure',
                   'messageId': 400,
@@ -552,6 +558,7 @@ exports.pay = function(req, res) {
                 res.json(outputJSON)
                 } else {
                   if(paymentcb){
+			console.log("payment sucess",paymentcb)
                     outputJSON = {
                           'status': 'success',
                           'messageId': 200,

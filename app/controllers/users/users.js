@@ -1,7 +1,6 @@
 
 var userObj = require('./../../models/users/users.js');
-var vendor = require('./../../models/vendordetails/vendordetails.js');
-//var Vendor = require('./../../models/admin/signup_vendor.js');
+var vendor = require('./../../models/admin/signup_vendor.js');
 var order = require('./../../models/order/order.js');
 var itemsObj = require('./../../models/items/items.js');
 var device = require('./../../models/devices/devices.js')
@@ -23,6 +22,7 @@ var client = new twilio(accountSid, authToken);
 
 exports.userlogin = function(req, res) {
     var data = res.req.user;
+console.log("data",data)
     if (req.body.loginType == 1) {
         if (data.message == 'Invalid username') {
             var outputJSON = {
@@ -715,9 +715,8 @@ exports.reset_password = function(req, res) {
                 }
             })
 
-        } else if (req.body.type == 2) {
-            console.log("insode 2");
-            vendor.update({
+        } else if (req.body.type == 2) { 
+           vendor.update({
                     _id: req.body._id
                 }, {
                     $set: {
@@ -896,10 +895,10 @@ exports.forgetpassword = function(req, res) {
                         'message': "Error Occured"
                     };
                     res.jsonp(outputJSON);
-                } else {
-			                    console.log("ddd",data)
-			
-                    if (data.length<0) {
+                } else{
+
+                    console.log("ddd",data)
+                    if (data.length<1) {
                         outputJSON = {
                             'status': 'failure',
                             'messageId': 401,
@@ -907,17 +906,16 @@ exports.forgetpassword = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        console.log("req.headers", req.headers.host)
-
+                        console.log("req.headers", req.headers.host,data[0]._id)
                         var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
-                        var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id + "/resetpassword_type/" + type;
+                        var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data[0]._id + "/resetpassword_type/" + type;
                         var transporter = nodemailer.createTransport(mailDetail);
 
                         var mailOptions = {
                             from: "abc",
                             to: vendoremail,
                             subject: 'Reset password',
-                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Please Follow the link to reset your password for vendor   \n  ' + resetUrl
+                            html: 'Welcome to Bridgit!Your request for reset password is being proccessed .Click on the link to reset your password.   \n  ' + resetUrl
                         };
                         console.log("mail options", mailOptions)
                         transporter.sendMail(mailOptions, function(error, response) {

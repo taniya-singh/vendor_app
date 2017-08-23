@@ -672,10 +672,6 @@ uploadProImg = function(data, callback) {
 
 exports.totalSales = function(req, res) {
 	order.aggregate([{
-		$match: {
-			status: "Picked Up"
-		}
-	}, {
 		$group: {
 			_id: null,
 			total_Count: {
@@ -777,7 +773,6 @@ exports.totalRevenue = function(req, res) {
 
 
 exports.saleData = function(req, res) {
-	// console.log("here in controller>>>>dssgregretgrtgregeg>>>>>>")
 	var vendor_id = req.body.vendor_id;
 
 	function firstDayOfMonth() {
@@ -792,53 +787,51 @@ exports.saleData = function(req, res) {
 		d.setDate(0);
 		return d.toISOString();
 	}
-
+	var startDate = req.body.startDate;
+	var endDate = req.body.endDate;
+	var startDayOfMonth;
+	var endDayOfMonth;
+	var currentDayOfweek; // Sunday
+	var lastDayOfweek; // saturdays
 	var now = Date.now();
-	//Below line for getting the first date of current month
-	var startDayOfMonth = firstDayOfMonth(now);
-	// console.log("startdate",startDayOfMonth)
-	//Below line for getting the last date of current month
-	var endDayOfMonth = lastDayOfMonth(now);
-	// console.log("enddate",endDayOfMonth)
-	//Below line for getting the current week first day
-	var currentDayOfweek = moment().day(0); // Sunday
-	// console.log("currentdat",currentDayOfweek)
-	//Below line for getting the current week last day
-	var lastDayOfweek = moment().day(6); // saturday
-	// console.log("lastdayeweek",lastDayOfweek)
-	// console.log("vendor id",vendor_id)
 
-	// console.log("pass month date", startDayOfMonth, endDayOfMonth);
-	// console.log("pass week date", currentDayOfweek, lastDayOfweek);
+	if (req.body.startDate && req.body.endDate) {
+		startDate = req.body.startDate;
+		endDate = req.body.endDate;
+		startDayOfMonth = req.body.startDate;
+		endDayOfMonth = req.body.endDate;
+		currentDayOfweek = req.body.startDate // Sunday
+		lastDayOfweek = req.body.endDate;
+	} else {
+		endDate = req.body.endDate;
+		now = Date.now();
+		startDayOfMonth = firstDayOfMonth(now);
+		endDayOfMonth = lastDayOfMonth(now);
+		currentDayOfweek = moment().day(0); // Sunday
+		lastDayOfweek = moment().day(6); // saturday
+	}
 	async.parallel({
 		monthsale: function(parallelCb) {
-			// get barber total sales of current month
 			getTotalSaleOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function(err, result) {
 				parallelCb(null, result)
-					// console.log(">>>>>>>>>>>>>>>>1111111",result)
 			});
 		},
 		weeksale: function(parallelCb) {
-			// get barber sale of current week
 			getTotalSaleOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
 				parallelCb(null, result)
-					// console.log(">>>>>>>>>>>>>>>>22222222",result)
 			});
 		},
 		monthrevenue: function(parallelCb) {
-			// get barber total sales of current month
 			getTotalRevenueOnDates(vendor_id, startDayOfMonth, endDayOfMonth, function(err, result) {
 				parallelCb(null, result)
-					// console.log(">>>>>>>>>>>>>>>>1111111", result)
 			});
 		},
 		weekrevenue: function(parallelCb) {
-			// get barber sale of current week
-			getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
-				parallelCb(null, result)
-					// console.log(">>>>>>>>>>>>>>>>22222222", result)
-			});
-		}
+				getTotalRevenueOnWeek(vendor_id, currentDayOfweek, lastDayOfweek, function(err, result) {
+					parallelCb(null, result)
+				});
+			}
+			
 	}, function(err, result) {
 		if (err) {
 			outputJSON = {
@@ -847,20 +840,12 @@ exports.saleData = function(req, res) {
 				'message': constantObj.messages.errorRetreivingData
 			};
 		} else {
-
-			// console.log("monthrev", JSON.stringify(result.monthrevenue))
-			// console.log("weekrev", JSON.stringify(result.weekrevenue));
-			// console.log("monthsale", JSON.stringify(result.monthsale))
-			// console.log("weeksale", JSON.stringify(result.weeksale));
-
 			let resultArray1 = [];
 			let resultArray2 = [];
 			for (var i = 0; i < result.monthsale.length; i++) {
 				let k = 0;
 				for (var j = 0; j < result.weeksale.length; j++) {
-					// console.log(result.monthsale[i].vendor_details[0]._id,result.weeksale[j].vendor_details[0]._id)
 					if (result.monthsale[i].vendor_details[0]._id.equals(result.weeksale[j].vendor_details[0]._id)) {
-						// console.log("inside")
 						let obj = {
 							_id: result.monthsale[i].vendor_details[0]._id,
 							name: result.monthsale[i].vendor_details[0].vendor_name,
@@ -880,15 +865,10 @@ exports.saleData = function(req, res) {
 					resultArray1.push(obj)
 				}
 			}
-
-			// console.log()
-
 			for (var m = 0; m < result.monthrevenue.length; m++) {
 				let r = 0;
 				for (var n = 0; n < result.weekrevenue.length; n++) {
-					// console.log(result.monthsale[i].vendor_details[0]._id,result.weeksale[j].vendor_details[0]._id)
 					if (result.monthrevenue[m].vendor_details[0]._id.equals(result.weekrevenue[n].vendor_details[0]._id)) {
-						// console.log("inside")
 						let obj = {
 							_id: result.monthrevenue[m].vendor_details[0]._id,
 							name: result.monthrevenue[m].vendor_details[0].vendor_name,
@@ -916,10 +896,6 @@ exports.saleData = function(req, res) {
 				}
 
 			}
-
-			
-			console.log("resultArray1", JSON.stringify(resultArray1));
-			console.log("resultArray2",JSON.stringify(resultArray2));
 			outputJSON = {
 				'status': 'success',
 				'messageId': 200,
@@ -934,18 +910,21 @@ exports.saleData = function(req, res) {
 
 
 var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
-	// console.log("hhwjhjk")
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
-	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
+
+	// var Startdate = new Date(startDate);
+	// var Enddate = new Date(endDate);
+
+	console.log("startdate:", Startdate);
+	console.log("Enddate:", Enddate);
+
 	order.aggregate([{
 		$match: {
 			created_date: {
-				$lte: Enddate,
-				$gte: Startdate
+				$gte: Startdate,
+				$lte: Enddate
 			}
 		}
 	}, {
@@ -984,9 +963,8 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 			cb(err, null);
 
 		} else {
-			// console.log("sales month",result)
 			cb(null, result)
-				
+
 		}
 	})
 }
@@ -994,11 +972,8 @@ var getTotalSaleOnDates = function(vendor_id, startDate, endDate, cb) {
 
 var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb) {
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("currentDayOfweek>>>>>>>>>>>>>>>>>",currentDayOfweek)
-	// console.log("lastDayOfweek>>>>>>>>>>>>>>>>>>>",lastDayOfweek)
 	order.aggregate([{
 		$match: {
 			created_date: {
@@ -1038,30 +1013,22 @@ var getTotalSaleOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb
 			}
 		}
 	}]).exec(function(err, result) {
-		// console.log("here",result);
 		if (err) {
 			cb(err, null);
 
 		} else {
 			cb(null, result)
-				// console.log("sa/le week",result)
 		}
 	})
 }
 
 var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
-	// console.log("here")
 	var total = 0;
-	var itemtotal=0;
+	var itemtotal = 0;
 	var total_revenew = 0;
 	var vendorId = mongoose.Types.ObjectId(vendor_id);
-	// console.log("vendor here",vendorId)
 	var Startdate = new Date(moment(startDate, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
 	var Enddate = new Date(moment(endDate, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-	// console.log("startDate>>>>>>>>>>>>>>>>>",Startdate)
-	// console.log("enddate>>>>>>>>>>>>>>>>>>>",Enddate)
-
-	//console.log("insiode tottal")
 	order.aggregate([{
 		$match: {
 			created_date: {
@@ -1090,7 +1057,9 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 	}, {
 		$group: {
 			"_id": "$vendor_id",
-				"item_count":{$push:"$item_count"},
+			"item_count": {
+				$push: "$item_count"
+			},
 			"tot_sales": {
 				$sum: "$item_count"
 			},
@@ -1103,37 +1072,31 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 		}
 	}]).exec(function(err, result) {
 		let resultArray = [];
-		// console.log("here",result);
 		if (err) {
 			cb(err, null);
 
 		} else {
-					console.log("res",result)
-					for (var i = 0; i<result.length; i++) {
-						if (result[i].item_detail.length > 0) {
-							for (var j = 0; j < result[i].item_count.length; j++){
-								// console.log("price",result[i].item_detail[j])
-									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
-									total = parseFloat(total) + parseFloat(calculated_price);
-									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
-								}
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].item_detail.length > 0) {
+					for (var j = 0; j < result[i].item_count.length; j++) {
+						var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
+						total = parseFloat(total) + parseFloat(calculated_price);
+						itemtotal = parseFloat(itemtotal) + parseFloat(calculated_price);
+					}
 
-								resultArray.push(itemtotal.toFixed(2))
-								// console.log(" single item total revenue of "+i+" is "+itemtotal)
-								itemtotal=0
+					resultArray.push(itemtotal.toFixed(2))
+					itemtotal = 0
 
-	  			}
-	  	
-	  		}
-	  		// console.log("final data to weekly revenue",total)
-	  		for (var i = 0; i < result.length; i++) {
+				}
+
+			}
+			for (var i = 0; i < result.length; i++) {
 				for (var j = 0; j < resultArray.length; j++) {
 					result[j].rev = resultArray[j];
 				}
 
 			}
-	  		total_revenew=total.toFixed(2)
-	  		// console.log("month revenue",result)
+			total_revenew = total.toFixed(2)
 			cb(null, result)
 
 
@@ -1143,25 +1106,22 @@ var getTotalRevenueOnDates = function(vendor_id, startDate, endDate, cb) {
 
 
 var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek, cb) {
-		var total = 0;
-		var itemtotal=0;
-		var total_revenew = 0;
-		var vendorId = mongoose.Types.ObjectId(vendor_id);
-		// console.log("vendor here",vendorId)
-		var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-		var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
-		// console.log("currentDayOfweek>>>>>>>>>>>>>>>>>",currentDayOfweek)
-		// console.log("lastDayOfweek>>>>>>>>>>>>>>>>>>>",lastDayOfweek)
-		order.aggregate([{
+	var total = 0;
+	var itemtotal = 0;
+	var total_revenew = 0;
+	var vendorId = mongoose.Types.ObjectId(vendor_id);
+	var currentDayOfweek = new Date(moment(currentDayOfweek, "YYYY-MM-DD").format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	var lastDayOfweek = new Date(moment(lastDayOfweek, "YYYY-MM-DD").add(1, 'day').format("YYYY-MM-DD[T]HH:mm:ss.SSS") + 'Z');
+	order.aggregate([{
 			$match: {
 				created_date: {
 					$lte: lastDayOfweek,
 					$gte: currentDayOfweek
 				}
 			}
-		}, 
+		},
 
-		 {
+		{
 			$lookup: {
 				from: "items",
 				localField: "item_id",
@@ -1182,7 +1142,9 @@ var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek,
 		}, {
 			$group: {
 				"_id": "$vendor_id",
-					"item_count":{$push:"$item_count"},
+				"item_count": {
+					$push: "$item_count"
+				},
 				"tot_sales": {
 					$sum: "$item_count"
 				},
@@ -1193,43 +1155,41 @@ var getTotalRevenueOnWeek = function(vendor_id, currentDayOfweek, lastDayOfweek,
 					$push: "$item_detail"
 				}
 			}
-		}]).exec(function(err, result) {
-				let resultArray = [];
-				// console.log("here",result);
-				if (err) {
-					cb(err, null);
+		}
+	]).exec(function(err, result) {
+		let resultArray = [];
+		if (err) {
+			cb(err, null);
 
-				} else {
-					//console.log("res",result.length)
-					for (var i = 0; i<result.length; i++) {
-						if (result[i].item_detail.length > 0) {
-							for (var j = 0; j < result[i].item_count.length; j++){
-									var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
-									total = parseFloat(total) + parseFloat(calculated_price);
-									itemtotal=parseFloat(itemtotal) + parseFloat(calculated_price);
-								}
+		} else {
+			for (var i = 0; i < result.length; i++) {
+				if (result[i].item_detail.length > 0) {
+					for (var j = 0; j < result[i].item_count.length; j++) {
+						var calculated_price = result[i].item_count[j] * result[i].item_detail[j].p_price;
+						total = parseFloat(total) + parseFloat(calculated_price);
+						itemtotal = parseFloat(itemtotal) + parseFloat(calculated_price);
+					}
 
-								resultArray.push(itemtotal.toFixed(2))
-								// console.log(" single item total revenue of "+i+" is "+itemtotal)
-								itemtotal=0
+					resultArray.push(itemtotal.toFixed(2))
+					itemtotal = 0
 
-	  			}
-	  	
-	  		}
-	  		// console.log("final data to weekly revenue",total)
-	  		for (var i = 0; i < result.length; i++) {
+				}
+
+			}
+			for (var i = 0; i < result.length; i++) {
 				for (var j = 0; j < resultArray.length; j++) {
 					result[j].rev = resultArray[j];
 				}
 
 			}
-	  		total_revenew=total.toFixed(2)
+			total_revenew = total.toFixed(2)
 
-						cb(null, result)
-					}
-				})
-
+			cb(null, result)
 		}
+	})
+
+}
+
 
 
 		exports.add_device_info = function(req, res) {
