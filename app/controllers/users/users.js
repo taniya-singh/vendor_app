@@ -894,10 +894,18 @@ exports.forgetpassword = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+                        //var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
                         var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data[0]._id + "/resetpassword_type/" + type;
-                        var transporter = nodemailer.createTransport(mailDetail);
-
+                       // var transporter = nodemailer.createTransport(mailDetail);
+			var transporter = nodemailer.createTransport({
+                        "host": "smtp.gmail.com",
+                        "port": 465,
+                        "secure": true,
+                        "auth": {
+                          "user": "bridgitapp@gmail.com",
+                          "pass": "bridgitapp2017"
+                            }
+                        });
                         var mailOptions = {
                             from: "abc",
                             to: vendoremail,
