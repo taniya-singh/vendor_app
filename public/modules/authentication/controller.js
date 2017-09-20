@@ -176,11 +176,11 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 
 
 	//forgot password
-	$scope.resendPassword = function() {
+	$scope.forgot_password = function() {
 
 		inputJSON = '{"username":' + '"' + $scope.username + '"}';
 
-		AuthenticationService.resendPassword(inputJSON, function(response) {
+		AuthenticationService.forgot_password(inputJSON, function(response) {
 
 			if(response.messageId == 200) {
 				console.log("@@@",response)
@@ -212,11 +212,11 @@ munchapp.controller('loginController', ['$stateParams', '$state','$scope', '$roo
 		});
 	}
 	//forgot password
-	$scope.resetPassword = function() {
+	$scope.resendPassword = function() {
 		
 		inputJSON = '{"newpwd":' + '"' + $scope.newpwd + '","cnfpwd":' + '"' + $scope.cnfpwd + '","email":' + '"' + $stateParams.email + '"}';
 		
-		AuthenticationService.resetPassword(inputJSON, function(response) {
+		AuthenticationService.resendPassword(inputJSON, function(response) {
 
 			if(response.messageId == 200) {
 				

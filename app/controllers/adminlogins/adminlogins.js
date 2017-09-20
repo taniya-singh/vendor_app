@@ -119,7 +119,7 @@ exports.forgotPassword = function(req, res) {
 
 
 
-exports.resetPassword = function(req, res) {
+exports.resendPassword = function(req, res) {
 
 	 console.log("reset ",req.body);
 

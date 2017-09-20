@@ -8,7 +8,7 @@ module.exports = function(app, express, passport) {
 	router.post('/authenticate', passport.authenticate('adminLogin', {session:false}), adminLoginObj.authenticate);
 	router.post('/logout', adminLoginObj.logout);
 	router.post('/forgot_password', adminLoginObj.forgotPassword);
-	router.post('/resetPassword', adminLoginObj.resetPassword);	
+	router.post('/resendPassword', adminLoginObj.resendPassword);	
 	router.post('/changePassword', adminLoginObj.changePassword);	
 	router.post('/saveProfile', adminLoginObj.saveProfile);	
 	router.post('/uploadProImg', adminLoginObj.uploadProImg);	

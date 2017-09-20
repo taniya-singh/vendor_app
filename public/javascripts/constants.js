@@ -7,7 +7,7 @@ var webservices = {
 	"authenticate" : baseUrl + "/adminlogin/authenticate",
 	"logout" : baseUrl + "/adminlogin/logout",
 	"forgot_password" : baseUrl + "/adminlogin/forgot_password",
-	"adminResetPassword"	  : baseUrl + "/adminlogin/resetPassword",
+	"resendPassword" : baseUrl + "/adminlogin/resendPassword",
 	"changePassword" : baseUrl + "/adminlogin/changePassword",	
 	"findOneAdminInfo" : baseUrl + "/adminlogin/adminInfo",
 	"saveProfile" : baseUrl + "/adminlogin/saveProfile",

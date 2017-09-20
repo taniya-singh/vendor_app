@@ -45,16 +45,16 @@ angular.module('Authentication')
 			callback(response.data);
 		});
 	}
-	service.resetpassword = function(inputJsonString, callback) {
+	service.forgot_password = function(inputJsonString, callback) {
 	console.log("hiiiiiii")
 	console.log("json data from service",inputJsonString)
-		communicationService.resultViaPost(webservices.resetpassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+		communicationService.resultViaPost(webservices.forgot_password, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			console.log("gggggg",response.data)
 			callback(response.data);
 		});
 	} 
-	service.resetPassword = function(inputJsonString, callback) {
-		communicationService.resultViaPost(webservices.adminResetPassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
+	service.resendPassword = function(inputJsonString, callback) {
+		communicationService.resultViaPost(webservices.resendPassword, appConstants.authorizationKey, headerConstants.json, inputJsonString, function(response) {
 			callback(response.data);
 		});
 	}
