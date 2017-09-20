@@ -11,6 +11,8 @@ var constantObj = require('./../../../constants.js');
 var accountSid = 'ACf8246b33d4d1342704dee12500c7aba2'; // Your Account SID from www.twilio.com/console
 var authToken = '53800350222c1f6974ce1617563aaaa5'; // Your Auth Token from www.twilio.com/console
 var client = new twilio(accountSid, authToken);
+var emailService = require('./../email/emailService.js');
+
 /**
  * Find role by id
  * Input: roleId
@@ -373,11 +375,6 @@ exports.list = function(req,res){
         var sortquery = {};
         sortquery[sortkey ? sortkey : '_id'] = req.body.sort ? (req.body.sort[sortkey] == 'desc' ? -1 : 1) : -1;
     }
-     //console.log("-----------query-------", query);
-    console.log("sortquery", sortquery);
-    console.log("page", page);
-    console.log("count", count);
-    console.log("skipNo",skipNo)
     var query = {};
     var searchStr = req.body.search;
     if (req.body.search) {
@@ -391,9 +388,7 @@ exports.list = function(req,res){
         }]
     }
     query.is_deleted=false;
-    console.log("-----------query-------", query);
     userObj.find(query).exec(function(err, data) {
-        console.log("hahahahhahahhahahaha",data);
                     if(err){
                         res.json("Error: "+err);   
                     }
@@ -485,7 +480,6 @@ exports.add = function(req, res) {
                     res.jsonp(outputJSON);
                 });
             } else {
-                console.log("inside else")
                 outputJSON = {
                     'status': 'failure',
                     'messageId': 401,
@@ -674,9 +668,7 @@ exports.reset_password = function(req, res) {
     
     console.log("new passsssss", req.body.password.newpassword)
     if (req.body._id != null) {
-        console.log("req.body",req.body)
         if (req.body.type == 1) {
-            console.log("insode 1");
             userObj.update({
                 _id: req.body._id
             }, {
@@ -685,7 +677,6 @@ exports.reset_password = function(req, res) {
                 }
             }, function(err, updatedresponse) {
                 if (err) {
-                    console.log(err)
                     outputJSON = {
                         'status': 'error',
                         'messageId': 400,
@@ -693,7 +684,6 @@ exports.reset_password = function(req, res) {
                     };
                     res.jsonp(outputJSON)
                 } else {
-                    console.log("updated responseeeeee", updatedresponse)
                     if (updatedresponse) {
                         outputJSON = {
                             'status': 'success',
@@ -730,9 +720,7 @@ exports.reset_password = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        console.log(updatedresponse)
-                        console.log("updatedresponse")
-                        if (updatedresponse.nModified == 1) {
+                       if (updatedresponse.nModified == 1) {
                             outputJSON = {
                                 'status': 'success',
                                 'messageId': 200,
@@ -793,7 +781,6 @@ exports.forgetpassword = function(req, res) {
                     res.jsonp(outputJSON)
                 } else {
                     var url = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id;
-                    console.log("url", url)
                     client.messages.create({
                         body: 'Click on link to reset password ' + url,
                         to: req.body.phone_no, // Text this number
@@ -820,7 +807,6 @@ exports.forgetpassword = function(req, res) {
         })
     }
     if (req.body.email) {
-        console.log("reb.bosy", req.body)
         var type = req.body.resetpassword_type;
         if (type == 1) {
             console.log("inside user")
@@ -843,47 +829,50 @@ exports.forgetpassword = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        console.log("req.headers", req.headers.host)
-
-                        var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
+     //                   var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
                         var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data._id + "/resetpassword_type/" + type;
-                        var transporter = nodemailer.createTransport(mailDetail);
+                        var transporter = nodemailer.createTransport({
+                        "host": "smtp.gmail.com",
+                        "port": 465,
+                        "secure": true,
+                        "auth": {
+                          "user": "piyushkapoor786@gmail.com",
+                          "pass": "P!yush@1994"
+                            }
+                        });
 
                         var mailOptions = {
-                            from: "abc",
+                            from: "Bridgit",
                             to: req.body.email,
                             subject: 'Reset password',
                             html: 'Welcome to Bridgit!Your request for reset password is  being proccessed. Please follow the link to reset your password for customer   \n  ' + resetUrl
                         };
-                        transporter.sendMail(mailOptions, function(error, response) {
+
+                        transporter.sendMail(mailOptions, (error, info) => {
                             if (error) {
-                                console.log("err", error)
-                                outputJSON = {
+                               return outputJSON = {
                                     'status': 'failure',
                                     'messageId': 401,
                                     'message': "error"
                                 };
                                 res.jsonp(outputJSON)
-                            } else {
-                                var response = {
-                                    "status": 'success',
-                                    "messageId": 200,
-                                    "message": 'We’ve sent an email to '+req.body.email +'.Click the link to reset your password.',
-                                    "Sent on": Date(),
-                                    "From": "Taniya Singh"
-                                }
-                                res.jsonp(response)
                             }
-                        })
+                            var response = {
+                                "status": 'success',
+                                "messageId": 200,
+                                "message": 'We’ve sent an email to '+vendoremail +'.Click the link to reset your password',
+                                "Sent on": Date(),
+                                "From": "Taniya Singh"
+                            }
+                            res.jsonp(response)
+                        });
+
                     }
                 }
             })
 
         } else if (type == 2) {
-            console.log("inside vendor")
             var vendoremail = req.body.email
-            console.log("vendor email", vendoremail)
-
             vendor.find({
                 vendor_email: vendoremail
             }, function(err, data) {
@@ -905,7 +894,6 @@ exports.forgetpassword = function(req, res) {
                         };
                         res.jsonp(outputJSON)
                     } else {
-                        console.log("req.headers", req.headers.host,data[0]._id)
                         var mailDetail = "smtps://osgroup.sdei@gmail.com:mohali2378@smtp.gmail.com";
                         var resetUrl = "http://" + req.headers.host + "/#" + "/resetpassword/" + data[0]._id + "/resetpassword_type/" + type;
                         var transporter = nodemailer.createTransport(mailDetail);
