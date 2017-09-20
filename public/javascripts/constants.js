@@ -27,7 +27,7 @@ var webservices = {
 	"totalUser": baseUrl + "/users/totalUser",	
 	"deleteUser" : baseUrl + "/users/deleteUser",
     "bulkUpdateUser" : baseUrl + "/users/bulkUpdate",
-    "resetpassword":baseUrl+"/users/reset_password",
+    "reset_password":baseUrl+"/users/reset_password",
 
 //vendor
 
