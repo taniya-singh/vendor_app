@@ -66,11 +66,11 @@
                                         <span class="glyphicon glyphicon glyphicon-edit"></span>
                                         </button>
 
-                                        <button ng-if="group.isDisabled == false" title="deactivate" class="pull-right btn-warning buttonAbove" ng-click="deactivate(group._id);$event.stopPropagation();">
+                                        <button ng-if="group.isDisabled == true" title="deactivate" class="pull-right btn-warning buttonAbove" ng-click="deactivate(group._id);$event.stopPropagation();">
                                         <span class="glyphicon glyphicon glyphicon-remove"></span>
                                         </button>
 
-                                        <button ng-if="group.isDisabled == true" title="activate" class="pull-right btn-warning buttonAbove" ng-click="activate(group._id);$event.stopPropagation();">
+                                        <button ng-if="group.isDisabled == false" title="activate" class="pull-right btn-warning buttonAbove" ng-click="activate(group._id);$event.stopPropagation();">
                                         <span class="glyphicon glyphicon-ok"></span>
                                         </button>
                                         </div>

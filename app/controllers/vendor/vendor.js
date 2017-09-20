@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var constantObj = require('./../../../constants.js');
 var fs=require('fs');
 var emailService = require('./../email/emailService.js');
-
+var moment=require('moment');
 /**
  * Input:  -
  * Output: Role json object containing all vendors
@@ -62,12 +62,21 @@ exports.items_added_by_vendor = function(req,res){
 
 
     exports.orderlist_vendor = function(req,res){
-    
+    var startof=moment().startOf('day');
+	var endof= moment().endOf("day");
     console.log("vendor_id",req.body.vendor_id)
       var outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
         order.aggregate([
-                    {
-                        $match:{vendor_id:mongoose.Types.ObjectId(req.body.vendor_id)}
+		{
+                        $match:{
+                          $and: [{"vendor_id":mongoose.Types.ObjectId(req.body.vendor_id)},
+                                 {"created_date" : {
+                                         $gte: startof.toDate(),
+                                         $lt: endof.toDate()    
+                                           }
+                                 }
+                                 ]
+                            }
                     },
                     {
                         $lookup: {

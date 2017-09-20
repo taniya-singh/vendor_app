@@ -19,7 +19,7 @@ var webservices = {
 	"userList" : baseUrl + "/users/list",
 	"update" : baseUrl + "/users/update",
 	"getCurrentUserData":baseUrl + "/users/getCurrentUserData",
-	//"resetPassword":baseUrl+"/users/resetassword",
+	"resetPassword":baseUrl+"/users/resetpassword",
 	"unSubscribe":baseUrl+"/users/unSubscribe",
 	"allUsersCount":baseUrl+"/users/allUsersCount",
 	"exportUserList":baseUrl + "/users/exportFile",
@@ -35,7 +35,7 @@ var webservices = {
 	"vendorList" : baseUrl + "/admin/vendorList",
 	"update" : baseUrl + "/vendor/update",
 	"getCurrentVendorData":baseUrl + "/vendor/getCurrentVendorData",
-	//"resetpassword":baseUrl+"/admin/reset_password",
+	"resetpassword":baseUrl+"/admin/reset_password",
 	"unSubscribe":baseUrl+"/vendor/unSubscribe",
 	"allVendorCount":baseUrl+"/vendor/allVendorCount",
 	"exportVendorList":baseUrl + "/vendor/exportFile",
@@ -78,11 +78,11 @@ var webservices = {
 
 }
 var nav = [
-		       {text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'home'},
-		       {text:'Manage Vendors', path:'/#/vendor',icon:'ion ion-person-add',activeText:'vendor'},
-               {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'users'},
-               {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-list',activeText:'FAQ'},
-               {text:'Sales & Revenue', path:'/#/saleData',icon:'fa-shopping-cart',activeText:'saleData'},
+		       {text:'Dashboard', path:'/#/',icon:'fa-dashboard',activeText:'/home'},
+		       {text:'Manage Vendors', path:'/#/vendor',icon:'ion ion-person-add',activeText:'/vendor'},
+               {text:'Manage Customer', path:'/#/users',icon:'fa-users',activeText:'/users'},
+               {text:'Manage FAQs', path:'/#/FAQ',icon:'fa-list',activeText:'/FAQ'},
+               {text:'Sales & Revenue', path:'/#/saleData',icon:'fa-shopping-cart',activeText:'/saleData'},
                          ];
 
 var facebookConstants = {
