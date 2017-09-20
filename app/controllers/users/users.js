@@ -836,8 +836,8 @@ exports.forgetpassword = function(req, res) {
                         "port": 465,
                         "secure": true,
                         "auth": {
-                          "user": "piyushkapoor786@gmail.com",
-                          "pass": "P!yush@1994"
+                          "user": "bridgitapp@gmail.com",
+                          "pass": "bridgitapp2017"
                             }
                         });
 
